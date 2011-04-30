@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- This POM: Tooling -->
+
+  <groupId>de.fau.cs.osr</groupId>
+  <artifactId>tooling</artifactId>
+  <version>1.0.4</version>
+  <packaging>pom</packaging>
+
+  <name>Tooling</name>
+  <url>http://osr.informatik.uni-erlangen.de</url>
+  <inceptionYear>2011</inceptionYear>
+  <description>
+    This is a pure POM project that serves as basis for projects developed at
+    the Open Source Research Group at the Friedrich-Alexander-University of
+    Erlangen-Nürnberg. It mainly specifies plugin dependencies for derived
+    projects and tries to preconfigure all aspects of a project that stay the
+    same across most projects.
+  </description>
+
+  <!-- ==[ Properties ]===================================================== -->
+
+  <properties>
+
+    <!-- General configuration -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <version.java>1.6</version.java>
+
+    <!-- Dependency versions -->
+    <version.dep.junit>4.7</version.dep.junit>
+    <version.dep.commons-io>1.4</version.dep.commons-io>
+    <version.dep.commons-lang>2.5</version.dep.commons-lang>
+
+    <!-- Plugin dependency versions -->
+    <version.plugin.compiler>2.3.2</version.plugin.compiler>
+    <version.plugin.assembly>2.2</version.plugin.assembly>
+    <version.plugin.eclipse>2.8</version.plugin.eclipse>
+    <version.plugin.release>2.1</version.plugin.release>
+    <version.plugin.javadoc>2.5</version.plugin.javadoc>
+    <version.plugin.source>2.1.2</version.plugin.source>
+    <version.plugin.jar>2.3.1</version.plugin.jar>
+    <version.plugin.site>2.2</version.plugin.site>
+    <version.plugin.build-helper>1.5</version.plugin.build-helper>
+    <version.plugin.license>1.9.0</version.plugin.license>
+
+    <!-- Extension versions -->
+    <version.extension.wagon-ssh-external>1.0-alpha-5</version.extension.wagon-ssh-external>
+
+  </properties>
+
+  <!-- ==[ Dependencies ]=================================================== -->
+
+  <dependencies>
+  </dependencies>
+
+  <!-- ==[ Dependency Management ]========================================== -->
+
+  <!-- Should be done in each project individually! -->
+
+  <!-- The dependencies listed here are some basic stuff that every project
+       needs sooner or later. -->
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- JUnit -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${version.dep.junit}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Apache Commons -->
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${version.dep.commons-io}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${version.dep.commons-lang}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+
+    <!-- ==[ Resource Configuration ]======================================= -->
+
+    <resources>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/schema</directory>
+      </resource>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**</include>
+        </includes>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <filtering>false</filtering>
+        <directory>src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <filtering>false</filtering>
+        <directory>src/main/schema</directory>
+      </testResource>
+      <testResource>
+        <filtering>false</filtering>
+        <directory>src/test/java</directory>
+        <includes>
+          <include>**</include>
+        </includes>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
+
+    <!-- ==[ Plugin Configuration ]========================================= -->
+
+    <!-- Should be done in each project individually! -->
+
+    <plugins>
+
+      <!-- Check and format license headers -->
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <configuration>
+          <!-- must be overriden in projects that inherit from tooling! -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+    <!-- ==[ Plugin Management ]============================================ -->
+
+    <pluginManagement>
+      <plugins>
+
+        <!-- Java Maven Compiler Plugin -->
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${version.plugin.compiler}</version>
+          <configuration>
+            <source>${version.java}</source>
+            <target>${version.java}</target>
+            <args>
+              <arg>-deprecation</arg>
+            </args>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Assembly Plugin -->
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${version.plugin.assembly}</version>
+        </plugin>
+
+        <!-- Maven Eclipse Plugin -->
+        <plugin>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>${version.plugin.eclipse}</version>
+          <configuration>
+            <downloadSources>true</downloadSources>
+            <downloadJavadocs>true</downloadJavadocs>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Release Plugin -->
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${version.plugin.release}</version>
+          <configuration>
+            <!-- Don't do site-deploy! -->
+            <goals>deploy</goals>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Javadoc Plugin -->
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${version.plugin.javadoc}</version>
+          <!-- confuses release plugin
+          <executions>
+            <execution>
+              <id>javadoc-jar</id>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+          -->
+          <configuration>
+            <quiet>true</quiet>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Source Plugin -->
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${version.plugin.source}</version>
+          <!-- confuses release plugin
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+          -->
+        </plugin>
+
+        <!-- Maven Jar Plugin -->
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.plugin.jar}</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Maven Site Plugin -->
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${version.plugin.site}</version>
+        </plugin>
+
+        <!-- Build Helper Maven Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${version.plugin.build-helper}</version>
+        </plugin>
+
+        <!-- Check and format license headers -->
+        <plugin>
+          <groupId>com.mycila.maven-license-plugin</groupId>
+          <artifactId>maven-license-plugin</artifactId>
+          <version>${version.plugin.license}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <!-- ==[ Build Element Set ]============================================ -->
+
+    <!--
+    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+    <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
+    <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
+    <outputDirectory>${basedir}/target/classes</outputDirectory>
+    <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
+    -->
+
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh-external</artifactId>
+        <version>${version.extension.wagon-ssh-external}</version>
+      </extension>
+    </extensions>
+  </build>
+
+  <!-- ==[ Reporting ]====================================================== -->
+
+  <!--
+  <reporting>
+    <plugins>
+
+      <!- Javadoc ->
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+
+      <!- Scaladoc ->
+      <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+      </plugin>
+
+      <!- Cross referencing ->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jxr-maven-plugin</artifactId>
+      </plugin>
+
+      <!- JUnit reports ->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+
+      <!- Test coverage ->
+      <plugin>
+        <artifactId>maven-clover-plugin</artifactId>
+      </plugin>
+
+      <!- Code analysis report ->
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <targetjdk>${version.java}</targetjdk>
+          <rulesets>
+            <ruleset>/rulesets/basic.xml</ruleset>
+            <ruleset>/rulesets/controversial.xml</ruleset>
+          </rulesets>
+          <format>xml</format>
+          <linkXref>true</linkXref>
+          <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+          <minimumTokens>100</minimumTokens>
+        </configuration>
+      </plugin>
+
+      <!- SCM changelog report ->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changelog-maven-plugin</artifactId>
+      </plugin>
+
+      <!- Todo tags report ->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+      </plugin>
+
+    </plugins>
+  </reporting>
+  -->
+
+  <!-- ==[ More Project Information ]======================================= -->
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>University of Erlangen-Nürnberg - Open Source Research Group</name>
+    <url>http://osr.informatik.uni-erlangen.de</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>dohrn</id>
+      <name>Hannes Dohrn</name>
+      <email>hannes.dohrn@informatik.uni-erlangen.de</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <organization>University of Erlangen-Nürnberg - Open Source Research Group</organization>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+
+  <!--
+  <contributors>
+    <contributor>
+      <name>Max Mustermann</name>
+      <email>max.mustermann@example.com</email>
+      <url>http://maxmustermann.com</url>
+      <organization>Example AG</organization>
+      <organizationUrl>http://example.com</organizationUrl>
+      <roles>
+        <role>tester</role>
+      </roles>
+      <timezone>+1</timezone>
+    </contributor>
+  </contributors>
+  -->
+
+  <!-- ==[ Environment Settings ]=========================================== -->
+
+  <issueManagement>
+    <system>Mantis</system>
+    <url>http://sweble.org/bugtracker/</url>
+  </issueManagement>
+
+  <!--
+  <ciManagement>
+    <system>Continuum</system>
+    <url>http://example.com/continuum</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <address>max.mustermann@example.com</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  -->
+
+  <mailingLists>
+    <mailingList>
+      <name>Sweble Project - General Discussion</name>
+      <subscribe>sweble-mw-parser-subscribe@sweble.org</subscribe>
+      <unsubscribe>sweble-mw-parser-unsubscribe@sweble.org</unsubscribe>
+      <post>sweble-mw-parser@sweble.org</post>
+      <archive>http://sweble.org/pipermail/sweble-mw-parser/</archive>
+    </mailingList>
+    <mailingList>
+      <name>Sweble Project - Developer Discussion</name>
+      <subscribe>sweble-mw-parser-devel-subscribe@sweble.org</subscribe>
+      <unsubscribe>sweble-mw-parser-devel-unsubscribe@sweble.org</unsubscribe>
+      <post>sweble-mw-parser-devel@sweble.org</post>
+      <archive>http://sweble.org/pipermail/sweble-mw-parser-devel/</archive>
+    </mailingList>
+  </mailingLists>
+
+  <scm>
+    <connection>scm:git://sweble.org/git/tooling.git</connection>
+    <developerConnection>scm:git:ssh://gitosis@sweble.org/tooling.git</developerConnection>
+    <url>http://sweble.org/gitweb/?p=tooling.git;a=summary</url>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>osr-public-releases-deployment</id>
+      <name>OSR Public Releases</name>
+      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public-releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>osr-public-snapshots-deployment</id>
+      <name>OSR Public Snapshots</name>
+      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public-snapshots</url>
+    </snapshotRepository>
+    <!--
+    <site>
+      <id></id>
+      <url></url>
+    </site>
+    -->
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <id>osr-public-repositories</id>
+      <name>OSR Public Repositories</name>
+      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
+    </repository>
+    <repository>
+      <id>java.net</id>
+      <name>java.net Maven Repository</name>
+      <url>http://download.java.net/maven/2</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <id>osr-public-plugin-repositories</id>
+      <name>OSR Public Repositories</name>
+      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>java.net</id>
+      <name>java.net Maven Repository</name>
+      <url>http://download.java.net/maven/2</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>
