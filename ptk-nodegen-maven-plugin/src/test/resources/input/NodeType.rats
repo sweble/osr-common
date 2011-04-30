@@ -1,0 +1,58 @@
+/*!
+ *
+ * Foobar
+ * ------
+ *
+ *   Foo:
+ *     - text text text
+ *     - text text text
+ *
+ *   Foo Bar:
+ *     - text text text
+ *     - text text text
+ *       text text text
+ *
+ *   Bar:
+ *     - text text text
+ *       text text text
+ *
+ * NodeTypeNode
+ * ------------
+ *
+ *   asdf
+ *
+ *   Blub:
+ *     asdf
+ * 
+ *   - Item 1
+ *   - Item 2
+ *     - Item 2.1
+ *     - Item 2.2
+ *   - Item 3
+ *
+ *   Foo:
+ *     - text text text
+ *     - text text text
+ *
+ *   Foo Bar:
+ *     - text text text
+ *     - text text text
+ *       text text text
+ *     - text text text
+ *
+ *       text text text
+ *
+ *   Bar:
+ *     - text text text
+ *       text text text
+ *
+ *   AST node:
+ *     Name        : NodeTypeNode
+ *     Extends     : LeafNode
+ *     NodeType    : AstNode.NT_CUSTOM_BIT
+ *
+ */
+
+module NodeType;
+
+// -- End of file --------------------------------------------------------------

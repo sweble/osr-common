@@ -1,0 +1,77 @@
+/*!
+ *
+ * Intro
+ * -----
+ *
+ *   AST node:
+ *     Name        : Intro
+ *     Extends     : LeafNode
+ *     Constructor : "abstract, continue, for, new, switch, assert, default"
+ *     Constructor : "goto, package, synchronized, boolean, do, if, private"
+ *     Constructor : "this, break, double, implements, protected, throw, byte"
+ *     Constructor : "else, import, public, throws, case, enum, instanceof"
+ *     Constructor : "return, transient, catch, extends, int, short, try, char"
+ *     Constructor : "final, interface, static, void, class, finally, long"
+ *     Constructor : "strictfp, volatile, const, float, native, super, while"
+ *
+ *     Properties:
+ *       abstract     : String
+ *       continue     : String
+ *       for          : String
+ *       new          : String
+ *       switch       : String
+ *       assert       : String
+ *       default      : String
+ *       goto         : String
+ *       package      : String
+ *       synchronized : String
+ *       boolean      : String
+ *       do           : String
+ *       if           : String
+ *       private      : String
+ *       this         : String
+ *       break        : String
+ *       double       : String
+ *       implements   : String
+ *       protected    : String
+ *       throw        : String
+ *       byte         : String
+ *       else         : String
+ *       import       : String
+ *       public       : String
+ *       throws       : String
+ *       case         : String
+ *       enum         : String
+ *       instanceof   : String
+ *       return       : String
+ *       transient    : String
+ *       catch        : String
+ *       extends      : String
+ *       int          : String
+ *       short        : String
+ *       try          : String
+ *       char         : String
+ *       final        : String
+ *       interface    : String
+ *       static       : String
+ *       void         : String
+ *       class        : String
+ *       float        : String
+ *       native       : String
+ *
+ *     Children:
+ *       finally      : AstNode
+ *       long         : AstNode
+ *       strictfp     : AstNode
+ *       transient    : AstNode
+ *       catch        : AstNode
+ *       volatile     : AstNode
+ *       const        : AstNode
+ *       super        : AstNode
+ *       while        : AstNode
+ *
+ */
+
+module ReservedWords;
+
+// -- End of file --------------------------------------------------------------

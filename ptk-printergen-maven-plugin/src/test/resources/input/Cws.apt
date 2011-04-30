@@ -1,0 +1,18 @@
+%Name X;
+
+%visit(Y) %cws;
+<div>
+	{call:sugar}
+		Sugar!
+	{/call}
+	{call:inline}Sweet!{/call}
+</div>
+
+
+
+%call(sugar)
+<span>
+	{content}
+</span>
+
+%call(inline) <span>{content}</span>

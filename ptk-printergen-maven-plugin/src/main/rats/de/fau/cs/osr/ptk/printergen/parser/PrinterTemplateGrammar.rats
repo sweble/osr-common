@@ -1,0 +1,786 @@
+/**
+ * Copyright 2011 The Open Source Research Group,
+ *                University of Erlangen-Nürnberg
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*!
+ * PrinterTemplate
+ * ---------------
+ *
+ *   AST node:
+ *     Name        : PrinterTemplate
+ *     Extends     : InnerNode.InnerNode2
+ *     Constructor : "intro, templates"
+ *
+ *     Children:
+ *       intro     : Intro
+ *       templates : NodeList
+ *
+ * Intro
+ * -----
+ *
+ *   AST node:
+ *     Name        : Intro
+ *     Extends     : InnerNode.InnerNode1
+ *     Constructor : "name, package, implements, ctorParams, header, body, footer"
+ *     Import      : java.util.List
+ *
+ *     Properties:
+ *       name       : String
+ *       package    : String
+ *       implements : List<String>
+ *       header     : String
+ *       body       : String
+ *       footer     : String
+ *
+ *     Children:
+ *       ctorParams : NodeList
+ *
+ * Call
+ * ----
+ *
+ *   AST node:
+ *     Name        : Call
+ *     Extends     : InnerNode.InnerNode1
+ *     Constructor : "name, eol, body"
+ *
+ *     Properties:
+ *       name : String
+ *       eol  : Boolean
+ *
+ *     Children:
+ *       body : NodeList
+ *
+ * CtrlCall
+ * --------
+ *
+ *   AST node:
+ *     Name        : CtrlCall
+ *     Extends     : ContentNode
+ *     Implements  : Instruction
+ *     Constructor : "target"
+ *
+ *     Properties:
+ *       target   : String
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.BlockOpen;
+ *       }
+ *     }
+ *
+ * CtrlCallEnd
+ * -----------
+ *
+ *   AST node:
+ *     Name        : CtrlCallEnd
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *
+ *     Properties:
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.BlockEnd;
+ *       }
+ *     }
+ *
+ * CtrlContent
+ * -----------
+ *
+ *   AST node:
+ *     Name        : CtrlContent
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *
+ *     Properties:
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.BlockOpen;
+ *       }
+ *     }
+ *
+ * CtrlElif
+ * --------
+ *
+ *   AST node:
+ *     Name        : CtrlElif
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *     Constructor : "cond"
+ *
+ *     Properties:
+ *       cond     : String
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.BlockInside;
+ *       }
+ *     }
+ *
+ * CtrlElse
+ * --------
+ *
+ *   AST node:
+ *     Name        : CtrlElse
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *
+ *     Properties:
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.BlockInside;
+ *       }
+ *     }
+ *
+ * CtrlIf
+ * ------
+ *
+ *   AST node:
+ *     Name        : CtrlIf
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *     Constructor : "cond"
+ *
+ *     Properties:
+ *       cond     : String
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.BlockOpen;
+ *       }
+ *     }
+ *
+ * CtrlIfEnd
+ * ---------
+ *
+ *   AST node:
+ *     Name        : CtrlIfEnd
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *
+ *     Properties:
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.BlockEnd;
+ *       }
+ *     }
+ *
+ * Expr
+ * ----
+ *
+ *   AST node:
+ *     Name        : Expr
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *     Constructor : "expr"
+ *
+ *     Properties:
+ *       expr     : String
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.IsBlock;
+ *       }
+ *     }
+ *
+ * Stmt
+ * ----
+ *
+ *   AST node:
+ *     Name        : Stmt
+ *     Extends     : LeafNode
+ *     Implements  : Instruction
+ *     Constructor : "stmt"
+ *
+ *     Properties:
+ *       stmt     : String
+ *       indent   : String
+ *       indented : Boolean
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public Instruction.BlockMode getBlockMode()
+ *       {
+ *         return Instruction.BlockMode.IsBlock;
+ *       }
+ *     }
+ *
+ * Indent
+ * ------
+ *
+ *   AST node:
+ *     Name        : Indent
+ *     Extends     : InnerNode.InnerNode1
+ *     Constructor : "indent, inst"
+ *
+ *     Properties:
+ *       indent : String
+ *
+ *     Children:
+ *       inst : AstNode
+ *
+ * Newline
+ * -------
+ *
+ *   AST node:
+ *     Name        : Newline
+ *     Extends     : StringContentNode
+ *     Constructor : "content"
+ *
+ * Parameter
+ * ---------
+ *
+ *   AST node:
+ *     Name        : Parameter
+ *     Extends     : LeafNode
+ *     Constructor : "type"
+ *     Constructor : "type, name"
+ *
+ *     Properties:
+ *       type : String
+ *       name : String
+ *
+ * Token
+ * -----
+ *
+ *   AST node:
+ *     Name        : Token
+ *     Extends     : LeafNode
+ *     Constructor : "name"
+ *
+ *     Properties:
+ *       name : String
+ *
+ * Visit
+ * -----
+ *
+ *   AST node:
+ *     Name        : Visit
+ *     Extends     : InnerNode.InnerNode2
+ *     Constructor : "arg, eol, body"
+ *
+ *     Properties:
+ *       eol : Boolean
+ *
+ *     Children:
+ *       arg  : Parameter
+ *       body : NodeList
+ */
+
+module de.fau.cs.osr.ptk.printergen.parser.PrinterTemplateGrammar;
+
+import de.fau.cs.osr.ptk.printergen.parser.JavaCode;
+import de.fau.cs.osr.ptk.printergen.parser.Whitespace;
+
+
+
+
+// -- Header / Body / Footer ---------------------------------------------------
+
+header
+{
+  import de.fau.cs.osr.ptk.common.ast.AstNode;
+  import de.fau.cs.osr.ptk.common.ast.NodeList;
+  import de.fau.cs.osr.ptk.common.ast.Text;
+
+  import java.util.List;
+}
+
+body
+{
+}
+
+option withLocation,
+       parser(de.fau.cs.osr.ptk.printergen.parser.AstTemplateParser);
+
+
+
+
+// -- Printer Template ---------------------------------------------------------
+
+public
+PrinterTemplate
+AstTemplateGrammar =
+  SpacingStar intro:Intro template:Template* Eof
+  {
+    yyValue = new PrinterTemplate(intro, new NodeList(template));
+  }
+;
+
+Intro
+Intro =
+  name:TmplName
+  packageX:Package?
+  implementsX:Implements
+  ctorParams:CtorParams?
+  header:Header?
+  body:Body?
+  footer:Footer?
+  {
+    yyValue = new Intro(name, packageX, implementsX, ctorParams, header, body, footer);
+  }
+;
+
+String
+TmplName =
+  "%Name" SpacingPlus yyValue:Name SpacingStar ';' SpacingStar
+;
+
+String
+Package =
+  "%Package" SpacingPlus yyValue:QName SpacingStar ';' SpacingStar
+;
+
+List<String>
+Implements =
+  implementsX:( "%Implements" SpacingPlus yyValue:QName SpacingStar ';' SpacingStar )*
+  {
+    yyValue = implementsX.list();
+  }
+;
+
+NodeList
+CtorParams =
+  "%CtorParams" SpacingPlus yyValue:CtorParamList SpacingStar ';' SpacingStar
+;
+
+NodeList
+CtorParamList =
+  first:CtorParam tail:(SpacingStar ',' SpacingStar yyValue:CtorParam)*
+  {
+    yyValue = new NodeList(first, tail);
+  }
+;
+
+AstNode
+CtorParam =
+  type:JavaType SpacingPlus name:Name
+  {
+    yyValue = new Parameter(type, name);
+  }
+;
+
+String
+Header =
+  "%Header" SpacingStar '{' yyValue:JavaCode '}' SpacingStar
+;
+
+String
+Body =
+  "%Body" SpacingStar '{' yyValue:JavaCode '}' SpacingStar
+;
+
+String
+Footer =
+  "%Footer" SpacingStar '{' yyValue:JavaCode '}' SpacingStar
+;
+
+
+
+
+// -- Templates ----------------------------------------------------------------
+
+AstNode
+Template =
+    "%visit" SpacingStar '(' SpacingStar arg:TemplateArgument ')' CSpacesStar eol:IsBlockVisit body:TemplateDef* SpacingStar
+    {
+      yyValue = new Visit(arg, (Boolean) eol, new NodeList(body));
+    }
+  / "%call" SpacingStar '(' SpacingStar arg:Name SpacingStar ')' CSpacesStar eol:IsBlockVisit body:TemplateDef* SpacingStar
+    {
+      yyValue = new Call(arg, (Boolean) eol, new NodeList(body));
+    }
+;
+
+Parameter
+TemplateArgument =
+    type:JavaType SpacingPlus name:Name SpacingStar
+    {
+      yyValue = new Parameter(type, name);
+    }
+  / type:JavaType SpacingStar
+    {
+      yyValue = new Parameter(type);
+    }
+;
+
+Object
+IsBlockVisit =
+    Eol ( CSpacesStar Eol )*
+    {
+      yyValue = (Boolean) true;
+    }
+  / {
+      yyValue = (Boolean) false;
+    }
+;
+
+void
+BIPredicate =
+  BILead '{' JavaCode '}' BIEnd
+;
+
+AstNode
+TemplateDef =
+    OutputText
+  / ControlSequence
+;
+
+AstNode
+OutputText =
+  output:OutputString
+  {
+    yyValue = new Text(output);
+  }
+;
+
+String
+OutputString =
+  ( !Eol ![{%] !OutputStopper _ )+
+;
+
+void
+OutputStopper =
+  SpacingStar ( "%visit" / "%call" / Eof )
+;
+
+AstNode
+ControlSequence =
+    InlineInstruction
+  / BlockInstruction
+  / Escape
+  / Newline
+;
+
+
+
+
+// -- Inline instructions ------------------------------------------------------
+
+AstNode
+InlineInstruction =
+    CtrlIf
+  / CtrlCall
+  / CtrlContent
+  / Expression
+  / Statement/*
+  / InlineCtrlFor
+  / InlineCtrlWhile
+  / InlineCtrlDoWhile*/
+;
+
+
+
+
+// -- Block instructions -------------------------------------------------------
+
+Indent
+BlockInstruction =
+    indent:BILead inst:( Expression / Statement ) BIEnd
+    {
+      yyValue = new Indent(indent, inst);
+    }
+;
+
+String
+BILead = Eol yyValue:CSpacesStar  ;
+
+void
+BIEnd = CSpacesStar &Eol ;
+
+
+
+
+// -- Escapes ------------------------------------------------------------------
+
+AstNode
+Escape =
+    BlockComment
+    {
+      yyValue = null;
+    }
+  / "%;"
+    {
+      yyValue = null;
+    }
+  / "%%"
+    {
+      yyValue = new Text("%");
+    }
+  / "%{"
+    {
+      yyValue = new Text("{");
+    }
+  / '%' name:Name ';'
+    {
+      yyValue = new Token(name);
+    }
+;
+
+
+
+
+// -- Newlines -----------------------------------------------------------------
+
+Newline
+Newline =
+  !OutputStopper !BIPredicate escape:( yyValue:'%' SpaceStar )? newline:Eol
+  {
+    yyValue = null;
+    if (escape == null)
+      yyValue = new Newline(newline);
+  }
+;
+
+
+
+
+// -- Statements, Expressions & Flow Control -----------------------------------
+
+AstNode
+Statement =
+  "{!" stmt:JavaCode '}'
+  {
+    yyValue = new Stmt(stmt);
+  }
+;
+
+AstNode
+Expression =
+  "{=" expr:JavaCode '}'
+  {
+    yyValue = new Expr(expr);
+  }
+;
+
+AstNode
+CtrlCall =
+  head:CallHead output:TemplateDef* end:CtrlCallEnd
+  {
+    if (head  instanceof Indent)
+    {
+      ((CtrlCall) ((Indent) head).getInst()).setContent(new NodeList(output));
+    }
+    else
+    {
+      ((CtrlCall) head).setContent(new NodeList(output));
+    }
+
+    yyValue = new NodeList(head, end);
+  }
+;
+
+AstNode
+CallHead =
+    indent:BILead call:Call BIEnd
+    {
+      yyValue = new Indent(indent, call);
+    }
+  / Call
+;
+
+AstNode
+Call =
+  "{call" SpacingStar ':' SpacingStar target:Name SpacingStar '}'
+  {
+    yyValue = new CtrlCall(target);
+  }
+;
+
+AstNode
+CtrlCallEnd =
+    indent:BILead callEndKw:CallEndkw BIEnd
+    {
+      yyValue = new Indent(indent, callEndKw);
+    }
+  / CallEndkw
+;
+
+AstNode
+CallEndkw =
+  "{/call" SpacingStar '}'
+  {
+    yyValue = new CtrlCallEnd();
+  }
+;
+
+NodeList
+CtrlIf =
+  head:IfHead body:CtrlIfBody ifelse:CtrlIfElse? ifend:CtrlIfEnd
+  {
+    yyValue = new NodeList(head, body);
+    yyValue.add(ifelse);
+    yyValue.add(ifend);
+  }
+;
+
+AstNode
+IfHead =
+    indent:BILead ifCond:IfCond BIEnd
+    {
+      yyValue = new Indent(indent, ifCond);
+    }
+  / IfCond
+;
+
+AstNode
+IfCond =
+  "{if" SpacingStar '(' cond:JavaCode ')' SpacingStar '}'
+  {
+    yyValue = new CtrlIf(cond);
+  }
+;
+
+NodeList
+CtrlIfBody =
+  output:TemplateDef* elif:CtrlIfElif?
+  {
+    yyValue = new NodeList(new NodeList(output), elif);
+  }
+;
+
+NodeList
+CtrlIfElif =
+  head:ElifHead body:CtrlIfBody
+  {
+    yyValue = new NodeList(head, body);
+  }
+;
+
+AstNode
+CtrlContent =
+    indent:BILead content:Content BIEnd
+    {
+      yyValue = new Indent(indent, content);
+    }
+  / Content
+;
+
+AstNode
+Content =
+  "{content" SpacingStar '}'
+  {
+    yyValue = new CtrlContent();
+  }
+;
+
+AstNode
+ElifHead =
+    indent:BILead elif:ElifCond BIEnd
+    {
+      yyValue = new Indent(indent, elif);
+    }
+  / ElifCond
+;
+
+AstNode
+ElifCond =
+  "{elif" SpacingStar '(' cond:JavaCode ')' SpacingStar '}'
+  {
+    yyValue = new CtrlElif(cond);
+  }
+;
+
+NodeList
+CtrlIfElse =
+  head:ElseHead output:TemplateDef*
+  {
+    yyValue = new NodeList(head, new NodeList(output));
+  }
+;
+
+AstNode
+ElseHead =
+    indent:BILead elseKw:ElseKw BIEnd
+    {
+      yyValue = new Indent(indent, elseKw);
+    }
+  / ElseKw
+;
+
+AstNode
+ElseKw =
+  "{else" SpacingStar '}'
+    {
+      yyValue = new CtrlElse();
+    }
+;
+
+AstNode
+CtrlIfEnd =
+    indent:BILead ifEndKw:IfEndKw BIEnd
+    {
+      yyValue = new Indent(indent, ifEndKw);
+    }
+  / IfEndKw
+;
+
+AstNode
+IfEndKw =
+  "{/if" SpacingStar '}'
+  {
+    yyValue = new CtrlIfEnd();
+  }
+;
+
+
+
+
+// -- End of file --------------------------------------------------------------

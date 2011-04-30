@@ -1,0 +1,13 @@
+%Name CtorParams;
+%CtorParams int someNumber, float someFloat;
+%visit(NodeList)
+<div>
+	{if()}
+		Hallo
+	{else}
+		Tschuess
+  {/if}
+
+	asdf
+	asdf {if()} Hallo {else} Tschuess {/if}
+</div>

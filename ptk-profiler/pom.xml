@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Parent POM: Parser Toolkit -->
+
+  <parent>
+    <groupId>de.fau.cs.osr.ptk</groupId>
+    <artifactId>parser-toolkit</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <!-- This POM: Parser Toolkit - Test & Performance Toolkit -->
+
+  <groupId>de.fau.cs.osr.ptk</groupId>
+  <artifactId>ptk-profiler</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>PTK - Test &amp; Performance Toolkit</name>
+  <url>http://osr.informatik.uni-erlangen.de</url>
+  <inceptionYear>2010</inceptionYear>
+  <description>
+    A toolkit providing means to test and correctness and performance of parser
+    implementations.
+  </description>
+
+  <!-- ==[ Dependencies ]=================================================== -->
+
+  <dependencies>
+
+    <!-- Utils -->
+    <dependency>
+      <groupId>de.fau.cs.osr.utils</groupId>
+      <artifactId>utils</artifactId>
+    </dependency>
+
+    <!-- Parser Toolkit - Common -->
+    <dependency>
+      <groupId>de.fau.cs.osr.ptk</groupId>
+      <artifactId>ptk-common</artifactId>
+    </dependency>
+
+    <!--
+      Testing
+    -->
+
+    <!-- JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <!-- JUnit invocations are part of the library! -->
+      <scope>compile</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <!-- ==[ Plugin Configuration ]========================================= -->
+
+    <plugins>
+
+      <!-- Create a JAR package with the ParserProfiler as main class -->
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>de.fau.cs.osr.ptk.profiler.ParserProfiler</mainClass>
+              <classpathPrefix>lib/</classpathPrefix>
+              <addClasspath>true</addClasspath>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <!-- Check and format license headers -->
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <configuration>
+          <header>../etc/license-header.txt</header>
+          <excludes>
+            <exclude>**/.gitignore</exclude>
+            <exclude>dependencies</exclude>
+            <exclude>LICENSE</exclude>
+            <exclude>NOTICE</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <!-- ==[ Reporting ]====================================================== -->
+
+  <!--
+    see parent: <reporting>
+  -->
+
+  <!-- ==[ More Project Information ]======================================= -->
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!--
+    see parent: <organization>
+                <developers>
+                <contributors>
+  -->
+
+  <!-- ==[ Environment Settings ]=========================================== -->
+
+  <!--
+    see parent: <issueManagement>
+                <ciManagement>
+                <mailingLists>
+                <scm>
+                <distributionManagement>
+                <repositories>
+                <pluginRepositories>
+  -->
+
+</project>

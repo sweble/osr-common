@@ -1,0 +1,85 @@
+/**
+ * Copyright 2011 The Open Source Research Group,
+ *                University of Erlangen-Nürnberg
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+module de.fau.cs.osr.ptk.nodegen.parser.JavaCode;
+
+import de.fau.cs.osr.ptk.nodegen.parser.Whitespace;
+
+
+
+
+// -----------------------------------------------------------------------------
+
+transient
+String
+JavaCode =
+  c:( Simple / Complex )*
+  {
+    StringBuilder b = new StringBuilder();
+    for (; !c.isEmpty(); c = c.tail())
+      b.append(c.head());
+    yyValue = b.toString();
+  }
+;
+
+private
+transient
+String
+Simple =
+    ( ![{}"'] !"/*" !"//" !Eol _ )+
+  / ["] ( '\\' ["'] / '\\' / !["] !Eol _ )* ["]
+  / ['] ( '\\' ["'] / '\\' / !['] !Eol _ )  [']
+  / "//" ( !Eol _ )*
+;
+
+private
+transient
+String
+Complex =
+    '{' code:JavaCode '}'
+    {
+      yyValue = "{" + code + "}";
+    }
+  / "/*" c:( Newline / !"*/" _ )* "*/"
+    {
+      StringBuilder b = new StringBuilder();
+      b.append("/*");
+      for (; !c.isEmpty(); c = c.tail())
+        b.append(c.head());
+      b.append("*/");
+      yyValue = b.toString();
+    }
+  / Newline
+;
+
+private
+transient
+String
+Newline =
+  eol:Eol " *" ' '? indent:' '*
+  {
+    int remain = indent.size() - yyState.getIndent();
+    yyValue = eol;
+    if (remain > 0)
+      yyValue += StringUtils.strrep(' ', remain);
+  }
+;
+
+
+
+
+// -- End of file --------------------------------------------------------------

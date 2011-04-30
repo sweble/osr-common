@@ -1,0 +1,45 @@
+%*
+ * Example of a typical Ast Printer Template (apt).
+ *%
+
+%Name Example;
+%Package de.fau.cs.osr.maven.plugins.rats;
+%Implements Stuff;
+
+%Header {
+  import java.util.ArrayList;
+}
+
+%Body {
+	public void dummy()
+	{
+	}
+}
+
+%Footer {
+}
+
+%visit(NodeList) {!iterate(nodeList)}
+
+%**********************%
+
+%visit(AstNode) {!iterate(astNode)}
+
+%visit(AstTemplate)
+<div class="attribute">
+	{if(true)}%**********************%
+		{!iterate(astTemplate)}%**********************%
+	{elif(false)}%**********************%
+		elif%**********************%
+	{else}%**********************%
+		else%**********************%
+	{/if}
+</div>
+
+%**********************%
+
+%visit(Newline newLine)
+<div class="element">
+</div>
+
+%visit(Text) {=text.getContent()}

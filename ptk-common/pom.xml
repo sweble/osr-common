@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Parent POM: Parser Toolkit -->
+
+  <parent>
+    <groupId>de.fau.cs.osr.ptk</groupId>
+    <artifactId>parser-toolkit</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <!-- This POM: Parser Toolkit - Common -->
+
+  <groupId>de.fau.cs.osr.ptk</groupId>
+  <artifactId>ptk-common</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>PTK - Common</name>
+  <url>http://osr.informatik.uni-erlangen.de</url>
+  <inceptionYear>2009</inceptionYear>
+  <description>
+    The parser toolkit common module provides the basic facilities for AST
+    building, traversal, persistence and much more.
+  </description>
+
+  <!-- ==[ Dependencies ]=================================================== -->
+
+  <dependencies>
+
+    <!-- Apache Commons -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-jxpath</groupId>
+      <artifactId>commons-jxpath</artifactId>
+    </dependency>
+
+    <!-- XStream -->
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+    </dependency>
+
+    <!-- JAXB -->
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+
+    <!-- Rats! -->
+    <dependency>
+      <groupId>xtc</groupId>
+      <artifactId>rats-runtime</artifactId>
+    </dependency>
+
+    <!-- Utils -->
+    <dependency>
+      <groupId>de.fau.cs.osr.utils</groupId>
+      <artifactId>utils</artifactId>
+    </dependency>
+
+    <!--
+      Testing
+    -->
+
+    <!-- JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <!-- JUnit invocations are part of the library! -->
+      <scope>compile</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <!-- ==[ Plugin Configuration ]========================================= -->
+
+    <plugins>
+
+      <!-- Add XML schema source directory -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/schema</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Compile schema files -->
+      <plugin>
+        <groupId>com.sun.tools.xjc.maven2</groupId>
+        <artifactId>maven-jaxb-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <schemaDirectory>${basedir}/src/main/schema</schemaDirectory>
+          <generatePackage>de.fau.cs.osr.ptk.common.xml</generatePackage>
+        </configuration>
+      </plugin>
+
+      <!-- Check and format license headers -->
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <configuration>
+          <header>../etc/license-header.txt</header>
+          <excludes>
+            <exclude>**/.gitignore</exclude>
+            <exclude>src/test/resources/simple.xml</exclude>
+            <exclude>dependencies</exclude>
+            <exclude>LICENSE</exclude>
+            <exclude>NOTICE</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <!-- ==[ Reporting ]====================================================== -->
+
+  <!--
+    see parent: <reporting>
+  -->
+
+  <!-- ==[ More Project Information ]======================================= -->
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!--
+    see parent: <organization>
+                <developers>
+                <contributors>
+  -->
+
+  <!-- ==[ Environment Settings ]=========================================== -->
+
+  <!--
+    see parent: <issueManagement>
+                <ciManagement>
+                <mailingLists>
+                <scm>
+                <distributionManagement>
+                <repositories>
+                <pluginRepositories>
+  -->
+
+</project>

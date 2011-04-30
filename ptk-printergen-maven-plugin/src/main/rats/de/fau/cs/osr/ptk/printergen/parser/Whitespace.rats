@@ -1,0 +1,98 @@
+/**
+ * Copyright 2011 The Open Source Research Group,
+ *                University of Erlangen-Nürnberg
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*!
+ * Whitespace
+ * ----------
+ *
+ *   Collection of different production to recognize whitespace.
+ */
+
+module de.fau.cs.osr.ptk.printergen.parser.Whitespace;
+
+
+
+
+// -- Whitespace ---------------------------------------------------------------
+
+transient String WsStar     = Whitespace* ;
+
+transient String WsPlus     = Whitespace+ ;
+
+   inline String Whitespace = Space
+                            / Eol ;
+
+transient String SpaceStar  = Space* ;
+
+transient String SpacePlus  = Space+ ;
+
+   inline String Space      = ' '
+                            / '\t'
+                            / '\f' ;
+
+   inline String Eol        = '\r' '\n'
+                            / '\r'
+                            / '\n' ;
+
+transient String Eof        = !_ ;
+
+transient String EolOrEof   = Eol / Eof ;
+
+
+
+
+// -- Ignored whitespace including comments ------------------------------------
+
+transient void SpacingStar  = Spacing* ;
+
+transient void SpacingPlus  = Spacing+ ;
+
+   inline void Spacing      = WsPlus / BlockComment ;
+
+transient void BlockComment = "%*" ( !"*%" _ )* "*%" ;
+
+
+
+
+// -- Preserved whitespace including comments ----------------------------------
+
+transient
+String
+CSpacesStar =
+  content:CSpace*
+  {
+    StringBuilder b = new StringBuilder();
+    for (Pair<String> p = content; !p.isEmpty(); p = p.tail())
+      b.append(p.head());
+    yyValue = b.toString();
+  }
+;
+
+inline
+String
+CSpace =
+    SpacePlus
+  / BlockComment
+    {
+      yyValue = "";
+    }
+;
+
+
+
+
+// -- End of file --------------------------------------------------------------

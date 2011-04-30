@@ -1,0 +1,51 @@
+	@Override
+	public final int getPropertyCount()
+	{
+		return ${propertyCount};
+	}
+	
+	@Override
+	public final AstNodePropertyIterator propertyIterator()
+	{
+		return new AstNodePropertyIterator()
+		{
+			@Override
+			protected int getPropertyCount()
+			{
+				return ${propertyCount};
+			}
+			
+			@Override
+			protected String getName(int index)
+			{
+				switch (index)
+				{
+${getNameCases}
+					default:
+						throw new IndexOutOfBoundsException();
+				}
+			}
+			
+			@Override
+			protected Object getValue(int index)
+			{
+				switch (index)
+				{
+${getValueCases}
+					default:
+						throw new IndexOutOfBoundsException();
+				}
+			}
+			
+			@Override
+			protected Object setValue(int index, Object value)
+			{
+				switch (index)
+				{
+${setValueCases}
+					default:
+						throw new IndexOutOfBoundsException();
+				}
+			}
+		};
+	}

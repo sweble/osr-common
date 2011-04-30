@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Parent POM: Parser Toolkit -->
+
+  <parent>
+    <groupId>de.fau.cs.osr.ptk</groupId>
+    <artifactId>parser-toolkit</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
+  <!-- This POM: Parser Toolkit - NodeGen Maven Plugin -->
+
+  <groupId>de.fau.cs.osr.ptk</groupId>
+  <artifactId>ptk-nodegen-maven-plugin</artifactId>
+  <version>1.0.0</version>
+  <packaging>maven-plugin</packaging>
+
+  <name>PTK - NodeGen Maven Plugin</name>
+  <url>http://osr.informatik.uni-erlangen.de</url>
+  <inceptionYear>2010</inceptionYear>
+  <description>
+    The NodeGen (Node Generator) Maven Plugin generates Ast Nodes from a node
+    description embedded in the .rats grammar description.
+  </description>
+
+  <!-- ==[ Dependencies ]=================================================== -->
+
+  <dependencies>
+
+    <!-- Maven Plugin API -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+    </dependency>
+
+    <!-- Apache Commons -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <!-- Utils -->
+    <dependency>
+      <groupId>de.fau.cs.osr.utils</groupId>
+      <artifactId>utils</artifactId>
+    </dependency>
+
+    <!-- Parser Toolkit - Common -->
+    <dependency>
+      <groupId>de.fau.cs.osr.ptk</groupId>
+      <artifactId>ptk-common</artifactId>
+    </dependency>
+
+    <!--
+      Testing
+    -->
+
+    <!-- JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <!-- ==[ Plugin Configuration ]========================================= -->
+
+    <plugins>
+
+      <!-- Add the Rats! source directory -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/rats</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Generate Rats! parsers -->
+      <plugin>
+        <groupId>de.fau.cs.osr.maven.plugins</groupId>
+        <artifactId>maven-rats-plugin</artifactId>
+        <configuration>
+          <ratsInputFiles>
+            <ratsInputFile>de/fau/cs/osr/ptk/nodegen/parser/AstNodeGenGrammar.rats</ratsInputFile>
+          </ratsInputFiles>
+        </configuration>
+      </plugin>
+
+      <!-- Generate Ast Nodes -->
+      <!--
+      <plugin>
+        <groupId>de.fau.cs.osr.ptk</groupId>
+        <artifactId>ptk-nodegen-maven-plugin</artifactId>
+        <configuration>
+          <ratsInputFiles>
+            <ratsInputFile>de/fau/cs/osr/ptk/nodegen/parser</ratsInputFile>
+          </ratsInputFiles>
+        </configuration>
+      </plugin>
+       -->
+
+      <!-- Check and format license headers -->
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <configuration>
+          <header>../etc/license-header.txt</header>
+          <mapping>
+             <rats>JAVADOC_STYLE</rats>
+          </mapping>
+          <excludes>
+            <exclude>src/test/resources/**</exclude>
+            <exclude>src/main/resources/**/*.tmpl</exclude>
+            <exclude>**/.gitignore</exclude>
+            <exclude>dependencies</exclude>
+            <exclude>LICENSE</exclude>
+            <exclude>NOTICE</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <!-- ==[ Reporting ]====================================================== -->
+
+  <!--
+    see parent: <reporting>
+  -->
+
+  <!-- ==[ More Project Information ]======================================= -->
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!--
+    see parent: <organization>
+                <developers>
+                <contributors>
+  -->
+
+  <!-- ==[ Environment Settings ]=========================================== -->
+
+  <!--
+    see parent: <issueManagement>
+                <ciManagement>
+                <mailingLists>
+                <scm>
+                <distributionManagement>
+                <repositories>
+                <pluginRepositories>
+  -->
+
+</project>

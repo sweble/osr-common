@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Parent POM: Tooling -->
+
+  <parent>
+    <groupId>de.fau.cs.osr</groupId>
+    <artifactId>tooling</artifactId>
+    <version>1.0.4</version>
+  </parent>
+
+  <!-- This POM: Parser Toolkit -->
+
+  <groupId>de.fau.cs.osr.ptk</groupId>
+  <artifactId>parser-toolkit</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+
+  <name>Parser Toolkit</name>
+  <url>http://osr.informatik.uni-erlangen.de</url>
+  <inceptionYear>2009</inceptionYear>
+  <description>
+    The parser toolkit provides the basic facilities for AST building, 
+    traversal, persistence and much more.
+  </description>
+
+  <!-- ==[ Submodules ]===================================================== -->
+
+  <modules>
+    <module>ptk-common</module>
+    <module>ptk-profiler</module>
+    <module>ptk-printergen-maven-plugin</module>
+    <module>ptk-nodegen-maven-plugin</module>
+  </modules>
+
+  <!-- ==[ Properties ]===================================================== -->
+
+  <properties>
+
+    <!-- Dependency versions -->
+    <version.dep.maven-plugin-api>2.0</version.dep.maven-plugin-api>
+    <version.dep.maven-project>2.0.4</version.dep.maven-project>
+    <version.dep.commons-jxpath>1.3</version.dep.commons-jxpath>
+    <version.dep.xstream>1.2.2</version.dep.xstream>
+    <version.dep.jaxb>2.2.1</version.dep.jaxb>
+    <version.dep.rats>1.15.0</version.dep.rats>
+
+    <!-- Plugin dependency versions -->
+    <version.plugin.rats>1.3.0</version.plugin.rats>
+    <version.plugin.parser-toolkit.bootstrap>1.0.0</version.plugin.parser-toolkit.bootstrap>
+
+  </properties>
+
+  <!-- ==[ Dependency Management ]========================================== -->
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- Maven Plugin API -->
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-api</artifactId>
+        <version>${version.dep.maven-plugin-api}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-project</artifactId>
+        <version>${version.dep.maven-project}</version>
+      </dependency>
+
+      <!-- Apache Commons -->
+      <dependency>
+        <groupId>commons-jxpath</groupId>
+        <artifactId>commons-jxpath</artifactId>
+        <version>${version.dep.commons-jxpath}</version>
+      </dependency>
+
+      <!-- XStream -->
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>${version.dep.xstream}</version>
+      </dependency>
+
+      <!-- JAXB -->
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>${version.dep.jaxb}</version>
+      </dependency>
+
+      <!-- Rats! -->
+      <dependency>
+        <groupId>xtc</groupId>
+        <artifactId>rats-runtime</artifactId>
+        <version>${version.dep.rats}</version>
+      </dependency>
+
+      <!-- Utils -->
+      <dependency>
+        <groupId>de.fau.cs.osr.utils</groupId>
+        <artifactId>utils</artifactId>
+        <!-- Version is given directly so the release plugin can see it -->
+        <version>0.2.0</version>
+      </dependency>
+
+      <!-- Parser Toolkit - Common -->
+      <dependency>
+        <groupId>de.fau.cs.osr.ptk</groupId>
+        <artifactId>ptk-common</artifactId>
+        <!-- Version is given directly so the release plugin can see it -->
+        <version>1.0.0</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+
+    <!-- ==[ Resource Configuration ]======================================= -->
+
+    <!--
+      see parent: <resources>
+    -->
+
+    <!-- ==[ Plugin Configuration ]========================================= -->
+
+    <plugins>
+
+      <!-- Check and format license headers -->
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <configuration>
+          <header>etc/license-header.txt</header>
+          <encoding>UTF-8</encoding>
+          <strictCheck>true</strictCheck>
+          <failIfMissing>true</failIfMissing>
+          <skip>false</skip>
+          <excludes>
+            <exclude>**/.gitignore</exclude>
+            <exclude>LICENSE</exclude>
+            <exclude>NOTICE</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+    <!-- ==[ Plugin Management ]============================================ -->
+
+    <pluginManagement>
+      <plugins>
+
+        <!-- Maven Rats Plugin -->
+        <plugin>
+          <groupId>de.fau.cs.osr.maven.plugins</groupId>
+          <artifactId>maven-rats-plugin</artifactId>
+          <version>${version.plugin.rats}</version>
+          <executions>
+            <execution>
+              <id>rats-generate</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Maven NodeGen Plugin -->
+        <plugin>
+          <groupId>de.fau.cs.osr.ptk</groupId>
+          <artifactId>ptk-nodegen-maven-plugin</artifactId>
+          <version>${version.plugin.parser-toolkit.bootstrap}</version>
+          <executions>
+            <execution>
+              <id>nodegen-generate</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <!-- ==[ Build Element Set ]============================================ -->
+
+    <!--
+      see parent: <sourceDirectory>
+                  <scriptSourceDirectory>
+                  <testSourceDirectory>
+                  <outputDirectory>
+                  <testOutputDirectory>
+                  <extensions>
+    -->
+
+  </build>
+
+  <!-- ==[ Reporting ]====================================================== -->
+
+  <!--
+    see parent: <reporting>
+  -->
+
+  <!-- ==[ More Project Information ]======================================= -->
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!--
+    see parent: <organization>
+  -->
+
+  <developers>
+    <developer>
+      <id>dohrn</id>
+      <name>Hannes Dohrn</name>
+      <email>hannes.dohrn@informatik.uni-erlangen.de</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <organization>University of Erlangen-Nürnberg - Open Source Research Group</organization>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+
+  <!--
+    see parent: <contributors>
+  -->
+
+  <!-- ==[ Environment Settings ]=========================================== -->
+
+  <!--
+    see parent: <issueManagement>
+                <ciManagement>
+                <mailingLists>
+  -->
+
+  <scm>
+    <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
+    <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
+    <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
+  </scm>
+
+  <!--
+    see parent: <distributionManagement>
+                <repositories>
+                <pluginRepositories>
+  -->
+
+  <repositories>
+    <!-- Minimal set-up needed to retrieve parent POM -->
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <id>osr-public-repositories</id>
+      <name>OSR Public Repositories</name>
+      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
+    </repository>
+  </repositories>
+
+</project>

@@ -1,0 +1,43 @@
+/**
+ * Some other header
+ */
+
+/*!
+ * ImplementsNode
+ * --------------
+ *
+ *   AST node:
+ *     Name        : ImplementsNode
+ *     Extends     : InnerNode.InnerNode1
+ *     Implements  : SomeInterface
+ *     Constructor : "ratsDoc, moduleName"
+ *
+ *     Properties:
+ *       moduleName : String
+ *
+ *     Children:
+ *       ratsDoc : RatsDoc
+ *
+ *     Header:
+ *     {
+ *       /* Only a comment as extra header */
+ *     }
+ *
+ *     Body:
+ *     {
+ *       @Override
+ *       public BlockMode getBlockMode()
+ *       {
+ *         // TODO Auto-generated method stub
+ *         return null;
+ *       }
+ *     }
+ */
+
+/*
+ * Some other header
+ */
+
+module Implements;
+
+// -- End of file --------------------------------------------------------------
