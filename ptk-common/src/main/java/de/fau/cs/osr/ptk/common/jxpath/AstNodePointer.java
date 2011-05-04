@@ -65,10 +65,10 @@ public class AstNodePointer
 	{
 		//debug("attributeIterator");
 		
-		if (node.hasAttributes())
-			return null;
+		if (node.hasAttributes() || node.hasProperties())
+			return new AstPropertyIterator(this, name);
 		
-		return new AstPropertyIterator(this, name);
+		return null;
 	}
 	
 	@Override
