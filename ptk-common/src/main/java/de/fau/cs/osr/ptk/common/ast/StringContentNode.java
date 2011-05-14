@@ -113,14 +113,6 @@ public abstract class StringContentNode
 	// =========================================================================
 	
 	@Override
-	public int getNodeType()
-	{
-		return AstNode.NT_STRING_CONTENT_NODE;
-	}
-	
-	// =========================================================================
-	
-	@Override
 	public void toString(Appendable out) throws IOException
 	{
 		out.append(getClass().getSimpleName());

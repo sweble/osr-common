@@ -57,14 +57,6 @@ public abstract class ContentNode
 	
 	// =========================================================================
 	
-	@Override
-	public int getNodeType()
-	{
-		return AstNode.NT_CONTENT_NODE;
-	}
-	
-	// =========================================================================
-	
 	public NodeList getContent()
 	{
 		return (NodeList) get(0);
