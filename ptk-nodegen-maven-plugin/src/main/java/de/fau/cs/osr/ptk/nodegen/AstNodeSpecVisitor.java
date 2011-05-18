@@ -17,7 +17,7 @@
 
 package de.fau.cs.osr.ptk.nodegen;
 
-import de.fau.cs.osr.ptk.common.Visitor;
+import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
@@ -26,7 +26,7 @@ import de.fau.cs.osr.ptk.nodegen.parser.Section;
 
 public final class AstNodeSpecVisitor
         extends
-            Visitor
+            AstVisitor
 {
 	private final AstNodeSpec astNodeSpec;
 	
@@ -130,7 +130,7 @@ public final class AstNodeSpecVisitor
 	
 	public final class AstNodeSpecPropertiesVisitor
 	        extends
-	        Visitor
+	        AstVisitor
 	{
 		@Override
 		public Object visitNotFound(AstNode node)
@@ -156,7 +156,7 @@ public final class AstNodeSpecVisitor
 	
 	public final class AstNodeSpecChildrenVisitor
 	        extends
-	        Visitor
+	        AstVisitor
 	{
 		@Override
 		public Object visitNotFound(AstNode node)
@@ -182,7 +182,7 @@ public final class AstNodeSpecVisitor
 	
 	public final class AstNodeSpecHeaderVisitor
 	        extends
-	        Visitor
+	        AstVisitor
 	{
 		@Override
 		public Object visitNotFound(AstNode node)
@@ -206,7 +206,7 @@ public final class AstNodeSpecVisitor
 	
 	public final class AstNodeSpecBodyVisitor
 	        extends
-	        Visitor
+	        AstVisitor
 	{
 		@Override
 		public Object visitNotFound(AstNode node)

@@ -37,7 +37,7 @@ import de.fau.cs.osr.utils.StringUtils;
 
 public class AstPrinter
         extends
-            Visitor
+            AstVisitor
 {
 	protected PrintWriter out;
 	

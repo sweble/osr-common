@@ -33,7 +33,7 @@ import de.fau.cs.osr.utils.StringUtils;
 
 public class PrinterBase
         extends
-            Visitor
+            AstVisitor
 {
 	private PrintWriter out;
 	

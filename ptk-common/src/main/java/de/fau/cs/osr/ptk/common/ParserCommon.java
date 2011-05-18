@@ -27,25 +27,25 @@ public abstract class ParserCommon
         implements
             ParserInterface
 {
-	private final List<Visitor> visitors = new LinkedList<Visitor>();
+	private final List<AstVisitor> visitors = new LinkedList<AstVisitor>();
 	
 	// =========================================================================
 	
 	@Override
-	public List<Visitor> getVisitors()
+	public List<AstVisitor> getVisitors()
 	{
 		return visitors;
 	}
 	
 	@Override
-	public ParserInterface addVisitor(Visitor v)
+	public ParserInterface addVisitor(AstVisitor v)
 	{
 		visitors.add(v);
 		return this;
 	}
 	
 	@Override
-	public ParserInterface addVisitors(Collection<? extends Visitor> v)
+	public ParserInterface addVisitors(Collection<? extends AstVisitor> v)
 	{
 		visitors.addAll(v);
 		return this;
@@ -54,7 +54,7 @@ public abstract class ParserCommon
 	protected AstNode process(AstNode n)
 	{
 		AstNode result = n;
-		for (Visitor v : getVisitors())
+		for (AstVisitor v : getVisitors())
 		{
 			Object o = v.go(result);
 			if (o instanceof AstNode)

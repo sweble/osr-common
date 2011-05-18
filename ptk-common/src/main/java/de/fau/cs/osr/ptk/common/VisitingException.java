@@ -17,8 +17,6 @@
 
 package de.fau.cs.osr.ptk.common;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
-
 /**
  * An exception that is thrown by a visitor if a visit() method threw an
  * exception. It can also be thrown from within a visit() method to wrap an
@@ -32,7 +30,7 @@ public class VisitingException
 {
 	private static final long serialVersionUID = 1L;
 	
-	private final AstNode node;
+	private final Object node;
 	
 	public VisitingException(Throwable cause)
 	{
@@ -46,19 +44,19 @@ public class VisitingException
 		this.node = null;
 	}
 	
-	public VisitingException(AstNode node, Throwable cause)
+	public VisitingException(Object node, Throwable cause)
 	{
 		super(cause);
 		this.node = node;
 	}
 	
-	public VisitingException(AstNode node, String message, Throwable cause)
+	public VisitingException(Object node, String message, Throwable cause)
 	{
 		super(message, cause);
 		this.node = node;
 	}
 	
-	public AstNode getNode()
+	public Object getNode()
 	{
 		return node;
 	}

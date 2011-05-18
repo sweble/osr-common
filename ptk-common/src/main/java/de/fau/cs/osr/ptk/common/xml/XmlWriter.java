@@ -36,13 +36,13 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.DomWriter;
 
 import de.fau.cs.osr.ptk.common.VisitingException;
-import de.fau.cs.osr.ptk.common.Visitor;
+import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.xml.WikiTechAstNode.Properties;
 
 public class XmlWriter
         extends
-            Visitor
+            AstVisitor
 {
 	private ObjectFactory objectFactory;
 	

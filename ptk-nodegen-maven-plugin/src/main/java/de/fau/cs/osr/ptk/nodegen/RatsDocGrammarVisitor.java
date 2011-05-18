@@ -20,7 +20,7 @@ package de.fau.cs.osr.ptk.nodegen;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import de.fau.cs.osr.ptk.common.Visitor;
+import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
@@ -33,7 +33,7 @@ import de.fau.cs.osr.ptk.nodegen.parser.Section;
 
 public final class RatsDocGrammarVisitor
         extends
-            Visitor
+            AstVisitor
 {
 	private StringBuilder javadoc;
 	

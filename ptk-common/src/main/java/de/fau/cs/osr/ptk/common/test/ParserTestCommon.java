@@ -31,7 +31,7 @@ import org.junit.Assert;
 import xtc.parser.ParseException;
 import de.fau.cs.osr.ptk.common.AstPrinterInterface;
 import de.fau.cs.osr.ptk.common.ParserInterface;
-import de.fau.cs.osr.ptk.common.Visitor;
+import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public class ParserTestCommon
@@ -73,7 +73,7 @@ public class ParserTestCommon
 	
 	// =========================================================================
 	
-	public List<String> gatherParseAndPrint(String wikitextDir, Visitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
+	public List<String> gatherParseAndPrint(String wikitextDir, AstVisitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
 	{
 		final List<File> input =
 		        resources.gather(wikitextDir, ".*?\\.wikitext", true);
@@ -88,7 +88,7 @@ public class ParserTestCommon
 		return result;
 	}
 	
-	public void gatherParseAndPrintTest(String wikitextDir, String asttextDir, Visitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
+	public void gatherParseAndPrintTest(String wikitextDir, String asttextDir, AstVisitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
 	{
 		System.out.println();
 		System.out.println("Parser & Print test:");
@@ -116,7 +116,7 @@ public class ParserTestCommon
 		System.out.println();
 	}
 	
-	public String parseAndPrint(final Visitor[] visitors, AstPrinterInterface printer, File wikitextFile) throws IOException, ParseException
+	public String parseAndPrint(final AstVisitor[] visitors, AstPrinterInterface printer, File wikitextFile) throws IOException, ParseException
 	{
 		FileContent wikitext = new FileContent(wikitextFile);
 		
@@ -125,7 +125,7 @@ public class ParserTestCommon
 		return printToString(ast, printer);
 	}
 	
-	public void parseAndPrintTest(final Visitor[] visitors, AstPrinterInterface printer, File wikitextFile, File reftextFile) throws IOException, ParseException
+	public void parseAndPrintTest(final AstVisitor[] visitors, AstPrinterInterface printer, File wikitextFile, File reftextFile) throws IOException, ParseException
 	{
 		FileContent wikitext = new FileContent(wikitextFile);
 		AstNode ast = parse(wikitext, visitors);
@@ -197,7 +197,7 @@ public class ParserTestCommon
 	
 	// =========================================================================
 	
-	public AstNode parse(FileContent wikitext, Visitor[] visitors) throws IOException, ParseException
+	public AstNode parse(FileContent wikitext, AstVisitor[] visitors) throws IOException, ParseException
 	{
 		ParserInterface parser = instantiateParser();
 		

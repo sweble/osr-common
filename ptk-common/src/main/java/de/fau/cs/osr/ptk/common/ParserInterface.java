@@ -28,9 +28,9 @@ public interface ParserInterface
 {
 	public AstNode parseArticle(String src, String title) throws IOException, ParseException;
 	
-	public List<Visitor> getVisitors();
+	public List<AstVisitor> getVisitors();
 	
-	public ParserInterface addVisitor(Visitor v);
+	public ParserInterface addVisitor(AstVisitor v);
 	
-	public ParserInterface addVisitors(Collection<? extends Visitor> v);
+	public ParserInterface addVisitors(Collection<? extends AstVisitor> v);
 }
