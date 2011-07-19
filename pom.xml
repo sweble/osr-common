@@ -47,6 +47,7 @@
     <version.dep.rats>1.15.0</version.dep.rats>
 
     <!-- Plugin dependency versions -->
+    <version.plugin.jaxb>0.8.0</version.plugin.jaxb>
     <version.plugin.rats>1.3.0</version.plugin.rats>
     <version.plugin.parser-toolkit.bootstrap>1.0.1-SNAPSHOT</version.plugin.parser-toolkit.bootstrap>
 
@@ -152,6 +153,20 @@
 
     <pluginManagement>
       <plugins>
+
+        <!-- Maven JAXB Plugin -->
+        <plugin>
+          <groupId>org.jvnet.jaxb2.maven2</groupId>
+          <artifactId>maven-jaxb2-plugin</artifactId>
+          <version>${version.plugin.jaxb}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
 
         <!-- Maven Rats Plugin -->
         <plugin>
