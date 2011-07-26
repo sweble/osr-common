@@ -110,6 +110,7 @@
         <configuration>
           <schemaDirectory>${basedir}/src/main/schema</schemaDirectory>
           <generatePackage>de.fau.cs.osr.ptk.common.xml</generatePackage>
+          <forceRegenerate>true</forceRegenerate>
         </configuration>
       </plugin>
 
