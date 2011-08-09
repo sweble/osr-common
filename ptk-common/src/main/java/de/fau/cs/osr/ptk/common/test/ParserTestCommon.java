@@ -179,6 +179,8 @@ public class ParserTestCommon
 	
 	private void testEquals(FileContent wikitext, FileContent reftext, String result, String reference)
 	{
+		if (!reference.equals(result))
+			System.out.println("  FAILED!");
 		Assert.assertEquals(reference, result);
 	}
 	
