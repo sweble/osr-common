@@ -38,13 +38,14 @@
     <version.plugin.jar>2.3.1</version.plugin.jar>
     <version.plugin.war>2.1.1</version.plugin.war>
     <version.plugin.assembly>2.2</version.plugin.assembly>
-    <version.plugin.eclipse>2.8</version.plugin.eclipse>
+    <version.plugin.eclipse>2.6</version.plugin.eclipse>
     <version.plugin.release>2.1</version.plugin.release>
     <version.plugin.javadoc>2.5</version.plugin.javadoc>
     <version.plugin.source>2.1.2</version.plugin.source>
     <version.plugin.site>2.2</version.plugin.site>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.license>1.9.0</version.plugin.license>
+    <version.plugin.git-commit-id>1.7</version.plugin.git-commit-id>
 
     <!-- Extension versions -->
     <version.extension.wagon-ssh-external>1.0-alpha-5</version.extension.wagon-ssh-external>
@@ -94,15 +95,18 @@
 
     <resources>
       <resource>
-        <filtering>false</filtering>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.buildinfo.properties</include>
         </includes>
+      </resource>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.buildinfo.properties</exclude>
+        </excludes>
       </resource>
       <resource>
         <filtering>false</filtering>
@@ -167,6 +171,7 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${version.plugin.compiler}</version>
+          <inherited>true</inherited>
           <configuration>
             <source>${version.java}</source>
             <target>${version.java}</target>
@@ -220,12 +225,14 @@
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>${version.plugin.assembly}</version>
+          <inherited>true</inherited>
         </plugin>
 
         <!-- Maven Eclipse Plugin -->
         <plugin>
           <artifactId>maven-eclipse-plugin</artifactId>
           <version>${version.plugin.eclipse}</version>
+          <inherited>true</inherited>
           <configuration>
             <downloadSources>true</downloadSources>
             <downloadJavadocs>true</downloadJavadocs>
@@ -236,6 +243,7 @@
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <version>${version.plugin.release}</version>
+          <inherited>true</inherited>
           <configuration>
             <!-- Don't do site-deploy! -->
             <goals>deploy</goals>
@@ -246,6 +254,7 @@
         <plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${version.plugin.javadoc}</version>
+          <inherited>true</inherited>
           <!-- confuses release plugin
           <executions>
             <execution>
@@ -266,6 +275,7 @@
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
           <version>${version.plugin.source}</version>
+          <inherited>true</inherited>
           <!-- confuses release plugin
           <executions>
             <execution>
@@ -282,6 +292,7 @@
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
           <version>${version.plugin.site}</version>
+          <inherited>true</inherited>
         </plugin>
 
         <!-- Build Helper Maven Plugin -->
@@ -289,6 +300,7 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>${version.plugin.build-helper}</version>
+          <inherited>true</inherited>
         </plugin>
 
         <!-- Check and format license headers -->
@@ -296,6 +308,7 @@
           <groupId>com.mycila.maven-license-plugin</groupId>
           <artifactId>maven-license-plugin</artifactId>
           <version>${version.plugin.license}</version>
+          <inherited>true</inherited>
           <executions>
             <execution>
               <goals>
@@ -309,7 +322,11 @@
         <plugin>
           <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
-          <version>1.7</version>
+          <version>${version.plugin.git-commit-id}</version>
+          <inherited>true</inherited>
+          <configuration>
+            <verbose>false</verbose>
+          </configuration>
           <executions>
             <execution>
               <goals>
@@ -319,7 +336,7 @@
           </executions>
         </plugin>
 
-      </plugins>
+      </plugins> 
     </pluginManagement>
 
     <!-- ==[ Build Element Set ]============================================ -->
