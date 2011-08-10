@@ -35,12 +35,13 @@
 
     <!-- Plugin dependency versions -->
     <version.plugin.compiler>2.3.2</version.plugin.compiler>
+    <version.plugin.jar>2.3.1</version.plugin.jar>
+    <version.plugin.war>2.1.1</version.plugin.war>
     <version.plugin.assembly>2.2</version.plugin.assembly>
     <version.plugin.eclipse>2.8</version.plugin.eclipse>
     <version.plugin.release>2.1</version.plugin.release>
     <version.plugin.javadoc>2.5</version.plugin.javadoc>
     <version.plugin.source>2.1.2</version.plugin.source>
-    <version.plugin.jar>2.3.1</version.plugin.jar>
     <version.plugin.site>2.2</version.plugin.site>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.license>1.9.0</version.plugin.license>
@@ -95,6 +96,13 @@
       <resource>
         <filtering>false</filtering>
         <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.buildinfo.properties</include>
+        </includes>
       </resource>
       <resource>
         <filtering>false</filtering>
@@ -168,6 +176,46 @@
           </configuration>
         </plugin>
 
+        <!-- Make sure MANIFEST files contain version information -->
+        <!-- Maven Jar Plugin -->
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.plugin.jar}</version>
+          <inherited>true</inherited>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Make sure MANIFEST files contain version information -->
+        <!-- Maven War Plugin -->
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>${version.plugin.war}</version>
+          <inherited>true</inherited>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+
         <!-- Maven Assembly Plugin -->
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
@@ -230,20 +278,6 @@
           -->
         </plugin>
 
-        <!-- Maven Jar Plugin -->
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${version.plugin.jar}</version>
-          <executions>
-            <execution>
-              <phase>package</phase>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
         <!-- Maven Site Plugin -->
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
@@ -266,6 +300,20 @@
             <execution>
               <goals>
                 <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Get Git commit information -->
+        <plugin>
+          <groupId>pl.project13.maven</groupId>
+          <artifactId>git-commit-id-plugin</artifactId>
+          <version>1.7</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>revision</goal>
               </goals>
             </execution>
           </executions>
@@ -507,6 +555,11 @@
       <id>java.net</id>
       <name>java.net Maven Repository</name>
       <url>http://download.java.net/maven/2</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>sonatype-releases</id>
+      <name>Sonatype Releases</name>
+      <url>https://oss.sonatype.org/content/repositories/releases/</url>
     </pluginRepository>
   </pluginRepositories>
 
