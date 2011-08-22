@@ -40,7 +40,7 @@
     <version.plugin.assembly>2.2</version.plugin.assembly>
     <version.plugin.eclipse>2.6</version.plugin.eclipse>
     <version.plugin.release>2.1</version.plugin.release>
-    <version.plugin.javadoc>2.5</version.plugin.javadoc>
+    <version.plugin.javadoc>2.8</version.plugin.javadoc>
     <version.plugin.source>2.1.2</version.plugin.source>
     <version.plugin.site>2.2</version.plugin.site>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
