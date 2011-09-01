@@ -94,6 +94,7 @@
     <!-- ==[ Resource Configuration ]======================================= -->
 
     <resources>
+      <!-- Doesn't work at least until maven-eclipse-plugin 2.8
       <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
@@ -107,6 +108,11 @@
         <excludes>
           <exclude>**/*.buildinfo.properties</exclude>
         </excludes>
+      </resource>
+       -->
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
       </resource>
       <resource>
         <filtering>false</filtering>
@@ -336,7 +342,7 @@
           </executions>
         </plugin>
 
-      </plugins> 
+      </plugins>
     </pluginManagement>
 
     <!-- ==[ Build Element Set ]============================================ -->
