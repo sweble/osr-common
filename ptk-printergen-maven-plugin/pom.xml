@@ -72,6 +72,16 @@
 
   <build>
 
+    <!-- ==[ Resource Configuration ]======================================= -->
+
+    <resources>
+      <!-- Filtering would mess up skeletons -->
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
     <!-- ==[ Plugin Configuration ]========================================= -->
 
     <plugins>
