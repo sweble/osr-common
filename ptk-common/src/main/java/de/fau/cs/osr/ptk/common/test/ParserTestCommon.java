@@ -194,7 +194,10 @@ public class ParserTestCommon
 		
 		String result = writer.toString();
 		
-		return resources.stripBaseDirectory(result);
+		// For Windows builds:
+		result = result.replace("\r\n", "\n");
+		
+		return resources.stripBaseDirectoryAndFixPath(result);
 	}
 	
 	// =========================================================================

@@ -85,9 +85,25 @@ public class ParserTestResources
 		return files;
 	}
 	
-	public String stripBaseDirectory(String text)
+	public String stripBaseDirectoryAndFixPath(String text)
 	{
-		return text.replace(baseDirectory.getAbsolutePath(), "");
+		String p = Pattern.quote(baseDirectory.getAbsolutePath());
+		Pattern rx = Pattern.compile(p + "(.*?:)");
+		StringBuilder b = new StringBuilder();
+		Matcher m = rx.matcher(text);
+		
+		int begin = 0;
+		while (m.find(begin))
+		{
+			b.append(text.substring(begin, m.start()));
+			b.append(m.group(1).replace(File.separatorChar, '/'));
+			begin = m.end();
+		}
+		
+		if (begin < text.length())
+			b.append(text.substring(begin, text.length()));
+		
+		return b.toString();
 	}
 	
 	private static void gatherRecursive(File directory, FilenameFilter filter, List<File> gathered)
