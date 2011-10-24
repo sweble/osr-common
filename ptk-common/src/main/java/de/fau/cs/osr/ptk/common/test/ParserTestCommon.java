@@ -30,8 +30,8 @@ import org.junit.Assert;
 
 import xtc.parser.ParseException;
 import de.fau.cs.osr.ptk.common.AstPrinterInterface;
-import de.fau.cs.osr.ptk.common.ParserInterface;
 import de.fau.cs.osr.ptk.common.AstVisitor;
+import de.fau.cs.osr.ptk.common.ParserInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public class ParserTestCommon
@@ -90,6 +90,11 @@ public class ParserTestCommon
 	
 	public void gatherParseAndPrintTest(String wikitextDir, String asttextDir, AstVisitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
 	{
+		gatherParseAndPrintTest(null, wikitextDir, asttextDir, visitors, printer);
+	}
+	
+	public void gatherParseAndPrintTest(String filter, String wikitextDir, String asttextDir, AstVisitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
+	{
 		System.out.println();
 		System.out.println("Parser & Print test:");
 		System.out.println("  Input:      " + wikitextDir);
@@ -102,6 +107,9 @@ public class ParserTestCommon
 		
 		for (File wikitextFile : input)
 		{
+			if (filter != null && !wikitextFile.getName().equalsIgnoreCase(filter))
+				continue;
+			
 			File asttextFile = ParserTestResources.rebase(
 			        wikitextFile,
 			        wikitextDir,
@@ -210,8 +218,8 @@ public class ParserTestCommon
 			parser.addVisitors(Arrays.asList(visitors));
 		
 		return parser.parseArticle(
-		                wikitext.getContent(),
-		                wikitext.getFile().getAbsolutePath());
+		        wikitext.getContent(),
+		        wikitext.getFile().getAbsolutePath());
 	}
 	
 	private ParserInterface instantiateParser()
