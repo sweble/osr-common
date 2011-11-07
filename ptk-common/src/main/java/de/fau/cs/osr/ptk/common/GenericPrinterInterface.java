@@ -20,11 +20,9 @@ package de.fau.cs.osr.ptk.common;
 import java.io.IOException;
 import java.io.Writer;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
-
-public interface AstPrinterInterface
+public interface GenericPrinterInterface
 {
-	public void print(AstNode ast, Writer out) throws IOException;
+	public void print(Object ast, Writer out) throws IOException;
 	
 	/**
 	 * Return a name describing the type of text which the printer produces. For

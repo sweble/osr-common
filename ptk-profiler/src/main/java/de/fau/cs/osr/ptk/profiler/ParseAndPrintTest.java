@@ -25,10 +25,9 @@ import java.util.List;
 
 import org.junit.ComparisonFailure;
 
-import de.fau.cs.osr.ptk.common.AstPrinterInterface;
-import de.fau.cs.osr.ptk.common.ParserInterface;
 import de.fau.cs.osr.ptk.common.AstVisitor;
-import de.fau.cs.osr.ptk.common.test.ParserTestCommon;
+import de.fau.cs.osr.ptk.common.GenericPrinterInterface;
+import de.fau.cs.osr.ptk.common.ParserInterface;
 import de.fau.cs.osr.ptk.common.test.ParserTestResources;
 import de.fau.cs.osr.utils.FmtIllegalArgumentException;
 import de.fau.cs.osr.utils.getopt.MissingOptionException;
@@ -40,13 +39,13 @@ public class ParseAndPrintTest
 	
 	private ParserTestResources resources;
 	
-	private ParserTestCommon common;
+	private ParserTestBase common;
 	
 	private File baseDirectory;
 	
 	private List<AstVisitor> visitors;
 	
-	private AstPrinterInterface printer;
+	private GenericPrinterInterface printer;
 	
 	// =========================================================================
 	
@@ -58,7 +57,7 @@ public class ParseAndPrintTest
 		
 		setUpTestResources();
 		
-		setUpParserTestCommon();
+		setUpParserTestBase();
 		
 		loadVisitors();
 		
@@ -105,7 +104,7 @@ public class ParseAndPrintTest
 	
 	// =========================================================================
 	
-	private void setUpParserTestCommon()
+	private void setUpParserTestBase()
 	{
 		String parserClassName = commandLine.value("parser");
 		
@@ -120,7 +119,7 @@ public class ParseAndPrintTest
 			        parserClassName);
 		}
 		
-		common = new ParserTestCommon(resources, parserClass);
+		common = new ParserTestBase(resources, parserClass);
 	}
 	
 	private void setUpTestResources()
@@ -174,14 +173,14 @@ public class ParseAndPrintTest
 		
 		Object printer_ = Helpers.instantiateClass(printerName, printerClass, "printer");
 		
-		if (!(printer_ instanceof AstPrinterInterface))
+		if (!(printer_ instanceof GenericPrinterInterface))
 		{
 			throw new FmtIllegalArgumentException(
 			            "Not a valid printer class `%s' (does not inherit from IAstPrinter).",
 			            printerName);
 		}
 		
-		printer = (AstPrinterInterface) printer_;
+		printer = (GenericPrinterInterface) printer_;
 	}
 	
 	// =========================================================================

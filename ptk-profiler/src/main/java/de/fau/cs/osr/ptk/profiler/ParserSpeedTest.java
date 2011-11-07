@@ -25,7 +25,6 @@ import java.util.List;
 
 import de.fau.cs.osr.ptk.common.ParserInterface;
 import de.fau.cs.osr.ptk.common.test.FileContent;
-import de.fau.cs.osr.ptk.common.test.ParserTestCommon;
 import de.fau.cs.osr.ptk.common.test.ParserTestResources;
 import de.fau.cs.osr.utils.ConsoleProgressBar;
 import de.fau.cs.osr.utils.FmtIllegalArgumentException;
@@ -38,7 +37,7 @@ public class ParserSpeedTest
 	
 	private ParserTestResources resources;
 	
-	private ParserTestCommon common;
+	private ParserTestBase common;
 	
 	private File baseDirectory;
 	
@@ -54,7 +53,7 @@ public class ParserSpeedTest
 		
 		setUpTestResources();
 		
-		setUpParserTestCommon();
+		setUpParserTestBase();
 		
 		testSpeed();
 	}
@@ -82,7 +81,7 @@ public class ParserSpeedTest
 	
 	// =========================================================================
 	
-	private void setUpParserTestCommon()
+	private void setUpParserTestBase()
 	{
 		String parserClassName = commandLine.value("parser");
 		
@@ -97,7 +96,7 @@ public class ParserSpeedTest
 			        parserClassName);
 		}
 		
-		common = new ParserTestCommon(resources, parserClass);
+		common = new ParserTestBase(resources, parserClass);
 	}
 	
 	private void setUpTestResources()
