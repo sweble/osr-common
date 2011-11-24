@@ -25,6 +25,11 @@ public final class StringUtils
 {
 	public static String escHtml(String text)
 	{
+		return escHtml(text, true);
+	}
+	
+	public static String escHtml(String text, boolean forAttribute)
+	{
 		// StringEscapeUtils.escapeHtml(in) does not escape '\'' but a lot of 
 		// other stuff that doesn't need escaping.
 		
@@ -35,14 +40,21 @@ public final class StringUtils
 		StringBuffer sb = new StringBuffer(n * 4 / 3);
 		for (int i = 0; i < n; i++)
 		{
-			char c = text.charAt(i);
-			switch (c)
+			char ch = text.charAt(i);
+			switch (ch)
 			{
+				case ' ':
+				case '\n':
+				case '\t':
+					sb.append(ch);
+					break;
 				case '<':
 					sb.append("&lt;");
 					break;
 				case '>':
-					sb.append("&gt;");
+					if (!forAttribute)
+						break;
+					sb.append(forAttribute ? "&gt;" : ">");
 					break;
 				case '&':
 					sb.append("&amp;");
@@ -52,21 +64,74 @@ public final class StringUtils
 					sb.append("&#39;");
 					break;
 				case '"':
-					sb.append("&quot;");
+					if (!forAttribute)
+						break;
+					sb.append(forAttribute ? "&quot;" : "\"");
 					break;
 				default:
-					sb.append(c);
-					break;
+					if ((ch >= 0 && ch < 0x20) || (ch == 0xFE))
+					{
+						hexCharRef(sb, ch);
+						break;
+					}
+					else if (Character.isHighSurrogate(ch))
+					{
+						++i;
+						if (i < n)
+						{
+							char ch2 = text.charAt(i);
+							if (Character.isLowSurrogate(ch2))
+							{
+								int codePoint = Character.toCodePoint(ch, ch2);
+								switch (Character.getType(codePoint))
+								{
+									case Character.CONTROL:
+									case Character.PRIVATE_USE:
+									case Character.UNASSIGNED:
+										hexCharRef(sb, codePoint);
+										break;
+									
+									default:
+										sb.append(ch);
+										sb.append(ch2);
+										break;
+								}
+								
+								continue;
+							}
+						}
+					}
+					else if (!Character.isLowSurrogate(ch))
+					{
+						sb.append(ch);
+						continue;
+					}
+					
+					// No low surrogate followed or only low surrogate
+					throw new IllegalArgumentException("String contains isolated surrogates!");
 			}
 		}
 		
 		return sb.toString();
 	}
 	
+	// =========================================================================
+	
 	public static String escJava(String text)
 	{
 		return StringEscapeUtils.escapeJava(text);
 	}
+	
+	// =========================================================================
+	
+	private static void hexCharRef(StringBuffer sb, int codePoint)
+	{
+		sb.append("&#x");
+		sb.append(String.format("%X", codePoint));
+		sb.append(';');
+	}
+	
+	// =========================================================================
 	
 	public static String join(Collection<?> c)
 	{
@@ -76,10 +141,12 @@ public final class StringUtils
 		return b.toString();
 	}
 	
+	// =========================================================================
+	
 	public static String strrep(char c, int times)
 	{
 		return org.apache.commons.lang.StringUtils.repeat(
-		        Character.toString(c), times);
+				Character.toString(c), times);
 	}
 	
 	public static String strrep(String str, int times)
@@ -93,6 +160,8 @@ public final class StringUtils
 	{
 		return org.apache.commons.lang.StringUtils.abbreviate(str, length);
 	}
+	
+	// =========================================================================
 	
 	/**
 	 * Indents a text block using the given indent string.
@@ -175,6 +244,8 @@ public final class StringUtils
 		return result.toString();
 	}
 	
+	// =========================================================================
+	
 	/**
 	 * Converts a name that's given in camel-case into upper-case, inserting
 	 * underscores before upper-case letters.
@@ -208,5 +279,118 @@ public final class StringUtils
 	{
 		// FIXME: Exception handling if name is null or empty!
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
+	}
+	
+	// =========================================================================
+	
+	public static boolean hasIsolatedSurrogates(String text)
+	{
+		final int length = text.length();
+		for (int i = 0; i < length; ++i)
+		{
+			char ch = text.charAt(i);
+			if (Character.isHighSurrogate(ch))
+			{
+				++i;
+				if (i < length)
+				{
+					char ch2 = text.charAt(i);
+					if (!Character.isLowSurrogate(ch2))
+						return true;
+				}
+				else
+					return true;
+			}
+			else if (Character.isLowSurrogate(ch))
+				return true;
+		}
+		return false;
+	}
+	
+	// =========================================================================
+	
+	public static boolean hasParagraphSeparators(String text)
+	{
+		final int length = text.length();
+		for (int i = 0; i < length; ++i)
+		{
+			char ch = text.charAt(i);
+			if (ch == '\n')
+			{
+				outer: for (++i; i < length; ++i)
+				{
+					char ch2 = text.charAt(i);
+					switch (ch2)
+					{
+						case ' ':
+						case '\t':
+							break;
+						case '\n':
+							return true;
+						default:
+							break outer;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	// =========================================================================
+	
+	public static String trim(String text)
+	{
+		int from = 0;
+		int length = text.length();
+		
+		while ((from < length) && (Character.isWhitespace(text.charAt(from))))
+			++from;
+		
+		while ((from < length) && (Character.isWhitespace(text.charAt(length - 1))))
+			--length;
+		
+		if (from > 0 || length < text.length())
+		{
+			return text.substring(from, length);
+		}
+		else
+		{
+			return text;
+		}
+	}
+	
+	public static String trimLeft(String text)
+	{
+		int from = 0;
+		int length = text.length();
+		
+		while ((from < length) && (Character.isWhitespace(text.charAt(from))))
+			++from;
+		
+		if (from > 0)
+		{
+			return text.substring(from, length);
+		}
+		else
+		{
+			return text;
+		}
+	}
+	
+	public static String trimRight(String text)
+	{
+		int length = text.length();
+		
+		while ((0 < length) && (Character.isWhitespace(text.charAt(length - 1))))
+			--length;
+		
+		if (length < text.length())
+		{
+			return text.substring(0, length);
+		}
+		else
+		{
+			return text;
+		}
 	}
 }
