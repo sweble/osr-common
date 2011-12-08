@@ -45,7 +45,7 @@
     <version.plugin.site>2.2</version.plugin.site>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.license>1.9.0</version.plugin.license>
-    <version.plugin.git-commit-id>1.7</version.plugin.git-commit-id>
+    <version.plugin.git-commit-id>1.9</version.plugin.git-commit-id>
 
     <!-- Extension versions -->
     <version.extension.wagon-ssh-external>1.0-alpha-5</version.extension.wagon-ssh-external>
@@ -334,11 +334,20 @@
             <verbose>false</verbose>
           </configuration>
           <executions>
+            <!-- Disabled until problem 
+              https://github.com/ktoso/maven-git-commit-id-plugin/issues/19 
+              is resolved -->
+            <execution> 
+              <id>git-commit-info-disabled</id> 
+              <phase>none</phase> 
+            </execution>
+            <!--
             <execution>
               <goals>
                 <goal>revision</goal>
               </goals>
             </execution>
+            -->
           </executions>
         </plugin>
 
