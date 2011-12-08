@@ -38,6 +38,7 @@ import com.thoughtworks.xstream.io.xml.DomWriter;
 import de.fau.cs.osr.ptk.common.VisitingException;
 import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.xml.WikiTechAstNode.Properties;
 
 public class XmlWriter
@@ -85,7 +86,7 @@ public class XmlWriter
 			ast.setNode((WikiTechAstNode) result);
 			
 			JAXBContext jaxbContext = JAXBContext.newInstance(
-			        "de.fau.cs.osr.ptk.common.xml.xjc");
+			        "de.fau.cs.osr.ptk.common.xml");
 			
 			Marshaller marshaller = jaxbContext.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -110,17 +111,28 @@ public class XmlWriter
 		
 		node.setType(n.getNodeTypeName());
 		
+		WikiTechAstNode.Properties properties = null;
+
 		Set<String> propertyNames = n.getAttributes().keySet();
 		if (!propertyNames.isEmpty())
 		{
-			WikiTechAstNode.Properties properties =
-			                this.objectFactory.createWikiTechAstNodeProperties();
+			properties = this.objectFactory.createWikiTechAstNodeProperties();
 			
 			for (String name : propertyNames)
 				dumpProperty(properties, name, n.getAttribute(name));
-			
-			node.setProperties(properties);
 		}
+		
+		AstNodePropertyIterator i = n.propertyIterator();
+		while (i.next())
+		{
+			if (properties == null)
+				properties = this.objectFactory.createWikiTechAstNodeProperties();
+			
+			dumpProperty(properties, i.getName(), i.getValue());
+		}
+		
+		if (properties != null)
+			node.setProperties(properties);
 		
 		if (!n.isEmpty())
 		{

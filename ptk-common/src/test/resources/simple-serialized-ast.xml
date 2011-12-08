@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wikitech-ast>
+    <node type="de.fau.cs.osr.ptk.common.jxpath.Document">
+        <children>
+            <node type="de.fau.cs.osr.ptk.common.ast.NodeList">
+                <children>
+                    <node type="de.fau.cs.osr.ptk.common.jxpath.Section">
+                        <properties>
+                            <property name="level">
+<int>1</int>
+                            </property>
+                            <property name="wsAtEol">
+<string>EOL1</string>
+                            </property>
+                        </properties>
+                        <children>
+                            <node type="de.fau.cs.osr.ptk.common.ast.NodeList">
+<children>
+    <node type="de.fau.cs.osr.ptk.common.ast.Text">
+        <properties>
+            <property name="content">
+                <string>Section 1</string>
+            </property>
+        </properties>
+    </node>
+</children>
+                            </node>
+                            <node type="de.fau.cs.osr.ptk.common.ast.NodeList">
+<children>
+    <node type="de.fau.cs.osr.ptk.common.ast.Text">
+        <properties>
+            <property name="content">
+                <string>Section 1 Body</string>
+            </property>
+        </properties>
+    </node>
+</children>
+                            </node>
+                        </children>
+                    </node>
+                    <node type="de.fau.cs.osr.ptk.common.jxpath.Section">
+                        <properties>
+                            <property name="level">
+<int>2</int>
+                            </property>
+                            <property name="wsAtEol">
+<string>EOL2</string>
+                            </property>
+                        </properties>
+                        <children>
+                            <node type="de.fau.cs.osr.ptk.common.ast.NodeList">
+<children>
+    <node type="de.fau.cs.osr.ptk.common.ast.Text">
+        <properties>
+            <property name="content">
+                <string>Section 2</string>
+            </property>
+        </properties>
+    </node>
+</children>
+                            </node>
+                            <node type="de.fau.cs.osr.ptk.common.ast.NodeList">
+<children>
+    <node type="de.fau.cs.osr.ptk.common.ast.Text">
+        <properties>
+            <property name="content">
+                <string>Section 2 Body</string>
+            </property>
+        </properties>
+    </node>
+</children>
+                            </node>
+                        </children>
+                    </node>
+                </children>
+            </node>
+        </children>
+    </node>
+</wikitech-ast>
