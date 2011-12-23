@@ -37,7 +37,7 @@ public final class StringUtils
 			return "";
 		
 		int n = text.length();
-		StringBuffer sb = new StringBuffer(n * 4 / 3);
+		StringBuilder sb = new StringBuilder(n * 4 / 3);
 		for (int i = 0; i < n; i++)
 		{
 			char ch = text.charAt(i);
@@ -124,10 +124,27 @@ public final class StringUtils
 	
 	// =========================================================================
 	
-	private static void hexCharRef(StringBuffer sb, int codePoint)
+	public static String hexCharRef(int codePoint)
+	{
+		return String.format("&#x%X;", codePoint);
+	}
+	
+	public static void hexCharRef(StringBuilder sb, int codePoint)
 	{
 		sb.append("&#x");
-		sb.append(String.format("%X", codePoint));
+		sb.append(Integer.toHexString(codePoint));
+		sb.append(';');
+	}
+	
+	public static String entityRef(String name)
+	{
+		return String.format("&%s;", name);
+	}
+	
+	public static void entityRef(StringBuilder sb, String name)
+	{
+		sb.append('&');
+		sb.append(name);
 		sb.append(';');
 	}
 	
@@ -392,5 +409,23 @@ public final class StringUtils
 		{
 			return text;
 		}
+	}
+	
+	// =========================================================================
+	
+	public static boolean isWhitespace(String text)
+	{
+		if (text == null)
+			throw new NullPointerException();
+		
+		return org.apache.commons.lang.StringUtils.isWhitespace(text);
+		
+		/*
+		for (int i = 0; i < text.length(); ++i)
+			if (!Character.isWhitespace(text.charAt(i)))
+				return false;
+		
+		return true;
+		*/
 	}
 }
