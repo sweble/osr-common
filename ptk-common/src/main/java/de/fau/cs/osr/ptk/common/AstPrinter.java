@@ -36,8 +36,8 @@ import de.fau.cs.osr.ptk.common.ast.StringContentNode;
 import de.fau.cs.osr.utils.StringUtils;
 
 public class AstPrinter
-        extends
-            AstVisitor
+		extends
+			AstVisitor
 {
 	protected PrintWriter out;
 	
@@ -243,7 +243,11 @@ public class AstPrinter
 			this.writer = null;
 		}
 		
-		public Memoize(int indent, AstNode node, PrintWriter oldOut, StringWriter writer)
+		public Memoize(
+				int indent,
+				AstNode node,
+				PrintWriter oldOut,
+				StringWriter writer)
 		{
 			this.indent = indent;
 			this.node = node;
@@ -331,6 +335,9 @@ public class AstPrinter
 		
 		Map<String, Object> props = new HashMap<String, Object>();
 		props.putAll(attrs);
+		
+		if (n instanceof StringContentNode)
+			props.put("content", ((StringContentNode) n).getContent());
 		
 		AstNodePropertyIterator i = n.propertyIterator();
 		while (i.next())
@@ -434,7 +441,7 @@ public class AstPrinter
 			out = oldOut;
 			singleLine = w.toString().trim();
 			if (singleLine.indexOf('\n') != -1 ||
-			        singleLine.indexOf('\r') != -1)
+					singleLine.indexOf('\r') != -1)
 				singleLine = null;
 		}
 		
@@ -449,7 +456,7 @@ public class AstPrinter
 	protected void decIndent()
 	{
 		this.indentStr =
-		        this.indentStr.substring(0, this.indentStr.length() - 2);
+				this.indentStr.substring(0, this.indentStr.length() - 2);
 	}
 	
 	protected void indent()
