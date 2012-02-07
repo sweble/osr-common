@@ -43,6 +43,7 @@
     <version.plugin.javadoc>2.8</version.plugin.javadoc>
     <version.plugin.source>2.1.2</version.plugin.source>
     <version.plugin.site>2.2</version.plugin.site>
+    <version.plugin.deploy>2.7</version.plugin.deploy>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.license>1.9.0</version.plugin.license>
     <version.plugin.git-commit-id>1.9</version.plugin.git-commit-id>
@@ -301,6 +302,13 @@
           <inherited>true</inherited>
         </plugin>
 
+        <!-- Maven Deploy Plugin -->
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${version.plugin.deploy}</version>
+          <inherited>true</inherited>
+        </plugin>
+
         <!-- Build Helper Maven Plugin -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -334,12 +342,12 @@
             <verbose>false</verbose>
           </configuration>
           <executions>
-            <!-- Disabled until problem 
-              https://github.com/ktoso/maven-git-commit-id-plugin/issues/19 
+            <!-- Disabled until problem
+              https://github.com/ktoso/maven-git-commit-id-plugin/issues/19
               is resolved -->
-            <execution> 
-              <id>git-commit-info-disabled</id> 
-              <phase>none</phase> 
+            <execution>
+              <id>git-commit-info-disabled</id>
+              <phase>none</phase>
             </execution>
             <!--
             <execution>
