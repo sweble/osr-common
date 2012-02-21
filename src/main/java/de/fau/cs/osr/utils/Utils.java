@@ -58,7 +58,7 @@ public final class Utils
 		}
 		return false;
 	}
-
+	
 	public static <T extends Enum<T>> T fromString(Class<T> clazz, String name)
 	{
 		try
@@ -68,6 +68,22 @@ public final class Utils
 		catch (IllegalArgumentException e)
 		{
 			return null;
+		}
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static boolean hasConstant(
+			Class<? extends Enum<?>> enumClazz,
+			String name)
+	{
+		try
+		{
+			Enum.valueOf((Class) enumClazz, name);
+			return true;
+		}
+		catch (IllegalArgumentException e)
+		{
+			return false;
 		}
 	}
 }
