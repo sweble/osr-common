@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import de.fau.cs.osr.utils.FmtIllegalArgumentException;
 
+@Deprecated
 public class ParserTestResources
 {
 	File baseDirectory;

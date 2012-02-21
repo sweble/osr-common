@@ -26,6 +26,7 @@ import org.junit.Assert;
 
 import de.fau.cs.osr.ptk.common.GenericPrinterInterface;
 
+@Deprecated
 public class ParserTestCommon
 {
 	
@@ -48,10 +49,10 @@ public class ParserTestCommon
 	}
 	
 	public ParserTestCommon(
-	        ParserTestResources resources,
-	        String noRefReplace,
-	        String noRefReplaceBy,
-	        boolean randomRefName)
+			ParserTestResources resources,
+			String noRefReplace,
+			String noRefReplaceBy,
+			boolean randomRefName)
 	{
 		this.resources = resources;
 		this.noRefReplace = Pattern.compile(noRefReplace);
@@ -61,7 +62,10 @@ public class ParserTestCommon
 	
 	// =========================================================================
 	
-	protected void printTest(Object what, GenericPrinterInterface printer, File reftextFile) throws IOException
+	protected void printTest(
+			Object what,
+			GenericPrinterInterface printer,
+			File reftextFile) throws IOException
 	{
 		String result = printToString(what, printer);
 		if (!reftextFile.exists())
@@ -73,8 +77,8 @@ public class ParserTestCommon
 				
 				if (!noRefReplace.matcher(dir).find())
 					Assert.fail(
-					        "Reference file did not exist! " +
-					                "FAILED TO WRITE REFERENCE FILE!");
+							"Reference file did not exist! " +
+									"FAILED TO WRITE REFERENCE FILE!");
 				
 				dir = noRefReplace.matcher(dir).replaceAll(noRefReplaceBy);
 				create = new File(dir);
@@ -97,9 +101,9 @@ public class ParserTestCommon
 			
 			FileUtils.writeStringToFile(create, result);
 			Assert.fail(
-			        "Reference file did not exist! " +
-			                "Wrote initial reference file to: " +
-			                create.getAbsolutePath());
+					"Reference file did not exist! " +
+							"Wrote initial reference file to: " +
+							create.getAbsolutePath());
 		}
 		
 		FileContent reftext = new FileContent(reftextFile);
