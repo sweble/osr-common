@@ -54,6 +54,7 @@
     <version.plugin.git-commit-id>2.0.3</version.plugin.git-commit-id>
     <version.plugin.gpg>1.4</version.plugin.gpg>
     <version.plugin.exec>1.2.1</version.plugin.exec>
+    <version.plugin.plantuml>7232</version.plugin.plantuml>
 
     <!-- Site plugin versions-->
     <version.site-plugin.project-info-reports>2.4</version.site-plugin.project-info-reports>
@@ -416,6 +417,35 @@
               <phase>none</phase>
             </execution>
             <!--
+            <execution>
+              <goals>
+                <goal>revision</goal>
+              </goals>
+            </execution>
+            -->
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.jeluard</groupId>
+          <artifactId>maven-plantuml-plugin</artifactId>
+          <version>${version.plugin.plantuml}</version>
+          <configuration>
+            <sourceFiles>
+              <directory>${basedir}</directory>
+              <includes>
+                <include>
+                  src/main/java/**/*.java
+                </include>
+              </includes>
+            </sourceFiles>
+            <outputDirectory>
+              ${basedir}/target/documentation/plantuml
+            </outputDirectory>
+            <format>svg</format>
+          </configuration>
+          <executions>
+            <!-- Don't execute automatically
             <execution>
               <goals>
                 <goal>revision</goal>
