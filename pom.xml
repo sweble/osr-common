@@ -30,6 +30,7 @@
 
     <!-- Dependency versions -->
     <version.dep.junit>4.7</version.dep.junit>
+    <version.dep.mockito>1.9.0</version.dep.mockito>
     <version.dep.commons-io>1.4</version.dep.commons-io>
     <version.dep.commons-lang>2.5</version.dep.commons-lang>
     <version.dep.commons-codec>1.6</version.dep.commons-codec>
@@ -89,6 +90,14 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${version.dep.junit}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Mockito -->
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>${version.dep.mockito}</version>
         <scope>test</scope>
       </dependency>
 
