@@ -41,9 +41,15 @@
     <version.plugin.javadoc>2.8</version.plugin.javadoc>
     <version.plugin.source>2.1.2</version.plugin.source>
     <version.plugin.jar>2.3.1</version.plugin.jar>
-    <version.plugin.site>2.2</version.plugin.site>
+    <version.plugin.site>3.0</version.plugin.site>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.license>1.9.0</version.plugin.license>
+
+    <version.site-plugin.project-info-reports>2.4</version.site-plugin.project-info-reports>
+    <version.site-plugin.surefire-report>2.6</version.site-plugin.surefire-report>
+    <version.site-plugin.cobertura>2.4</version.site-plugin.cobertura>
+    <version.site-plugin.taglist>2.4</version.site-plugin.taglist>
+    <version.site-plugin.jxr>2.1</version.site-plugin.jxr>
 
     <!-- Extension versions -->
     <version.extension.wagon-ssh-external>1.0-alpha-5</version.extension.wagon-ssh-external>
@@ -142,9 +148,44 @@
       <plugin>
         <groupId>com.mycila.maven-license-plugin</groupId>
         <artifactId>maven-license-plugin</artifactId>
+        <inherited>true</inherited>
         <configuration>
-          <!-- must be overriden in projects that inherit from tooling! -->
           <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <!-- Maven site generation -->
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <reportPlugins>
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>dependencies</report>
+                    <report>dependency-convergence</report>
+                    <report>dependency-management</report>
+                    <report>distribution-management</report>
+                    <report>index</report>
+                    <report>issue-tracking</report>
+                    <report>license</report>
+                    <report>mailing-list</report>
+                    <report>modules</report>
+                    <report>plugin-management</report>
+                    <report>plugins</report>
+                    <report>project-team</report>
+                    <report>scm</report>
+                    <report>summary</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+
+          </reportPlugins>
         </configuration>
       </plugin>
 
@@ -159,6 +200,7 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${version.plugin.compiler}</version>
+          <inherited>true</inherited>
           <configuration>
             <source>${version.java}</source>
             <target>${version.java}</target>
@@ -172,12 +214,14 @@
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>${version.plugin.assembly}</version>
+          <inherited>true</inherited>
         </plugin>
 
         <!-- Maven Eclipse Plugin -->
         <plugin>
           <artifactId>maven-eclipse-plugin</artifactId>
           <version>${version.plugin.eclipse}</version>
+          <inherited>true</inherited>
           <configuration>
             <downloadSources>true</downloadSources>
             <downloadJavadocs>true</downloadJavadocs>
@@ -188,6 +232,7 @@
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <version>${version.plugin.release}</version>
+          <inherited>true</inherited>
           <configuration>
             <!-- Don't do site-deploy! -->
             <goals>deploy</goals>
@@ -198,9 +243,11 @@
         <plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${version.plugin.javadoc}</version>
+          <inherited>true</inherited>
           <!-- confuses release plugin
           <executions>
             <execution>
+              <inherited>true</inherited>
               <id>javadoc-jar</id>
               <phase>package</phase>
               <goals>
@@ -218,9 +265,11 @@
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
           <version>${version.plugin.source}</version>
+          <inherited>true</inherited>
           <!-- confuses release plugin
           <executions>
             <execution>
+              <inherited>true</inherited>
               <phase>package</phase>
               <goals>
                 <goal>jar-no-fork</goal>
@@ -246,9 +295,34 @@
           </configuration>
           <executions>
             <execution>
+              <inherited>true</inherited>
               <phase>package</phase>
               <goals>
                 <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Build Helper Maven Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${version.plugin.build-helper}</version>
+          <inherited>true</inherited>
+        </plugin>
+
+        <!-- Check and format license headers -->
+        <plugin>
+          <groupId>com.mycila.maven-license-plugin</groupId>
+          <artifactId>maven-license-plugin</artifactId>
+          <version>${version.plugin.license}</version>
+          <inherited>true</inherited>
+          <executions>
+            <execution>
+              <inherited>true</inherited>
+              <goals>
+                <goal>check</goal>
               </goals>
             </execution>
           </executions>
@@ -258,27 +332,94 @@
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
           <version>${version.plugin.site}</version>
+          <inherited>true</inherited>
         </plugin>
 
-        <!-- Build Helper Maven Plugin -->
+        <!-- Maven Project Info Report Plugin -->
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>${version.site-plugin.project-info-reports}</version>
+          <inherited>true</inherited>
+          <!-- This is not inherited to the report plugin in other modules
+          <reportSets>
+            <reportSet>
+              <reports>
+                <report>dependencies</report>
+                <report>dependency-convergence</report>
+                <report>dependency-management</report>
+                <report>distribution-management</report>
+                <report>index</report>
+                <report>issue-tracking</report>
+                <report>license</report>
+                <report>mailing-list</report>
+                <report>modules</report>
+                <report>plugin-management</report>
+                <report>plugins</report>
+                <report>project-team</report>
+                <report>scm</report>
+                <report>summary</report>
+              </reports>
+            </reportSet>
+          </reportSets>
+          -->
+        </plugin>
+
+        <!-- Maven Surefire Report Plugin -->
+        <plugin>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>${version.site-plugin.surefire-report}</version>
+          <inherited>true</inherited>
+        </plugin>
+
+        <!-- Maven Java Cross Reference Plugin -->
+        <plugin>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>${version.site-plugin.jxr}</version>
+          <inherited>true</inherited>
+        </plugin>
+
+        <!-- Maven Cobertura Report Plugin -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>${version.plugin.build-helper}</version>
+          <artifactId>cobertura-maven-plugin</artifactId>
+          <version>${version.site-plugin.cobertura}</version>
+          <inherited>true</inherited>
         </plugin>
 
-        <!-- Check and format license headers -->
+        <!-- Maven Taglist Report Plugin -->
         <plugin>
-          <groupId>com.mycila.maven-license-plugin</groupId>
-          <artifactId>maven-license-plugin</artifactId>
-          <version>${version.plugin.license}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>taglist-maven-plugin</artifactId>
+          <version>${version.site-plugin.taglist}</version>
+          <inherited>true</inherited>
+          <!-- This is not inherited to the report plugin in other modules
+          <configuration>
+            <encoding>UTF-8</encoding>
+            <sourceFileLocale>en</sourceFileLocale>
+            <emptyComments>true</emptyComments>
+            <tagListOptions>
+              <tagClasses>
+                <tagClass>
+                  <displayName>Code Work</displayName>
+                  <tags>
+                    <tag>
+                      <matchString>fixme</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>todo</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                    <tag>
+                      <matchString>@todo</matchString>
+                      <matchType>ignoreCase</matchType>
+                    </tag>
+                  </tags>
+                </tagClass>
+              </tagClasses>
+            </tagListOptions>
+          </configuration>
+          -->
         </plugin>
 
       </plugins>
@@ -435,17 +576,17 @@
   <mailingLists>
     <mailingList>
       <name>Sweble Project - General Discussion</name>
-      <subscribe>sweble-mw-parser-subscribe@sweble.org</subscribe>
-      <unsubscribe>sweble-mw-parser-unsubscribe@sweble.org</unsubscribe>
-      <post>sweble-mw-parser@sweble.org</post>
-      <archive>http://sweble.org/pipermail/sweble-mw-parser/</archive>
+      <subscribe>sweble-wt-parser-subscribe@sweble.org</subscribe>
+      <unsubscribe>sweble-wt-parser-unsubscribe@sweble.org</unsubscribe>
+      <post>sweble-wt-parser@sweble.org</post>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser/</archive>
     </mailingList>
     <mailingList>
       <name>Sweble Project - Developer Discussion</name>
-      <subscribe>sweble-mw-parser-devel-subscribe@sweble.org</subscribe>
-      <unsubscribe>sweble-mw-parser-devel-unsubscribe@sweble.org</unsubscribe>
-      <post>sweble-mw-parser-devel@sweble.org</post>
-      <archive>http://sweble.org/pipermail/sweble-mw-parser-devel/</archive>
+      <subscribe>sweble-wt-parser-devel-subscribe@sweble.org</subscribe>
+      <unsubscribe>sweble-wt-parser-devel-unsubscribe@sweble.org</unsubscribe>
+      <post>sweble-wt-parser-devel@sweble.org</post>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser-devel/</archive>
     </mailingList>
   </mailingLists>
 
@@ -466,18 +607,16 @@
       <name>OSR Public Snapshots</name>
       <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public-snapshots</url>
     </snapshotRepository>
-    <!--
     <site>
-      <id></id>
-      <url></url>
+      <id>sweble.org</id>
+      <url>http://sweble.org/site/tooling</url>
     </site>
-    -->
   </distributionManagement>
 
   <repositories>
     <repository>
       <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
         <updatePolicy>daily</updatePolicy>
         <checksumPolicy>warn</checksumPolicy>
       </releases>
@@ -490,19 +629,12 @@
       <name>OSR Public Repositories</name>
       <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
     </repository>
-    <repository>
-      <id>java.net</id>
-      <name>java.net Maven Repository</name>
-      <url>http://download.java.net/maven/2</url>
-    </repository>
   </repositories>
 
   <pluginRepositories>
     <pluginRepository>
       <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
+        <enabled>false</enabled>
       </releases>
       <snapshots>
         <enabled>true</enabled>
@@ -512,11 +644,6 @@
       <id>osr-public-plugin-repositories</id>
       <name>OSR Public Repositories</name>
       <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>java.net</id>
-      <name>java.net Maven Repository</name>
-      <url>http://download.java.net/maven/2</url>
     </pluginRepository>
   </pluginRepositories>
 
