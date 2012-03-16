@@ -8,6 +8,7 @@
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
     <version>1.0.4</version>
+    <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
   <!-- This POM: Parser Toolkit -->
@@ -21,7 +22,7 @@
   <url>http://osr.informatik.uni-erlangen.de</url>
   <inceptionYear>2009</inceptionYear>
   <description>
-    The parser toolkit provides the basic facilities for AST building, 
+    The parser toolkit provides the basic facilities for AST building,
     traversal, persistence and much more.
   </description>
 
@@ -134,7 +135,6 @@
         <artifactId>maven-license-plugin</artifactId>
         <configuration>
           <header>etc/license-header.txt</header>
-          <encoding>UTF-8</encoding>
           <strictCheck>true</strictCheck>
           <failIfMissing>true</failIfMissing>
           <skip>false</skip>
@@ -143,6 +143,20 @@
             <exclude>LICENSE</exclude>
             <exclude>NOTICE</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+
+      <!-- Maven site generation -->
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <reportPlugins>
+
+            <plugin>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+
+          </reportPlugins>
         </configuration>
       </plugin>
 
@@ -257,24 +271,5 @@
                 <repositories>
                 <pluginRepositories>
   -->
-
-  <repositories>
-    <!-- Minimal set-up needed to retrieve parent POM -->
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <id>osr-public-repositories</id>
-      <name>OSR Public Repositories</name>
-      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
-    </repository>
-  </repositories>
 
 </project>
