@@ -47,9 +47,11 @@
     <version.plugin.deploy>2.7</version.plugin.deploy>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.surefire>2.12</version.plugin.surefire>
+    <version.plugin.archetype>2.2</version.plugin.archetype>
     <version.plugin.license>1.9.0</version.plugin.license>
-    <version.plugin.git-commit-id>1.9</version.plugin.git-commit-id>
+    <version.plugin.git-commit-id>2.0.3</version.plugin.git-commit-id>
     <version.plugin.gpg>1.4</version.plugin.gpg>
+    <version.plugin.exec>1.2.1</version.plugin.exec>
 
     <version.site-plugin.project-info-reports>2.4</version.site-plugin.project-info-reports>
     <version.site-plugin.surefire-report>2.12</version.site-plugin.surefire-report>
@@ -344,6 +346,12 @@
           <inherited>true</inherited>
         </plugin>
 
+        <!-- Maven Archetype Plugin -->
+        <plugin>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>${version.plugin.archetype}</version>
+        </plugin>
+
         <!-- Check and format license headers -->
         <plugin>
           <groupId>com.mycila.maven-license-plugin</groupId>
@@ -395,6 +403,13 @@
           <configuration>
             <useAgent>true</useAgent>
           </configuration>
+        </plugin>
+
+        <!-- Execute system and Java programs -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${version.plugin.exec}</version>
         </plugin>
 
         <!-- Maven Site Plugin -->
@@ -744,6 +759,36 @@
       <id>quick</id>
       <build>
         <plugins>
+
+          <!-- Skip assembly generation -->
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>${version.plugin.assembly}</version>
+            <inherited>true</inherited>
+            <configuration>
+              <skipAssembly>true</skipAssembly>
+            </configuration>
+          </plugin>
+
+          <!-- Skip javadoc generation -->
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.javadoc}</version>
+            <inherited>true</inherited>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <!-- Skip source generation -->
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${version.plugin.source}</version>
+            <inherited>true</inherited>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
 
           <!-- Don't check and format license headers -->
           <plugin>
