@@ -7,18 +7,18 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0.1-SNAPSHOT</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - NodeGen Maven Plugin -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>ptk-nodegen-maven-plugin</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.0.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>PTK - NodeGen Maven Plugin</name>
-  <url>http://osr.informatik.uni-erlangen.de</url>
+  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-nodegen-maven-plugin</url>
   <inceptionYear>2010</inceptionYear>
   <description>
     The NodeGen (Node Generator) Maven Plugin generates Ast Nodes from a node
@@ -131,12 +131,35 @@
           <excludes>
             <exclude>src/test/resources/**</exclude>
             <exclude>src/main/resources/**/*.tmpl</exclude>
+            <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/apt/*.apt</exclude>
+            <exclude>src/site/fml/*.fml</exclude>
+            <exclude>src/site/resources/css/site.css</exclude>
             <exclude>**/.gitignore</exclude>
             <exclude>dependencies</exclude>
             <exclude>LICENSE</exclude>
             <exclude>NOTICE</exclude>
           </excludes>
         </configuration>
+      </plugin>
+
+      <!-- Maven GPG Plugin -->
+      <plugin>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${version.plugin.gpg}</version>
+        <configuration>
+          <!-- OSR Group <osr@i2.informatik.uni-erlangen.de> -->
+          <keyname>44E980E1</keyname>
+        </configuration>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <!-- Maven site generation -->
@@ -149,9 +172,24 @@
               <artifactId>maven-project-info-reports-plugin</artifactId>
             </plugin>
 
+            <plugin>
+              <artifactId>maven-plugin-plugin</artifactId>
+            </plugin>
+
             <!-- >>> ADDITIONAL REPORT PLUGINS >>> -->
             <plugin>
               <artifactId>maven-javadoc-plugin</artifactId>
+              <configuration>
+                <quiet>true</quiet>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <id>site-javadoc</id>
+                  <reports>
+                    <report>javadoc</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
 
             <plugin>
@@ -160,6 +198,22 @@
 
             <plugin>
               <artifactId>maven-jxr-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <id>src-xref</id>
+                  <reports>
+                    <report>jxr</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-pmd-plugin</artifactId>
+              <version>2.7.1</version>
+              <configuration>
+                <targetJdk>${version.java}</targetJdk>
+              </configuration>
             </plugin>
 
             <plugin>
@@ -234,10 +288,109 @@
     see parent: <issueManagement>
                 <ciManagement>
                 <mailingLists>
-                <scm>
-                <distributionManagement>
+  -->
+
+  <scm>
+    <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
+    <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
+    <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
+  </scm>
+
+  <!--
+    see parent: <distributionManagement>
                 <repositories>
                 <pluginRepositories>
   -->
+
+  <!-- ==[ Profiles ]======================================================= -->
+
+  <profiles>
+    <profile>
+      <id>quick</id>
+      <build>
+        <plugins>
+
+          <!-- Don't check and format license headers -->
+          <plugin>
+            <groupId>com.mycila.maven-license-plugin</groupId>
+            <artifactId>maven-license-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <!-- Don't sign artifacts -->
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${version.plugin.gpg}</version>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <!-- Don't run tests -->
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </plugin>
+
+          <!-- Only generate minimal site -->
+          <plugin>
+            <artifactId>maven-site-plugin</artifactId>
+            <configuration>
+              <reportPlugins>
+                <plugin>
+                  <artifactId>maven-project-info-reports-plugin</artifactId>
+                  <reportSets>
+                    <reportSet>
+                      <reports>
+                        <!-- cim, dependencies, dependency-convergence -->
+                        <report>dependency-management</report>
+                        <report>distribution-management</report>
+                        <report>index</report>
+                        <report>issue-tracking</report>
+                        <report>license</report>
+                        <report>mailing-list</report>
+                        <report>modules</report>
+                        <report>plugin-management</report>
+                        <report>plugins</report>
+                        <report>project-team</report>
+                        <report>scm</report>
+                        <report>summary</report>
+                      </reports>
+                    </reportSet>
+                  </reportSets>
+                </plugin>
+              </reportPlugins>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>dont-sign</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+
+          <!-- Don't sign artifacts -->
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${version.plugin.gpg}</version>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
