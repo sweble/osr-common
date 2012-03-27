@@ -44,7 +44,9 @@
     <version.dep.maven-project>2.0.4</version.dep.maven-project>
     <version.dep.commons-jxpath>1.3</version.dep.commons-jxpath>
     <version.dep.xstream>1.2.2</version.dep.xstream>
+    <!--
     <version.dep.jaxb>2.2.1</version.dep.jaxb>
+    -->
     <version.dep.rats>1.15.0</version.dep.rats>
 
     <!-- Plugin dependency versions -->
@@ -86,11 +88,14 @@
       </dependency>
 
       <!-- JAXB -->
+      <!-- Dual licensed: CDDL v1.1 and GPL v2; We go with CDDL v1.1 -->
+      <!-- Included in Java 6
       <dependency>
         <groupId>javax.xml.bind</groupId>
         <artifactId>jaxb-api</artifactId>
         <version>${version.dep.jaxb}</version>
       </dependency>
+      -->
 
       <!-- Rats! -->
       <dependency>

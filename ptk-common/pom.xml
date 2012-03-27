@@ -46,10 +46,12 @@
     </dependency>
 
     <!-- JAXB -->
+    <!--
     <dependency>
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
     </dependency>
+    -->
 
     <!-- Rats! -->
     <dependency>
