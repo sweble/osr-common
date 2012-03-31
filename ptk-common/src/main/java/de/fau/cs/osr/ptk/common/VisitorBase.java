@@ -31,7 +31,7 @@ public abstract class VisitorBase<T>
 	private static final float LOAD_FACTOR = .6f;
 	
 	private static final ConcurrentHashMap<Target, Target> cache =
-	        new ConcurrentHashMap<Target, Target>(LOWER_CAPACITY, LOAD_FACTOR);
+			new ConcurrentHashMap<Target, Target>(LOWER_CAPACITY, LOAD_FACTOR);
 	
 	// =========================================================================
 	
@@ -111,7 +111,7 @@ public abstract class VisitorBase<T>
 		Target cached = cache.get(key);
 		try
 		{
-			if (cached == null && !cache.contains(key))
+			if (cached == null)
 				cached = findVisit(key);
 			
 			if (cached.getMethod() == null)
@@ -227,12 +227,12 @@ public abstract class VisitorBase<T>
 	// =========================================================================
 	
 	protected static final class Target
-	        implements
-	            Comparable<Target>
+			implements
+				Comparable<Target>
 	{
-		private static int useCounter = 0;
+		private static long useCounter = 0;
 		
-		private int lastUse = -1;
+		private long lastUse = -1;
 		
 		private final Class<?> vClass;
 		
@@ -312,11 +312,11 @@ public abstract class VisitorBase<T>
 		public String toString()
 		{
 			return String.format(
-			        "Target [%d - %s; %s:%s]",
-			        lastUse,
-			        method != null ? "O" : "X",
-			        vClass.getSimpleName(),
-			        nClass.getSimpleName());
+					"Target [%d - %s; %s:%s]",
+					lastUse,
+					method != null ? "O" : "X",
+					vClass.getSimpleName(),
+					nClass.getSimpleName());
 		}
 	}
 }
