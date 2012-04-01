@@ -17,9 +17,12 @@
 
 package de.fau.cs.osr.utils;
 
+/**
+ * @deprecated Use WrappedException instead!
+ */
 public class ExceptionWrapper
-        extends
-            RuntimeException
+		extends
+			WrappedException
 {
 	private static final long serialVersionUID = 1L;
 	
