@@ -115,8 +115,18 @@
           name="boolean"
           type="xsd:boolean" />
         <xsd:element
-          name="object"
-          type="xsd:anyType" />
+          name="object">
+	        <xsd:complexType>
+    <xsd:sequence>
+		        <xsd:element
+		          name="object"
+		          type="xsd:anyType"/>
+    </xsd:sequence>
+			    <xsd:attribute
+			      name="clazz"
+			      type="xsd:string" />
+	        </xsd:complexType>
+        </xsd:element>
       </xsd:choice>
     </xsd:sequence>
     <xsd:attribute

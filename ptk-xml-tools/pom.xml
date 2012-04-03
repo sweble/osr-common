@@ -13,16 +13,16 @@
   <!-- This POM: Parser Toolkit - Common -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
-  <artifactId>ptk-common</artifactId>
+  <artifactId>ptk-xml-tools</artifactId>
   <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>PTK - Common</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-common</url>
-  <inceptionYear>2009</inceptionYear>
+  <name>PTK - XML Tools</name>
+  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-xml-tools</url>
+  <inceptionYear>2012</inceptionYear>
   <description>
-    The parser toolkit common module provides the basic facilities for AST
-    building, traversal, persistence and much more.
+    This module provides facilities for reading ASTs from and writing ASTs to
+    XML files.
   </description>
 
   <!-- ==[ Dependencies ]=================================================== -->
@@ -30,6 +30,7 @@
   <dependencies>
 
     <!-- Apache Commons -->
+    <!--
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
@@ -38,18 +39,31 @@
       <groupId>commons-jxpath</groupId>
       <artifactId>commons-jxpath</artifactId>
     </dependency>
+    -->
 
-    <!-- Rats! -->
+    <!-- XStream -->
+    <!--
     <dependency>
-      <groupId>xtc</groupId>
-      <artifactId>rats-runtime</artifactId>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
     </dependency>
+    -->
+
+    <!-- JAXB -->
+    <!--
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+    -->
 
     <!-- Utils -->
+    <!--
     <dependency>
       <groupId>de.fau.cs.osr.utils</groupId>
       <artifactId>utils</artifactId>
     </dependency>
+    -->
 
     <!--
       Testing
@@ -70,6 +84,37 @@
     <!-- ==[ Plugin Configuration ]========================================= -->
 
     <plugins>
+
+      <!-- Add XML schema source directory -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/main/schema</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Compile schema files -->
+      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <configuration>
+          <schemaDirectory>${basedir}/src/main/schema</schemaDirectory>
+          <generatePackage>de.fau.cs.osr.ptk.common.xml</generatePackage>
+          <forceRegenerate>true</forceRegenerate>
+        </configuration>
+      </plugin>
 
       <!-- Check and format license headers -->
       <plugin>
@@ -196,6 +241,21 @@
       </plugin>
 
     </plugins>
+
+    <!-- ==[ Plugin Management ]============================================ -->
+
+    <pluginManagement>
+      <plugins>
+
+      <plugin>
+        <groupId>com.sun.tools.xjc.maven2</groupId>
+        <artifactId>maven-jaxb-plugin</artifactId>
+        <version>${version.plugin.jaxb}</version>
+      </plugin>
+
+      </plugins>
+    </pluginManagement>
+
   </build>
 
   <!-- ==[ Reporting ]====================================================== -->

@@ -22,61 +22,59 @@ import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMResult;
 
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.io.xml.DomWriter;
-
-import de.fau.cs.osr.ptk.common.VisitingException;
 import de.fau.cs.osr.ptk.common.AstVisitor;
+import de.fau.cs.osr.ptk.common.VisitingException;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.xml.WikiTechAstNode.Properties;
 
 public class XmlWriter
-        extends
-            AstVisitor
+		extends
+		AstVisitor
 {
 	private ObjectFactory objectFactory;
-	
+
 	private OutputStream out;
-	
+
 	private DOMImplementation domImplementation;
-	
+
 	// =========================================================================
-	
+
 	public XmlWriter(OutputStream out)
 	{
 		this.out = out;
 	}
-	
+
 	// =========================================================================
-	
+
 	@Override
 	protected final boolean before(AstNode node)
 	{
 		try
 		{
 			domImplementation =
-			        DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
-		}
-		catch (ParserConfigurationException e)
+					DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
+		} catch (ParserConfigurationException e)
 		{
 			throw new VisitingException(e);
 		}
-		
+
 		objectFactory = new ObjectFactory();
 		return super.before(node);
 	}
-	
+
 	@Override
 	protected Object after(AstNode node, Object result)
 	{
@@ -84,77 +82,76 @@ public class XmlWriter
 		{
 			WikitechAst ast = this.objectFactory.createWikitechAst();
 			ast.setNode((WikiTechAstNode) result);
-			
+
 			JAXBContext jaxbContext = JAXBContext.newInstance(
-			        "de.fau.cs.osr.ptk.common.xml");
-			
+					"de.fau.cs.osr.ptk.common.xml");
+
 			Marshaller marshaller = jaxbContext.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-			
+
 			marshaller.marshal(ast, out);
-		}
-		catch (JAXBException e)
+		} catch (JAXBException e)
 		{
 			throw new VisitingException("Failed marshalling the AST", e);
 		}
-		
+
 		return super.after(node, result);
 	}
-	
+
 	// =========================================================================
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public WikiTechAstNode visit(AstNode n)
+	public WikiTechAstNode visit(AstNode n) throws JAXBException
 	{
 		WikiTechAstNode node = this.objectFactory.createWikiTechAstNode();
-		
+
 		node.setType(n.getNodeTypeName());
-		
+
 		WikiTechAstNode.Properties properties = null;
 
 		Set<String> propertyNames = n.getAttributes().keySet();
 		if (!propertyNames.isEmpty())
 		{
 			properties = this.objectFactory.createWikiTechAstNodeProperties();
-			
+
 			for (String name : propertyNames)
 				dumpProperty(properties, name, n.getAttribute(name));
 		}
-		
+
 		AstNodePropertyIterator i = n.propertyIterator();
 		while (i.next())
 		{
 			if (properties == null)
 				properties = this.objectFactory.createWikiTechAstNodeProperties();
-			
+
 			dumpProperty(properties, i.getName(), i.getValue());
 		}
-		
+
 		if (properties != null)
 			node.setProperties(properties);
-		
+
 		if (!n.isEmpty())
 		{
 			WikiTechAstNode.Children children =
-			        this.objectFactory.createWikiTechAstNodeChildren();
-			
+					this.objectFactory.createWikiTechAstNodeChildren();
+
 			children.getNode().addAll((List) map(n));
-			
+
 			node.setChildren(children);
 		}
-		
+
 		return node;
 	}
-	
+
 	// =========================================================================
-	
-	protected void dumpProperty(Properties properties, String name, Object value)
+
+	protected void dumpProperty(Properties properties, String name, Object value) throws JAXBException
 	{
 		WikiTechAstProperty property = this.objectFactory.createWikiTechAstProperty();
-		
+
 		property.setName(name);
-		
+
 		if (value != null)
 		{
 			Class<?> clazz = value.getClass();
@@ -197,18 +194,33 @@ public class XmlWriter
 			else
 			{
 				property.setObject(createDomFromObject(value));
+				// property.setObject(createDomFromObject(value));
 			}
 		}
-		
+
 		properties.getProperty().add(property);
 	}
-	
-	private Object createDomFromObject(Object value)
+
+	private de.fau.cs.osr.ptk.common.xml.WikiTechAstProperty.Object createDomFromObject(Object value)
+			throws JAXBException
 	{
-		XStream xstream = new XStream(new DomDriver());
-		Document document = domImplementation.createDocument(null, "object", null);
-		Element root = document.getDocumentElement();
-		xstream.marshal(value, new DomWriter(document));
-		return root;
+		Class<? extends Object> clazz = value.getClass();
+		JAXBContext jc = JAXBContext.newInstance(clazz);
+
+		Marshaller marshaller = jc.createMarshaller();
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		JAXBElement<? extends Object> jaxbElement =
+				new JAXBElement(new QName(clazz.getName().replace('$', '-')), clazz, value);
+
+		DOMResult result = new DOMResult();
+
+		marshaller.marshal(jaxbElement, result);
+
+		de.fau.cs.osr.ptk.common.xml.WikiTechAstProperty.Object o = new de.fau.cs.osr.ptk.common.xml.WikiTechAstProperty.Object();
+		String name = clazz.getName();
+		o.setClazz(name);
+		o.setObject(result.getNode().getFirstChild());
+		return o;
 	}
 }

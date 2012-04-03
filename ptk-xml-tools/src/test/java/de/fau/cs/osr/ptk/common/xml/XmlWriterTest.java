@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package de.fau.cs.osr.ptk.common.xml;
 
 import java.io.IOException;
@@ -33,7 +34,21 @@ import de.fau.cs.osr.ptk.common.jxpath.Section;
 
 public class XmlWriterTest
 {
-	
+	static final class ArbitraryNode
+	{
+		public int hello = 5;
+
+		private String blub = "world";
+
+		public String getBlub() {
+			return blub;
+		}
+
+		public void setBlub(String blub) {
+			this.blub = blub;
+		}
+	}
+
 	private static final AstNode AST =
 			new Document(
 					new NodeList(
@@ -51,21 +66,22 @@ public class XmlWriterTest
 									new NodeList(
 											new Text("Section 2 Body")), // body
 									"EOL2")));
-	
+
 	@Test
 	public void test() throws IOException
 	{
-		ByteArrayOutputStream objBaos = new ByteArrayOutputStream();
-		
-		XmlWriter xmlw = new XmlWriter(objBaos);
+		AST.setAttribute("someObject", new ArbitraryNode());
+
+		ByteArrayOutputStream baosBaos = new ByteArrayOutputStream();
+
+		XmlWriter xmlw = new XmlWriter(baosBaos);
 		xmlw.go(AST);
-		
+
 		InputStream is = getClass().getResourceAsStream("/simple-serialized-ast.xml");
 		String expected = IOUtils.toString(is, "UTF-8");
-		
-		String actual = new String(objBaos.toString("UTF-8"));
-		
+
+		String actual = new String(baosBaos.toString("UTF-8"));
+
 		Assert.assertEquals(expected, actual);
 	}
-	
 }

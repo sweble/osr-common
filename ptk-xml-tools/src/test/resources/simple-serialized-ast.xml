@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <wikitech-ast>
     <node type="de.fau.cs.osr.ptk.common.jxpath.Document">
+        <properties>
+            <property name="someObject">
+                <object>
+                    <de.fau.cs.osr.ptk.common.xml.XmlWriterTest_-ArbitraryNode>
+                        <hello>5</hello>
+                        <blub>world</blub>
+                    </de.fau.cs.osr.ptk.common.xml.XmlWriterTest_-ArbitraryNode>
+                </object>
+            </property>
+        </properties>
         <children>
             <node type="de.fau.cs.osr.ptk.common.ast.NodeList">
                 <children>
