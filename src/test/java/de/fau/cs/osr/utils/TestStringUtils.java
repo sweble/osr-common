@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils.getopt;
+package de.fau.cs.osr.utils;
 
 import junit.framework.Assert;
 

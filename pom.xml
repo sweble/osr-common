@@ -30,7 +30,7 @@
   <properties>
 
     <!-- Dependency versions -->
-    <version.dep.jopt-simple>3.2</version.dep.jopt-simple>
+    <version.dep.jopt-simple>4.3</version.dep.jopt-simple>
 
   </properties>
 

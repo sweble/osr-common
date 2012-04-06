@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils.getopt;
+package de.fau.cs.osr.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
