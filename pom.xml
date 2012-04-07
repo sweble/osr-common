@@ -19,7 +19,7 @@
   <packaging>pom</packaging>
 
   <name>Parser Toolkit</name>
-  <url>http://osr.informatik.uni-erlangen.de</url>
+  <url>http://sweble.org/doc/site/tooling/parser-toolkit</url>
   <inceptionYear>2009</inceptionYear>
   <description>
     The parser toolkit provides the basic facilities for AST building,
@@ -49,8 +49,8 @@
 
     <!-- Plugin dependency versions -->
     <version.plugin.jaxb>0.8.0</version.plugin.jaxb>
-    <version.plugin.rats>1.3.0</version.plugin.rats>
-    <version.plugin.parser-toolkit.bootstrap>1.0.1-SNAPSHOT</version.plugin.parser-toolkit.bootstrap>
+    <version.plugin.rats>1.3.0.1</version.plugin.rats>
+    <version.plugin.nodegen>1.0.0.1</version.plugin.nodegen>
 
   </properties>
 
@@ -136,15 +136,30 @@
         <artifactId>maven-license-plugin</artifactId>
         <configuration>
           <header>etc/license-header.txt</header>
-          <!-- <encoding>UTF-8</encoding> -->
           <strictCheck>true</strictCheck>
           <failIfMissing>true</failIfMissing>
           <skip>false</skip>
           <excludes>
             <exclude>**/.gitignore</exclude>
+            <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/resources/css/site.css</exclude>
             <exclude>LICENSE</exclude>
             <exclude>NOTICE</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+
+      <!-- Maven site generation -->
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <reportPlugins>
+
+            <plugin>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+
+          </reportPlugins>
         </configuration>
       </plugin>
 
@@ -186,10 +201,17 @@
         </plugin>
 
         <!-- Maven NodeGen Plugin -->
+        <!-- This plugin is part of the Parser Toolkit and would cause a hen or
+          the egg problem  if actually used by submodules of the Parser Toolkit.
+          Therefore, it is only used once and then the generated files are moved
+          to the source folder. The plugin is disabled immediately afterwards.
+          The configuration, however, is kept to ease its use next time.
+         -->
+        <!--
         <plugin>
           <groupId>de.fau.cs.osr.ptk</groupId>
           <artifactId>ptk-nodegen-maven-plugin</artifactId>
-          <version>${version.plugin.parser-toolkit.bootstrap}</version>
+          <version>${version.plugin.nodegen}</version>
           <executions>
             <execution>
               <id>nodegen-generate</id>
@@ -200,6 +222,7 @@
             </execution>
           </executions>
         </plugin>
+        -->
 
       </plugins>
     </pluginManagement>
@@ -239,7 +262,17 @@
 
   <developers>
     <developer>
-      <id>dohrn</id>
+      <id>driehle</id>
+      <name>Dirk Riehle</name>
+      <email>dirk.riehle@informatik.uni-erlangen.de</email>
+      <roles>
+        <role>Director</role>
+      </roles>
+      <organization>University of Erlangen-Nürnberg - Open Source Research Group</organization>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>hdohrn</id>
       <name>Hannes Dohrn</name>
       <email>hannes.dohrn@informatik.uni-erlangen.de</email>
       <roles>
@@ -270,27 +303,103 @@
 
   <!--
     see parent: <distributionManagement>
-                <repositories>
-                <pluginRepositories>
   -->
 
+  <!-- This is needed since SNAPSHOTs wouldn't find their parent pom otherwise -->
   <repositories>
-    <!-- Minimal set-up needed to retrieve parent POM -->
     <repository>
       <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
+        <enabled>false</enabled>
       </releases>
       <snapshots>
         <enabled>true</enabled>
         <updatePolicy>daily</updatePolicy>
         <checksumPolicy>warn</checksumPolicy>
       </snapshots>
-      <id>osr-public-repositories</id>
-      <name>OSR Public Repositories</name>
+      <id>osr-public-snapshots-repo</id>
+      <name>OSR Public Snapshots Repository</name>
       <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
     </repository>
   </repositories>
 
+  <!-- ==[ Profiles ]======================================================= -->
+
+  <profiles>
+    <profile>
+      <id>quick</id>
+      <build>
+        <plugins>
+
+          <!-- Don't check and format license headers -->
+          <plugin>
+            <groupId>com.mycila.maven-license-plugin</groupId>
+            <artifactId>maven-license-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <!-- Only generate minimal site -->
+          <plugin>
+            <artifactId>maven-site-plugin</artifactId>
+            <configuration>
+              <reportPlugins>
+                <plugin>
+                  <artifactId>maven-project-info-reports-plugin</artifactId>
+                  <reportSets>
+                    <reportSet>
+                      <reports>
+                        <!-- cim, dependencies, dependency-convergence -->
+                        <report>dependency-management</report>
+                        <report>distribution-management</report>
+                        <report>index</report>
+                        <report>issue-tracking</report>
+                        <report>license</report>
+                        <report>mailing-list</report>
+                        <report>modules</report>
+                        <report>plugin-management</report>
+                        <report>plugins</report>
+                        <report>project-team</report>
+                        <report>scm</report>
+                        <report>summary</report>
+                      </reports>
+                    </reportSet>
+                  </reportSets>
+                </plugin>
+              </reportPlugins>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>sign</id>
+      <build>
+        <plugins>
+
+          <!-- Maven GPG Plugin -->
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <!-- Sweble <info@sweble.org> -->
+              <keyname>D17B20AF</keyname>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
 </project>
