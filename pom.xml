@@ -42,6 +42,7 @@
     <version.plugin.source>2.1.2</version.plugin.source>
     <version.plugin.jar>2.3.1</version.plugin.jar>
     <version.plugin.site>3.0</version.plugin.site>
+    <version.plugin.deploy>2.7</version.plugin.deploy>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.surefire>2.12</version.plugin.surefire>
     <version.plugin.license>1.9.0</version.plugin.license>
@@ -192,6 +193,31 @@
           </configuration>
         </plugin>
 
+        <!-- Make sure MANIFEST files contain version information -->
+        <!-- Maven Jar Plugin -->
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.plugin.jar}</version>
+          <inherited>true</inherited>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+          <executions>
+            <execution>
+              <inherited>true</inherited>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
         <!-- Maven Assembly Plugin -->
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
@@ -261,29 +287,11 @@
           -->
         </plugin>
 
-        <!-- Make sure MANIFEST files contain version information -->
-        <!-- Maven Jar Plugin -->
+        <!-- Maven Deploy Plugin -->
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${version.plugin.jar}</version>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${version.plugin.deploy}</version>
           <inherited>true</inherited>
-          <configuration>
-            <archive>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-              </manifest>
-            </archive>
-          </configuration>
-          <executions>
-            <execution>
-              <inherited>true</inherited>
-              <phase>package</phase>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
 
         <!-- Build Helper Maven Plugin -->
@@ -619,13 +627,11 @@
   </scm>
 
   <distributionManagement>
-    <!--
     <repository>
-      <id>osr-public-releases-deployment</id>
-      <name>OSR Public Releases</name>
-      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public-releases</url>
+      <id>sonatype-nexus-staging</id>
+      <name>Sonatype Nexus Staging</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
-    -->
     <snapshotRepository>
       <id>osr-public-snapshots-deployment</id>
       <name>OSR Public Snapshots Deployment</name>
@@ -720,6 +726,32 @@
         </plugins>
       </build>
     </profile>
-  </profiles>
+    <profile>
+      <id>sign</id>
+      <build>
+        <plugins>
 
+          <!-- Maven GPG Plugin -->
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <!-- Sweble <info@sweble.org> -->
+              <keyname>D17B20AF</keyname>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
 </project>
