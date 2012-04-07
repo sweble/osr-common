@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>1.0.4.1-SNAPSHOT</version>
+    <version>1.0.4.1</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -15,7 +15,7 @@
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>parser-toolkit</artifactId>
-  <version>1.0.0.1-SNAPSHOT</version>
+  <version>1.0.0.1</version>
   <packaging>pom</packaging>
 
   <name>Parser Toolkit</name>
@@ -103,7 +103,7 @@
         <groupId>de.fau.cs.osr.utils</groupId>
         <artifactId>utils</artifactId>
         <!-- Version is given directly so the release plugin can see it -->
-        <version>0.2.0.1-SNAPSHOT</version>
+        <version>0.2.0.1</version>
       </dependency>
 
       <!-- Parser Toolkit - Common -->
@@ -111,7 +111,7 @@
         <groupId>de.fau.cs.osr.ptk</groupId>
         <artifactId>ptk-common</artifactId>
         <!-- Version is given directly so the release plugin can see it -->
-        <version>1.0.0.1-SNAPSHOT</version>
+        <version>1.0.0.1</version>
       </dependency>
 
     </dependencies>

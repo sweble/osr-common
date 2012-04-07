@@ -7,14 +7,14 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.0.0.1-SNAPSHOT</version>
+    <version>1.0.0.1</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - Test & Performance Toolkit -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>ptk-profiler</artifactId>
-  <version>1.0.0.1-SNAPSHOT</version>
+  <version>1.0.0.1</version>
   <packaging>jar</packaging>
 
   <name>PTK - Test and Performance Toolkit</name>
