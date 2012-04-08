@@ -788,6 +788,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>sign</id>
       <build>
