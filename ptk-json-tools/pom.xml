@@ -10,24 +10,30 @@
     <version>1.0.1-SNAPSHOT</version>
   </parent>
 
-  <!-- This POM: Parser Toolkit - XML Tools -->
+  <!-- This POM: Parser Toolkit - JSON Tools -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
-  <artifactId>ptk-xml-tools</artifactId>
+  <artifactId>ptk-json-tools</artifactId>
   <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>PTK - XML Tools</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-xml-tools</url>
+  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-json-tools</url>
   <inceptionYear>2012</inceptionYear>
   <description>
-    This module provides facilities for reading and writing ASTs in the XML
+    This module provides facilities for reading and writing ASTs in the JSON
     format.
   </description>
 
   <!-- ==[ Dependencies ]=================================================== -->
 
   <dependencies>
+
+    <!-- Gson -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
 
     <!-- Parser Toolkit - Common -->
     <dependency>
@@ -56,37 +62,6 @@
     <!-- ==[ Plugin Configuration ]========================================= -->
 
     <plugins>
-
-      <!-- Add XML schema source directory -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>add-source</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>src/main/schema</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Compile schema files -->
-      <plugin>
-        <groupId>org.jvnet.jaxb2.maven2</groupId>
-        <artifactId>maven-jaxb2-plugin</artifactId>
-        <configuration>
-          <schemaDirectory>${basedir}/src/main/schema</schemaDirectory>
-          <generatePackage>de.fau.cs.osr.ptk.common.xml</generatePackage>
-          <forceRegenerate>true</forceRegenerate>
-        </configuration>
-      </plugin>
 
       <!-- Check and format license headers -->
       <plugin>
@@ -213,21 +188,6 @@
       </plugin>
 
     </plugins>
-
-    <!-- ==[ Plugin Management ]============================================ -->
-
-    <pluginManagement>
-      <plugins>
-
-      <plugin>
-        <groupId>com.sun.tools.xjc.maven2</groupId>
-        <artifactId>maven-jaxb-plugin</artifactId>
-        <version>${version.plugin.jaxb}</version>
-      </plugin>
-
-      </plugins>
-    </pluginManagement>
-
   </build>
 
   <!-- ==[ Reporting ]====================================================== -->

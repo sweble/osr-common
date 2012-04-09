@@ -1,4 +1,4 @@
-package de.fau.cs.osr.ptk.common.gson;
+package de.fau.cs.osr.ptk.common.json;
 
 import java.lang.reflect.Type;
 import java.util.Map.Entry;
