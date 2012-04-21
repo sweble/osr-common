@@ -33,8 +33,6 @@
     <dependency>
       <groupId>de.fau.cs.osr.ptk</groupId>
       <artifactId>ptk-common</artifactId>
-      <!-- Version is given directly so the release plugin can see it -->
-      <version>1.0.1-SNAPSHOT</version>
     </dependency>
 
     <!--

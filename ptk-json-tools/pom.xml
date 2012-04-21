@@ -39,8 +39,6 @@
     <dependency>
       <groupId>de.fau.cs.osr.ptk</groupId>
       <artifactId>ptk-common</artifactId>
-      <!-- Version is given directly so the release plugin can see it -->
-      <version>1.0.1-SNAPSHOT</version>
     </dependency>
 
     <!--
@@ -51,8 +49,15 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <!-- JUnit invocations are part of the library! -->
-      <scope>compile</scope>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Hamcrest -->
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-all</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
