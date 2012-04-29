@@ -1,16 +1,25 @@
 package de.fau.cs.osr.ptk.common.json;
 
-import static de.fau.cs.osr.ptk.common.test.TestAstBuilder.astSection;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static de.fau.cs.osr.ptk.common.test.TestAstBuilder.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
+import de.fau.cs.osr.ptk.common.AstComparer;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.ptk.common.test.TestNodeSection;
 import de.fau.cs.osr.ptk.common.test.TestNodeUrl;
+import de.fau.cs.osr.utils.NameAbbrevService;
 
 public class TestJsonConverter
 {
@@ -60,7 +69,7 @@ public class TestJsonConverter
 	}
 	
 	@Test
-	public void testJsonToASTNodeConversion() throws Exception
+	public void testJsonToAstNodeConversion() throws Exception
 	{
 		final String protocol = "protocol";
 		final String path = "path";
@@ -75,7 +84,12 @@ public class TestJsonConverter
 		System.out.println(JsonConverter.toJson(ast));
 		*/
 		
-		TestNodeUrl url = JsonConverter.fromJson(
+		Gson json = JsonConverter.createGsonConverter(
+				false,
+				new NameAbbrevService(
+						"de.fau.cs.osr.ptk.common.test"));
+		
+		TestNodeUrl url = json.fromJson(
 				""
 						+ "{"
 						+ "  \"!type\": \"TestNodeUrl\","
@@ -94,5 +108,137 @@ public class TestJsonConverter
 		// properties
 		assertThat(url.getProtocol(), equalTo(protocol));
 		assertThat(url.getPath(), equalTo(path));
+	}
+	
+	@Test
+	public void testSerializationAndDeserialization() throws Exception
+	{
+		TestNodeSection in = astSection()
+				.withLevel(1)
+				.withBody(
+						astText(),
+						astUrl().build())
+				.build();
+		
+		in.setAttribute("int attr", 5);
+		
+		in.setAttribute("string attr", "string value");
+		
+		in.setAttribute("array attr", new Double[] { 3.1415, 2.7182 });
+		
+		in.setAttribute("bad ass array attr", new double[][] { { 3.1415, 2.7182 }, { 3.1415 * 2, 2.7182 * 2 } });
+		
+		in.setAttribute("arbitrary object", new ArbitraryNode());
+		
+		in.setAttribute("null valued attr", null);
+		
+		// -------
+		
+		NameAbbrevService as = new NameAbbrevService(
+				"de.fau.cs.osr.ptk.common.test",
+				"de.fau.cs.osr.ptk.common.xml");
+		
+		String json = serialize(in, as);
+		
+		System.out.println(json);
+		
+		AstNode out = deserialize(json, as);
+		
+		System.out.println(serialize(out, as));
+		
+		// -------
+		
+		assertTrue(AstComparer.compare(in, out, false));
+		
+		// We have to compare the attribuets manually. The arrays contained in 
+		// the attribute won't be compared correctly by the .equals call.
+		deepCompareMaps(in.getAttributes(), out.getAttributes());
+	}
+	
+	// =========================================================================
+	
+	private String serialize(AstNode ast, NameAbbrevService as) throws Exception
+	{
+		return JsonConverter.toJson(ast, as);
+	}
+	
+	private AstNode deserialize(String json, NameAbbrevService as) throws Exception
+	{
+		return JsonConverter.fromJson(json, AstNode.class, as);
+	}
+	
+	private boolean deepCompareMaps(
+			Map<String, Object> a,
+			Map<String, Object> b)
+	{
+		Iterator<Entry<String, Object>> i = a.entrySet().iterator();
+		while (i.hasNext())
+		{
+			Entry<String, Object> e = i.next();
+			String key = e.getKey();
+			Object value = e.getValue();
+			if (value == null)
+			{
+				if (b.get(key) != null || !b.containsKey(key))
+					return false;
+			}
+			else if (value.getClass().isArray())
+			{
+				Arrays.deepEquals((Object[]) value, (Object[]) b.get(key));
+			}
+			else
+			{
+				if (!value.equals(b.get(key)))
+					return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	// =========================================================================
+	
+	protected static final class ArbitraryNode
+	{
+		public Object nullValue = null;
+		
+		public int intValue = 42;
+		
+		public String strValue = "some string";
+		
+		public double[] doubleValues = { 3.1415, 2.7182 };
+		
+		// =====================================================================
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			ArbitraryNode other = (ArbitraryNode) obj;
+			if (!Arrays.equals(doubleValues, other.doubleValues))
+				return false;
+			if (intValue != other.intValue)
+				return false;
+			if (nullValue == null)
+			{
+				if (other.nullValue != null)
+					return false;
+			}
+			else if (!nullValue.equals(other.nullValue))
+				return false;
+			if (strValue == null)
+			{
+				if (other.strValue != null)
+					return false;
+			}
+			else if (!strValue.equals(other.strValue))
+				return false;
+			return true;
+		}
 	}
 }

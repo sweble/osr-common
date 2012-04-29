@@ -17,210 +17,370 @@
 
 package de.fau.cs.osr.ptk.common.xml;
 
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Set;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.*;
+
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
-import de.fau.cs.osr.ptk.common.AstVisitor;
-import de.fau.cs.osr.ptk.common.VisitingException;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.xml.WikiTechAstNode.Properties;
+import de.fau.cs.osr.ptk.common.ast.NodeList;
+import de.fau.cs.osr.ptk.common.ast.Text;
+import de.fau.cs.osr.utils.NameAbbrevService;
+import de.fau.cs.osr.utils.ReflectionUtils;
+import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
 
 public class XmlWriter
-		extends
-		AstVisitor
 {
-	private ObjectFactory objectFactory;
-
-	private OutputStream out;
-
-	private DOMImplementation domImplementation;
-
+	private static final int MAX_ENTRIES = 128;
+	
 	// =========================================================================
-
-	public XmlWriter(OutputStream out)
+	
+	private final AttributesImpl atts = new AttributesImpl();
+	
+	private final Map<Class<?>, Marshaller> marshallerCache =
+			new LinkedHashMap<Class<?>, Marshaller>()
+			{
+				private static final long serialVersionUID = 1L;
+				
+				protected boolean removeEldestEntry(
+						Map.Entry<Class<?>, Marshaller> eldest)
+				{
+					return size() > MAX_ENTRIES;
+				}
+			};
+	
+	private boolean compact = false;
+	
+	private Writer writer;
+	
+	private NameAbbrevService abbrevService;
+	
+	private TransformerHandler th;
+	
+	// =========================================================================
+	
+	public static String write(AstNode node) throws SerializationException
 	{
-		this.out = out;
+		StringWriter writer = new StringWriter();
+		new XmlWriter().serialize(node, writer);
+		return writer.toString();
 	}
-
-	// =========================================================================
-
-	@Override
-	protected final boolean before(AstNode node)
+	
+	public static String write(AstNode node, NameAbbrevService abbrevService) throws SerializationException
 	{
+		StringWriter writer = new StringWriter();
+		new XmlWriter().serialize(node, writer, abbrevService);
+		return writer.toString();
+	}
+	
+	public static Writer write(AstNode node, Writer writer) throws SerializationException
+	{
+		new XmlWriter().serialize(node, writer);
+		return writer;
+	}
+	
+	public static Writer write(
+			AstNode node,
+			Writer writer,
+			NameAbbrevService abbrevService) throws SerializationException
+	{
+		new XmlWriter().serialize(node, writer, abbrevService);
+		return writer;
+	}
+	
+	// =========================================================================
+	
+	/**
+	 * If set to true the output is not indented or otherwise beautified.
+	 * 
+	 * @param compact
+	 *            Whether to compact the output.
+	 */
+	public void setCompact(boolean compact)
+	{
+		this.compact = compact;
+	}
+	
+	public void serialize(AstNode node, Writer writer) throws SerializationException
+	{
+		serialize(node, writer, new NameAbbrevService());
+	}
+	
+	public void serialize(
+			AstNode node,
+			Writer writer,
+			NameAbbrevService abbrevService) throws SerializationException
+	{
+		this.writer = writer;
+		
+		this.abbrevService = abbrevService;
+		
 		try
 		{
-			domImplementation =
-					DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
-		} catch (ParserConfigurationException e)
-		{
-			throw new VisitingException(e);
+			before();
+			dispatch(node);
+			after();
 		}
-
-		objectFactory = new ObjectFactory();
-		return super.before(node);
-	}
-
-	@Override
-	protected Object after(AstNode node, Object result)
-	{
-		try
+		catch (TransformerConfigurationException e)
 		{
-			WikitechAst ast = this.objectFactory.createWikitechAst();
-			ast.setNode((WikiTechAstNode) result);
-
-			JAXBContext jaxbContext = JAXBContext.newInstance(
-					"de.fau.cs.osr.ptk.common.xml");
-
-			Marshaller marshaller = jaxbContext.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-
-			marshaller.marshal(ast, out);
-		} catch (JAXBException e)
-		{
-			throw new VisitingException("Failed marshalling the AST", e);
+			throw new SerializationException(e);
 		}
-
-		return super.after(node, result);
+		catch (SAXException e)
+		{
+			throw new SerializationException(e);
+		}
+		catch (JAXBException e)
+		{
+			throw new SerializationException(e);
+		}
 	}
-
+	
 	// =========================================================================
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public WikiTechAstNode visit(AstNode n) throws JAXBException
+	
+	private void before() throws TransformerConfigurationException, SAXException
 	{
-		WikiTechAstNode node = this.objectFactory.createWikiTechAstNode();
-
-		node.setType(n.getNodeTypeName());
-
-		WikiTechAstNode.Properties properties = null;
-
-		Set<String> propertyNames = n.getAttributes().keySet();
-		if (!propertyNames.isEmpty())
+		SAXTransformerFactory tf =
+				(SAXTransformerFactory) SAXTransformerFactory.newInstance();
+		
+		if (!compact)
+			// Not sure if this always works
+			tf.setAttribute("indent-number", new Integer(2));
+		
+		th = tf.newTransformerHandler();
+		
+		Transformer t = th.getTransformer();
+		t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		t.setOutputProperty(OutputKeys.METHOD, "xml");
+		
+		if (!compact)
 		{
-			properties = this.objectFactory.createWikiTechAstNodeProperties();
-
-			for (String name : propertyNames)
-				dumpProperty(properties, name, n.getAttribute(name));
+			// Not sure if this always works
+			t.setOutputProperty(OutputKeys.INDENT, "yes");
+			t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		}
-
-		AstNodePropertyIterator i = n.propertyIterator();
-		while (i.next())
-		{
-			if (properties == null)
-				properties = this.objectFactory.createWikiTechAstNodeProperties();
-
-			dumpProperty(properties, i.getName(), i.getValue());
-		}
-
-		if (properties != null)
-			node.setProperties(properties);
-
-		if (!n.isEmpty())
-		{
-			WikiTechAstNode.Children children =
-					this.objectFactory.createWikiTechAstNodeChildren();
-
-			children.getNode().addAll((List) map(n));
-
-			node.setChildren(children);
-		}
-
-		return node;
+		
+		Result streamResult = new StreamResult(writer);
+		th.setResult(streamResult);
+		
+		th.startDocument();
+		
+		addAttribute(new QName("xmlns:ptk"), PTK_NS);
+		startElement(AST_QNAME);
+		atts.clear();
 	}
-
-	// =========================================================================
-
-	protected void dumpProperty(Properties properties, String name, Object value) throws JAXBException
+	
+	private void after() throws SAXException
 	{
-		WikiTechAstProperty property = this.objectFactory.createWikiTechAstProperty();
-
-		property.setName(name);
-
+		endElement(AST_QNAME);
+		th.endDocument();
+	}
+	
+	// =========================================================================
+	
+	private void dispatch(AstNode n) throws SAXException, JAXBException
+	{
+		switch (n.getNodeType())
+		{
+			case AstNode.NT_TEXT:
+				visit((Text) n);
+				break;
+			case AstNode.NT_NODE_LIST:
+				visit((NodeList) n);
+				break;
+			default:
+				visit(n);
+		}
+	}
+	
+	private void iterate(AstNode n) throws SAXException, JAXBException
+	{
+		for (AstNode c : n)
+			dispatch(c);
+	}
+	
+	private void visit(AstNode n) throws SAXException, JAXBException
+	{
+		String typeName = abbrevService.abbrev(n.getClass());
+		
+		String tagName = typeNameToTagName(typeName);
+		
+		startElement(tagName);
+		{
+			for (Entry<String, Object> e : n.getAttributes().entrySet())
+				writeAttribute(e.getKey(), e.getValue());
+			
+			for (AstNodePropertyIterator i = n.propertyIterator(); i.next();)
+				writeProperty(i.getName(), i.getValue());
+			
+			for (int i = 0; i < n.getChildNames().length; ++i)
+			{
+				startElement(n.getChildNames()[i]);
+				{
+					dispatch(n.get(i));
+				}
+				endElement(n.getChildNames()[i]);
+			}
+		}
+		endElement(tagName);
+	}
+	
+	private void visit(Text n) throws SAXException
+	{
+		startElement(TEXT_QNAME);
+		{
+			String s = n.getContent();
+			th.characters(s.toCharArray(), 0, s.length());
+		}
+		endElement(TEXT_QNAME);
+	}
+	
+	private void visit(NodeList n) throws SAXException, JAXBException
+	{
+		startElement(LIST_QNAME);
+		{
+			iterate(n);
+		}
+		endElement(LIST_QNAME);
+	}
+	
+	// =========================================================================
+	
+	private void writeProperty(String name, Object value) throws SAXException, JAXBException
+	{
+		if (value == null)
+		{
+			addAttribute(ATTR_NULL_QNAME, "true");
+			startElement(name);
+			atts.clear();
+			endElement(name);
+		}
+		else
+		{
+			marshal(name, value);
+		}
+	}
+	
+	private void writeAttribute(String name, Object value) throws SAXException, JAXBException
+	{
+		Class<?> type = null;
+		Class<?> clazz = null;
+		
+		addAttribute(ATTR_NAME_QNAME, name);
+		
 		if (value != null)
 		{
-			Class<?> clazz = value.getClass();
-			if (clazz == Byte.class)
+			clazz = value.getClass();
+			
+			ArrayInfo aInfo = ReflectionUtils.arrayDimension(clazz);
+			if (aInfo.dim > 0)
 			{
-				property.setByte((Byte) value);
-			}
-			else if (clazz == Short.class)
-			{
-				property.setShort((Short) value);
-			}
-			else if (clazz == Integer.class)
-			{
-				property.setInt((Integer) value);
-			}
-			else if (clazz == Long.class)
-			{
-				property.setLong((Long) value);
-			}
-			else if (clazz == Float.class)
-			{
-				property.setFloat((Float) value);
-			}
-			else if (clazz == Double.class)
-			{
-				property.setDouble((Double) value);
-			}
-			else if (clazz == Character.class)
-			{
-				property.setChar(((Character) value).toString());
-			}
-			else if (clazz == String.class)
-			{
-				property.setString((String) value);
-			}
-			else if (clazz == Boolean.class)
-			{
-				property.setBoolean((Boolean) value);
+				addAttribute(ATTR_ARRAY_QNAME, String.valueOf(aInfo.dim));
+				type = aInfo.elementClass;
 			}
 			else
 			{
-				property.setObject(createDomFromObject(value));
-				// property.setObject(createDomFromObject(value));
+				type = clazz;
 			}
 		}
-
-		properties.getProperty().add(property);
+		else
+		{
+			addAttribute(ATTR_NULL_QNAME, "true");
+		}
+		
+		startElement(ATTR_QNAME);
+		atts.clear();
+		{
+			if (value != null)
+			{
+				String typeName = abbrevService.abbrev(type);
+				
+				marshal(typeNameToTagName(typeName), value);
+			}
+		}
+		endElement(ATTR_QNAME);
 	}
-
-	private de.fau.cs.osr.ptk.common.xml.WikiTechAstProperty.Object createDomFromObject(Object value)
-			throws JAXBException
+	
+	// =========================================================================
+	
+	public void marshal(String name, Object obj) throws SAXException, JAXBException
 	{
-		Class<? extends Object> clazz = value.getClass();
-		JAXBContext jc = JAXBContext.newInstance(clazz);
-
-		Marshaller marshaller = jc.createMarshaller();
-
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		JAXBElement<? extends Object> jaxbElement =
-				new JAXBElement(new QName(clazz.getName().replace('$', '-')), clazz, value);
-
-		DOMResult result = new DOMResult();
-
-		marshaller.marshal(jaxbElement, result);
-
-		de.fau.cs.osr.ptk.common.xml.WikiTechAstProperty.Object o = new de.fau.cs.osr.ptk.common.xml.WikiTechAstProperty.Object();
-		String name = clazz.getName();
-		o.setClazz(name);
-		o.setObject(result.getNode().getFirstChild());
-		return o;
+		Class<?> clazz = obj.getClass();
+		if (ReflectionUtils.isExtPrimitive(clazz))
+		{
+			String value = String.valueOf(obj);
+			
+			startElement(name);
+			th.characters(value.toCharArray(), 0, value.length());
+			endElement(name);
+		}
+		else
+		{
+			Marshaller marshaller = marshallerCache.get(clazz);
+			if (marshaller == null)
+			{
+				marshaller = JAXBContext.newInstance(clazz).createMarshaller();
+				marshallerCache.put(clazz, marshaller);
+			}
+			
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			JAXBElement elem = new JAXBElement(new QName(name), clazz, obj);
+			
+			marshaller.marshal(elem, th);
+		}
+	}
+	
+	// =========================================================================
+	
+	private void startElement(String localName) throws SAXException
+	{
+		th.startElement("", "", localName, atts);
+	}
+	
+	private void startElement(QName name) throws SAXException
+	{
+		th.startElement("", "", qNameToStr(name), atts);
+	}
+	
+	private void addAttribute(QName name, String value)
+	{
+		atts.addAttribute("", "", qNameToStr(name), "CDATA", value);
+	}
+	
+	private void endElement(String localName) throws SAXException
+	{
+		th.endElement("", "", localName);
+	}
+	
+	private void endElement(QName name) throws SAXException
+	{
+		th.endElement("", "", qNameToStr(name));
+	}
+	
+	private String qNameToStr(QName name)
+	{
+		if (name.getNamespaceURI() == null || name.getNamespaceURI().isEmpty())
+			return name.getLocalPart();
+		
+		return "ptk:" + name.getLocalPart();
 	}
 }

@@ -6,6 +6,16 @@ import de.fau.cs.osr.ptk.common.ast.Text;
 
 public class TestAstBuilder
 {
+	public static Text astText()
+	{
+		return new Text("Default text");
+	}
+	
+	public static Text astText(String text)
+	{
+		return new Text(text);
+	}
+	
 	public static TestSectionBuilder astSection()
 	{
 		return new TestSectionBuilder();
@@ -22,9 +32,9 @@ public class TestAstBuilder
 	{
 		private int level = 0;
 		
-		private NodeList title = new NodeList(new Text("Default section title"));
+		private NodeList title = new NodeList(astText("Default section title"));
 		
-		private NodeList body = new NodeList(new Text("Default section body"));
+		private NodeList body = new NodeList(astText("Default section body"));
 		
 		public TestSectionBuilder withLevel(int level)
 		{

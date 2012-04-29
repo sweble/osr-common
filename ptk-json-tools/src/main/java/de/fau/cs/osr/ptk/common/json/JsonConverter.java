@@ -1,11 +1,14 @@
 package de.fau.cs.osr.ptk.common.json;
 
+import java.io.Reader;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
+import de.fau.cs.osr.utils.NameAbbrevService;
 
 public class JsonConverter
 {
@@ -16,7 +19,7 @@ public class JsonConverter
 	
 	public static String toJson(Object object, boolean prettyPrinting)
 	{
-		return getGsonConverter(prettyPrinting).toJson(object);
+		return createGsonConverter(prettyPrinting, null).toJson(object);
 	}
 	
 	public static void toJson(Object object, Appendable appendable)
@@ -29,22 +32,75 @@ public class JsonConverter
 			boolean prettyPrinting,
 			Appendable appendable)
 	{
-		getGsonConverter(prettyPrinting).toJson(object, appendable);
+		createGsonConverter(prettyPrinting, null).toJson(object, appendable);
+	}
+	
+	public static String toJson(Object object, NameAbbrevService as)
+	{
+		return toJson(object, true, as);
+	}
+	
+	public static String toJson(
+			Object object,
+			boolean prettyPrinting,
+			NameAbbrevService as)
+	{
+		return createGsonConverter(prettyPrinting, as).toJson(object);
+	}
+	
+	public static void toJson(
+			Object object,
+			Appendable appendable,
+			NameAbbrevService as)
+	{
+		toJson(object, true, appendable, as);
+	}
+	
+	public static void toJson(
+			Object object,
+			boolean prettyPrinting,
+			Appendable appendable,
+			NameAbbrevService as)
+	{
+		createGsonConverter(prettyPrinting, as).toJson(object, appendable);
 	}
 	
 	// =========================================================================
 	
 	public static <T> T fromJson(String json, Class<? extends T> clazz)
 	{
-		return getGsonConverter(false).fromJson(json, clazz);
+		return createGsonConverter(false, null).fromJson(json, clazz);
+	}
+	
+	public static <T> T fromJson(Reader reader, Class<? extends T> clazz)
+	{
+		return createGsonConverter(false, null).fromJson(reader, clazz);
+	}
+	
+	public static <T> T fromJson(
+			String json,
+			Class<? extends T> clazz,
+			NameAbbrevService as)
+	{
+		return createGsonConverter(false, as).fromJson(json, clazz);
+	}
+	
+	public static <T> T fromJson(
+			Reader reader,
+			Class<? extends T> clazz,
+			NameAbbrevService as)
+	{
+		return createGsonConverter(false, as).fromJson(reader, clazz);
 	}
 	
 	// =========================================================================
 	
-	public static Gson createGsonConverter(boolean prettyPrinting)
+	public static Gson createGsonConverter(
+			boolean prettyPrinting,
+			NameAbbrevService as)
 	{
 		GsonBuilder builder = new GsonBuilder();
-		registerAstTypeAdapters(builder);
+		registerAstTypeAdapters(builder, as);
 		
 		if (prettyPrinting)
 			builder.setPrettyPrinting();
@@ -53,46 +109,16 @@ public class JsonConverter
 		return gson;
 	}
 	
-	public static void registerAstTypeAdapters(GsonBuilder gson)
+	public static void registerAstTypeAdapters(
+			GsonBuilder gson,
+			NameAbbrevService as)
 	{
 		gson.registerTypeAdapter(NodeList.class, new NodeListGsonTypeAdapter());
 		gson.registerTypeAdapter(Text.class, new TextGsonTypeAdatper());
 		
 		// Fallback
-		gson.registerTypeHierarchyAdapter(AstNode.class, new AstNodeGsonSerializer());
-	}
-	
-	// =========================================================================
-	
-	private static Gson ppGson = null;
-	
-	private static Gson gson = null;
-	
-	private static Gson getGsonConverter(boolean prettyPrinting)
-	{
-		if (prettyPrinting)
-		{
-			if (ppGson == null)
-			{
-				synchronized (JsonConverter.class)
-				{
-					if (ppGson == null)
-						ppGson = createGsonConverter(true);
-				}
-			}
-			return ppGson;
-		}
-		else
-		{
-			if (gson == null)
-			{
-				synchronized (JsonConverter.class)
-				{
-					if (gson == null)
-						gson = createGsonConverter(false);
-				}
-			}
-			return gson;
-		}
+		gson.registerTypeHierarchyAdapter(
+				AstNode.class,
+				new AstNodeGsonTypeAdapter(as));
 	}
 }

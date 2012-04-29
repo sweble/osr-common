@@ -2,10 +2,7 @@ package de.fau.cs.osr.ptk.common.json;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -20,42 +17,33 @@ import com.google.gson.JsonSerializer;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
+import de.fau.cs.osr.utils.NameAbbrevService;
 
-public final class AstNodeGsonSerializer
+public final class AstNodeGsonTypeAdapter
 		implements
 			JsonSerializer<AstNode>,
 			JsonDeserializer<AstNode>
 {
-	//private static final String[] EXPECTED_AST_NODE_MEMBERS = { "type", "props", "attrs", "children" };
-	
-	private static final int MAX_ENTRIES = 100;
+	private static final int MAX_ENTRIES = 128;
 	
 	// =========================================================================
-	
-	private final Map<String, Class<?>> attrTypeCache;
 	
 	private final Map<PropKey, PropSetter> propTypeCache;
 	
-	private final Map<String, Class<? extends AstNode>> nodeTypeCache;
-	
-	private final List<String> packages = new ArrayList<String>();
+	private final NameAbbrevService abbrev;
 	
 	// =========================================================================
 	
-	public AstNodeGsonSerializer()
+	public AstNodeGsonTypeAdapter()
 	{
-		packages.add("de.fau.cs.osr.ptk.common.json");
-		
-		attrTypeCache = new LinkedHashMap<String, Class<?>>()
-		{
-			private static final long serialVersionUID = 1L;
-			
-			protected boolean removeEldestEntry(
-					Map.Entry<String, Class<?>> eldest)
-			{
-				return size() > MAX_ENTRIES;
-			}
-		};
+		this(null);
+	}
+	
+	public AstNodeGsonTypeAdapter(NameAbbrevService abbrev)
+	{
+		if (abbrev == null)
+			abbrev = new NameAbbrevService();
+		this.abbrev = abbrev;
 		
 		propTypeCache = new LinkedHashMap<PropKey, PropSetter>()
 		{
@@ -63,17 +51,6 @@ public final class AstNodeGsonSerializer
 			
 			protected boolean removeEldestEntry(
 					Map.Entry<PropKey, PropSetter> eldest)
-			{
-				return size() > MAX_ENTRIES;
-			}
-		};
-		
-		nodeTypeCache = new LinkedHashMap<String, Class<? extends AstNode>>()
-		{
-			private static final long serialVersionUID = 1L;
-			
-			protected boolean removeEldestEntry(
-					Map.Entry<String, Class<? extends AstNode>> eldest)
 			{
 				return size() > MAX_ENTRIES;
 			}
@@ -101,6 +78,7 @@ public final class AstNodeGsonSerializer
 				JsonObject attr = new JsonObject();
 				attr.add(
 						"type",
+						//new JsonPrimitive(abbrev.abbrev(value.getClass())));
 						new JsonPrimitive(value.getClass().getName()));
 				attr.add(
 						"value",
@@ -191,23 +169,25 @@ public final class AstNodeGsonSerializer
 		
 		String typeSuffix = typeElem.getAsString();
 		
-		AstNode n = createNodeFromCache(typeSuffix);
-		if (n != null)
-			return n;
-		
-		String fqn = typeSuffix;
-		Iterator<String> i = packages.iterator();
-		while (true)
+		Exception e;
+		try
 		{
-			n = tryToInstantiate(typeSuffix, fqn);
-			if (n != null)
-				return n;
-			
-			if (!i.hasNext())
-				throw new JsonParseException("Cannot find class for AST node with type suffix `" + typeSuffix + "'");
-			
-			fqn = i.next() + "." + typeSuffix;
+			return (AstNode) abbrev.resolve(typeSuffix).newInstance();
 		}
+		catch (ClassNotFoundException e_)
+		{
+			e = e_;
+		}
+		catch (InstantiationException e_)
+		{
+			e = e_;
+		}
+		catch (IllegalAccessException e_)
+		{
+			e = e_;
+		}
+		
+		throw new JsonParseException("Cannot create AST node for name `" + typeSuffix + "'", e);
 	}
 	
 	private void loadAttribute(
@@ -217,12 +197,31 @@ public final class AstNodeGsonSerializer
 	{
 		JsonObject value = field.getValue().getAsJsonObject();
 		
-		n.setAttribute(
-				field.getKey().substring(1),
-				context.<Object> deserialize(
-						value.get("value"),
-						getAttributeType(
-						value.get("type").getAsString())));
+		String name = field.getKey().substring(1);
+		
+		Exception e;
+		try
+		{
+			String type = value.get("type").getAsString();
+			
+			n.setAttribute(
+					name,
+					context.<Object> deserialize(
+							value.get("value"),
+							abbrev.resolve(type)));
+			
+			return;
+		}
+		catch (JsonParseException e_)
+		{
+			e = e_;
+		}
+		catch (ClassNotFoundException e_)
+		{
+			e = e_;
+		}
+		
+		throw new JsonParseException("Failed to deserialize attribute `" + name + "'", e);
 	}
 	
 	private void loadProperty(
@@ -253,27 +252,6 @@ public final class AstNodeGsonSerializer
 						AstNode.class);
 		
 		n.set(i, value);
-	}
-	
-	// =========================================================================
-	
-	private Class<?> getAttributeType(String fqn)
-	{
-		Class<?> type = attrTypeCache.get(fqn);
-		if (type != null)
-			return type;
-		
-		try
-		{
-			type = Class.forName(fqn);
-		}
-		catch (ClassNotFoundException e1)
-		{
-			throw new JsonParseException("Cannot find class `" + fqn + "'");
-		}
-		
-		attrTypeCache.put(fqn, type);
-		return type;
 	}
 	
 	// =========================================================================
@@ -328,49 +306,6 @@ public final class AstNodeGsonSerializer
 		setter = new PropSetter(propType, setterMethod);
 		propTypeCache.put(key, setter);
 		return setter;
-	}
-	
-	// =========================================================================
-	
-	private AstNode createNodeFromCache(String typeSuffix)
-	{
-		Class<? extends AstNode> nodeClass = nodeTypeCache.get(typeSuffix);
-		if (nodeClass == null)
-			return null;
-		return createNode(nodeClass);
-	}
-	
-	@SuppressWarnings("unchecked")
-	private AstNode tryToInstantiate(String typeSuffix, String fqn)
-	{
-		Class<? extends AstNode> nodeClass;
-		try
-		{
-			nodeClass = (Class<? extends AstNode>) Class.forName(fqn);
-		}
-		catch (ClassNotFoundException e)
-		{
-			return null;
-		}
-		
-		nodeTypeCache.put(typeSuffix, nodeClass);
-		return createNode(nodeClass);
-	}
-	
-	private AstNode createNode(Class<? extends AstNode> nodeClass)
-	{
-		try
-		{
-			return nodeClass.newInstance();
-		}
-		catch (InstantiationException e)
-		{
-			throw new JsonParseException(e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new JsonParseException(e);
-		}
 	}
 	
 	// =========================================================================
@@ -461,5 +396,4 @@ public final class AstNodeGsonSerializer
 			}
 		}
 	}
-	
 }
