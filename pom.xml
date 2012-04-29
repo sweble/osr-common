@@ -32,6 +32,7 @@
     <version.dep.junit>4.7</version.dep.junit>
     <version.dep.commons-io>1.4</version.dep.commons-io>
     <version.dep.commons-lang>2.5</version.dep.commons-lang>
+    <version.dep.commons-collections>3.2.1</version.dep.commons-collections>
 
     <!-- Plugin dependency versions -->
     <version.plugin.compiler>2.3.2</version.plugin.compiler>
@@ -97,6 +98,11 @@
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
         <version>${version.dep.commons-lang}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>${version.dep.commons-collections}</version>
       </dependency>
 
     </dependencies>
