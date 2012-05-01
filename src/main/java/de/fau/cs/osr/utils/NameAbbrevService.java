@@ -203,7 +203,7 @@ public class NameAbbrevService
 		return dim;
 	}
 	
-	public static Class<?> arrayClassFor(Class<?> clazz, int dim)
+	private static Class<?> arrayClassFor(Class<?> clazz, int dim)
 	{
 		if (dim == 0)
 			return clazz;
