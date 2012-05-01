@@ -75,16 +75,24 @@ public final class AstNodeGsonTypeAdapter
 				String name = "@" + e.getKey();
 				Object value = e.getValue();
 				
-				JsonObject attr = new JsonObject();
-				attr.add(
-						"type",
-						//new JsonPrimitive(abbrev.abbrev(value.getClass())));
-						new JsonPrimitive(value.getClass().getName()));
-				attr.add(
-						"value",
-						context.serialize(value));
+				JsonElement jsonValue;
+				if (value != null)
+				{
+					JsonObject attr = new JsonObject();
+					attr.add(
+							"type",
+							new JsonPrimitive(abbrev.abbrev(value.getClass())));
+					attr.add(
+							"value",
+							context.serialize(value));
+					jsonValue = attr;
+				}
+				else
+				{
+					jsonValue = null;
+				}
 				
-				node.add(name, attr);
+				node.add(name, jsonValue);
 			}
 		}
 		
@@ -195,21 +203,24 @@ public final class AstNodeGsonTypeAdapter
 			Entry<String, JsonElement> field,
 			AstNode n)
 	{
-		JsonObject value = field.getValue().getAsJsonObject();
-		
 		String name = field.getKey().substring(1);
 		
 		Exception e;
 		try
 		{
-			String type = value.get("type").getAsString();
+			Object value = null;
+			if (!field.getValue().isJsonNull())
+			{
+				JsonObject jsonValue = field.getValue().getAsJsonObject();
+				
+				String type = jsonValue.get("type").getAsString();
+				
+				value = context.<Object> deserialize(
+						jsonValue.get("value"),
+						abbrev.resolve(type));
+			}
 			
-			n.setAttribute(
-					name,
-					context.<Object> deserialize(
-							value.get("value"),
-							abbrev.resolve(type)));
-			
+			n.setAttribute(name, value);
 			return;
 		}
 		catch (JsonParseException e_)

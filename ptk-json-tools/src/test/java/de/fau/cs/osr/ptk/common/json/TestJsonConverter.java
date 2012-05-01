@@ -94,7 +94,7 @@ public class TestJsonConverter
 						+ "{"
 						+ "  \"!type\": \"TestNodeUrl\","
 						+ "  \"@someAttr\": {"
-						+ "    \"type\": \"java.lang.String\","
+						+ "    \"type\": \"String\","
 						+ "    \"value\": \"someAttrValue\""
 						+ "  },"
 						+ "  \"protocol\": \"protocol\","
@@ -136,7 +136,7 @@ public class TestJsonConverter
 		
 		NameAbbrevService as = new NameAbbrevService(
 				"de.fau.cs.osr.ptk.common.test",
-				"de.fau.cs.osr.ptk.common.xml");
+				"de.fau.cs.osr.ptk.common.json");
 		
 		String json = serialize(in, as);
 		

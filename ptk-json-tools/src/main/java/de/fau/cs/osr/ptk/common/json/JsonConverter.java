@@ -120,5 +120,8 @@ public class JsonConverter
 		gson.registerTypeHierarchyAdapter(
 				AstNode.class,
 				new AstNodeGsonTypeAdapter(as));
+		
+		// We require the serialization of null values
+		gson.serializeNulls();
 	}
 }
