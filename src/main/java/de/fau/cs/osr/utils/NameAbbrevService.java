@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
+import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
+
 /**
  * If one has a known subset of classes and therefore a known set of class
  * names, one can abbreviate or even leave out the package name without
@@ -71,9 +73,17 @@ public class NameAbbrevService
 	 */
 	public String abbrev(Class<?> clazz)
 	{
+		String suffix = "";
+		if (clazz.isArray())
+		{
+			ArrayInfo info = ReflectionUtils.arrayDimension(clazz);
+			clazz = info.elementClass;
+			suffix = StringUtils.strrep("[]", info.dim);
+		}
+		
 		String shortName = (String) cache.get(clazz);
 		if (shortName != null)
-			return shortName;
+			return shortName + suffix;
 		
 		// clazz.getSimpleName(); doesn't work for nested classes!
 		String simpleName = clazz.getName();
@@ -90,7 +100,7 @@ public class NameAbbrevService
 			// Cannot abbreviate any more :(
 			shortName = clazz.getName();
 			cache.put(clazz, shortName);
-			return shortName;
+			return shortName + suffix;
 		}
 		
 		final String dotSimpleName = "." + simpleName;
@@ -110,12 +120,12 @@ public class NameAbbrevService
 					// Cannot abbreviate any more :(
 					shortName = clazz.getName();
 					cache.put(clazz, shortName);
-					return shortName;
+					return shortName + suffix;
 				}
 				else
 				{
 					shortName = simpleName;
-					return shortName;
+					return shortName + suffix;
 				}
 			}
 			catch (ClassNotFoundException e)
@@ -124,7 +134,7 @@ public class NameAbbrevService
 		}
 		
 		if (!strict)
-			return clazz.getName();
+			return clazz.getName() + suffix;
 		
 		throw new IllegalArgumentException("Given class is not part of the package list: " + clazz.getName());
 	}
@@ -138,16 +148,20 @@ public class NameAbbrevService
 	 */
 	public Class<?> resolve(String abbrev) throws ClassNotFoundException
 	{
+		int dim = getArrayDim(abbrev);
+		
+		abbrev = abbrev.substring(0, abbrev.length() - dim * 2);
+		
 		Class<?> clazz = (Class<?>) cache.getKey(abbrev);
 		if (clazz != null)
-			return clazz;
+			return arrayClassFor(clazz, dim);
 		
 		if (abbrev.indexOf('.') >= 0)
 		{
 			// Full name was given
 			clazz = Class.forName(abbrev);
 			cache.put(clazz, abbrev);
-			return clazz;
+			return arrayClassFor(clazz, dim);
 		}
 		
 		final String dotSimpleName = "." + abbrev;
@@ -157,7 +171,7 @@ public class NameAbbrevService
 			{
 				clazz = Class.forName(pkg + dotSimpleName);
 				cache.put(clazz, abbrev);
-				return clazz;
+				return arrayClassFor(clazz, dim);
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -165,6 +179,34 @@ public class NameAbbrevService
 		}
 		
 		throw new ClassNotFoundException("Given abbreviated class name was "
-				+ "not found in any package of the package list");
+				+ "not found in any package of the package list: " + abbrev);
+	}
+	
+	private static int getArrayDim(String abbrev)
+	{
+		int dim = 0;
+		for (int i = abbrev.length() - 1; i >= 0;)
+		{
+			if (abbrev.charAt(i) == ']')
+			{
+				--i;
+				if (abbrev.charAt(i) == '[')
+				{
+					--i;
+					++dim;
+					continue;
+				}
+			}
+			
+			break;
+		}
+		return dim;
+	}
+	
+	public static Class<?> arrayClassFor(Class<?> clazz, int dim)
+	{
+		if (dim == 0)
+			return clazz;
+		return ReflectionUtils.arrayClassFor(clazz, dim);
 	}
 }
