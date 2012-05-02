@@ -335,6 +335,9 @@ public class XmlWriter
 		}
 		else
 		{
+			if (obj instanceof Enum && !clazz.isEnum())
+				clazz = clazz.getEnclosingClass();
+			
 			Marshaller marshaller = marshallerCache.get(clazz);
 			if (marshaller == null)
 			{
