@@ -10,45 +10,29 @@
     <version>1.0.1-SNAPSHOT</version>
   </parent>
 
-  <!-- This POM: Parser Toolkit - Common -->
+  <!-- This POM: Parser Toolkit - XML Tools -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
-  <artifactId>ptk-common</artifactId>
+  <artifactId>ptk-xml-tools</artifactId>
   <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>PTK - Common</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-common</url>
-  <inceptionYear>2009</inceptionYear>
+  <name>PTK - XML Tools</name>
+  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-xml-tools</url>
+  <inceptionYear>2012</inceptionYear>
   <description>
-    The parser toolkit common module provides the basic facilities for AST
-    building, traversal, persistence and much more.
+    This module provides facilities for reading and writing ASTs in the XML
+    format.
   </description>
 
   <!-- ==[ Dependencies ]=================================================== -->
 
   <dependencies>
 
-    <!-- Apache Commons -->
+    <!-- Parser Toolkit - Common -->
     <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-jxpath</groupId>
-      <artifactId>commons-jxpath</artifactId>
-    </dependency>
-
-    <!-- Rats! -->
-    <dependency>
-      <groupId>xtc</groupId>
-      <artifactId>rats-runtime</artifactId>
-    </dependency>
-
-    <!-- Utils -->
-    <dependency>
-      <groupId>de.fau.cs.osr.utils</groupId>
-      <artifactId>utils</artifactId>
+      <groupId>de.fau.cs.osr.ptk</groupId>
+      <artifactId>ptk-common</artifactId>
     </dependency>
 
     <!--
@@ -196,6 +180,21 @@
       </plugin>
 
     </plugins>
+
+    <!-- ==[ Plugin Management ]============================================ -->
+
+    <pluginManagement>
+      <plugins>
+
+      <plugin>
+        <groupId>com.sun.tools.xjc.maven2</groupId>
+        <artifactId>maven-jaxb-plugin</artifactId>
+        <version>${version.plugin.jaxb}</version>
+      </plugin>
+
+      </plugins>
+    </pluginManagement>
+
   </build>
 
   <!-- ==[ Reporting ]====================================================== -->

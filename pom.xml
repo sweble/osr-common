@@ -33,6 +33,8 @@
     <module>ptk-profiler</module>
     <module>ptk-printergen-maven-plugin</module>
     <module>ptk-nodegen-maven-plugin</module>
+    <module>ptk-json-tools</module>
+    <module>ptk-xml-tools</module>
   </modules>
 
   <!-- ==[ Properties ]===================================================== -->
@@ -43,9 +45,8 @@
     <version.dep.maven-plugin-api>2.0</version.dep.maven-plugin-api>
     <version.dep.maven-project>2.0.4</version.dep.maven-project>
     <version.dep.commons-jxpath>1.3</version.dep.commons-jxpath>
-    <version.dep.xstream>1.2.2</version.dep.xstream>
-    <version.dep.jaxb>2.2.1</version.dep.jaxb>
     <version.dep.rats>1.15.0</version.dep.rats>
+    <version.dep.gson>2.1</version.dep.gson>
 
     <!-- Plugin dependency versions -->
     <version.plugin.jaxb>0.8.0</version.plugin.jaxb>
@@ -78,18 +79,11 @@
         <version>${version.dep.commons-jxpath}</version>
       </dependency>
 
-      <!-- XStream -->
+      <!-- Gson -->
       <dependency>
-        <groupId>com.thoughtworks.xstream</groupId>
-        <artifactId>xstream</artifactId>
-        <version>${version.dep.xstream}</version>
-      </dependency>
-
-      <!-- JAXB -->
-      <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>${version.dep.jaxb}</version>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${version.dep.gson}</version>
       </dependency>
 
       <!-- Rats! -->

@@ -10,45 +10,35 @@
     <version>1.0.1-SNAPSHOT</version>
   </parent>
 
-  <!-- This POM: Parser Toolkit - Common -->
+  <!-- This POM: Parser Toolkit - JSON Tools -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
-  <artifactId>ptk-common</artifactId>
+  <artifactId>ptk-json-tools</artifactId>
   <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>PTK - Common</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-common</url>
-  <inceptionYear>2009</inceptionYear>
+  <name>PTK - XML Tools</name>
+  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-json-tools</url>
+  <inceptionYear>2012</inceptionYear>
   <description>
-    The parser toolkit common module provides the basic facilities for AST
-    building, traversal, persistence and much more.
+    This module provides facilities for reading and writing ASTs in the JSON
+    format.
   </description>
 
   <!-- ==[ Dependencies ]=================================================== -->
 
   <dependencies>
 
-    <!-- Apache Commons -->
+    <!-- Gson -->
     <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-jxpath</groupId>
-      <artifactId>commons-jxpath</artifactId>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
     </dependency>
 
-    <!-- Rats! -->
+    <!-- Parser Toolkit - Common -->
     <dependency>
-      <groupId>xtc</groupId>
-      <artifactId>rats-runtime</artifactId>
-    </dependency>
-
-    <!-- Utils -->
-    <dependency>
-      <groupId>de.fau.cs.osr.utils</groupId>
-      <artifactId>utils</artifactId>
+      <groupId>de.fau.cs.osr.ptk</groupId>
+      <artifactId>ptk-common</artifactId>
     </dependency>
 
     <!--
@@ -59,8 +49,15 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <!-- JUnit invocations are part of the library! -->
-      <scope>compile</scope>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Hamcrest -->
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-all</artifactId>
+      <version>1.1</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
