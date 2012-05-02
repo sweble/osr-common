@@ -66,7 +66,7 @@ public final class AstNodeGsonTypeAdapter
 			JsonSerializationContext context)
 	{
 		JsonObject node = new JsonObject();
-		node.add("!type", new JsonPrimitive(src.getNodeName()));
+		node.add("!type", new JsonPrimitive(abbrev.abbrev(src.getClass())));
 		
 		if (!src.getAttributes().isEmpty())
 		{
