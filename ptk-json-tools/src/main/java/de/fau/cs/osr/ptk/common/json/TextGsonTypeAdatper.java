@@ -6,7 +6,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -17,13 +16,22 @@ public final class TextGsonTypeAdatper
 			JsonSerializer<Text>,
 			JsonDeserializer<Text>
 {
+	private final JsonConverterImpl config;
+	
+	// =========================================================================
+	
+	public TextGsonTypeAdatper(JsonConverterImpl config)
+	{
+		this.config = config;
+	}
+	
 	@Override
 	public JsonElement serialize(
 			Text src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
-		return new JsonPrimitive(((Text) src).getContent());
+		return config.serializeText(src, typeOfSrc, context);
 	}
 	
 	@Override
@@ -32,14 +40,6 @@ public final class TextGsonTypeAdatper
 			Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException
 	{
-		return deserialize_(json, typeOfT, context);
-	}
-	
-	protected static Text deserialize_(
-			JsonElement json,
-			Type typeOfT,
-			JsonDeserializationContext context)
-	{
-		return new Text(json.getAsString());
+		return config.deserializeText(json, typeOfT, context);
 	}
 }
