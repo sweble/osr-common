@@ -195,11 +195,7 @@ public class JsonConverterImpl
 	
 	private String locationToStr(AstNode src)
 	{
-		Location l = src.getNativeLocation();
-		if (l.getFile() == null)
-			return l.getLine() + ":" + l.getColumn();
-		else
-			return l.getFile() + ":" + l.getLine() + ":" + l.getColumn();
+		return src.getNativeLocation().toString();
 	}
 	
 	private Location strToLocation(JsonElement location)
@@ -207,25 +203,7 @@ public class JsonConverterImpl
 		String s = location.getAsString();
 		if (s == null)
 			return null;
-		int i = s.indexOf(':');
-		if (i == -1)
-			return null;
-		int j = s.indexOf(':', i + 1);
-		int line;
-		int column;
-		String file = null;
-		if (j == -1)
-		{
-			line = Integer.parseInt(s.substring(0, i));
-			column = Integer.parseInt(s.substring(i + 1));
-		}
-		else
-		{
-			file = s.substring(0, i);
-			line = Integer.parseInt(s.substring(i + 1, j));
-			column = Integer.parseInt(s.substring(j + 1));
-		}
-		return new Location(file, line, column);
+		return Location.valueOf(s);
 	}
 	
 	private AstNode instantiateNode(JsonObject jo)

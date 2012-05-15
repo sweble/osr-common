@@ -42,6 +42,8 @@ public class XmlConstants
 	
 	static final QName ATTR_NAME_QNAME = new QName("name");
 	
+	static final QName ATTR_LOCATION_QNAME = new QName("location");
+	
 	static final QName ATTR_ARRAY_QNAME = new QName("array");
 	
 	static final QName ATTR_NULL_QNAME = new QName("null");

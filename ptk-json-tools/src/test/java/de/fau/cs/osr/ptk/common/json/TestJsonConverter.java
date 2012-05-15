@@ -148,7 +148,7 @@ public class TestJsonConverter
 		
 		// -------
 		
-		assertTrue(AstComparer.compare(in, out, false));
+		assertTrue(AstComparer.compare(in, out, false, true));
 		
 		// We have to compare the attribuets manually. The arrays contained in 
 		// the attribute won't be compared correctly by the .equals call.

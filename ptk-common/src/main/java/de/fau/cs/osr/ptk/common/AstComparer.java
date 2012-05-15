@@ -7,11 +7,14 @@ public class AstComparer
 {
 	private final boolean compareAttributes;
 	
+	private final boolean compareLocation;
+	
 	// =========================================================================
 	
-	protected AstComparer(boolean compareAttributes)
+	protected AstComparer(boolean compareAttributes, boolean compareLocation)
 	{
 		this.compareAttributes = compareAttributes;
+		this.compareLocation = compareLocation;
 	}
 	
 	// =========================================================================
@@ -33,9 +36,10 @@ public class AstComparer
 	public static boolean compare(
 			AstNode rootA,
 			AstNode rootB,
-			boolean compareAttributes)
+			boolean compareAttributes,
+			boolean compareLocation)
 	{
-		return new AstComparer(compareAttributes).compareIntern(rootA, rootB);
+		return new AstComparer(compareAttributes, compareLocation).compareIntern(rootA, rootB);
 	}
 	
 	// =========================================================================
@@ -53,6 +57,17 @@ public class AstComparer
 		
 		if (a.getClass() != b.getClass())
 			return false;
+		
+		if (compareLocation)
+		{
+			if (a.getNativeLocation() == null)
+			{
+				if (b.getNativeLocation() != null)
+					return false;
+			}
+			else if (!a.getNativeLocation().equals(b.getNativeLocation()))
+				return false;
+		}
 		
 		// Compare attributes
 		if (compareAttributes)
