@@ -20,6 +20,7 @@ package de.fau.cs.osr.ptk.common.xml;
 import static de.fau.cs.osr.ptk.common.test.TestAstBuilder.*;
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -123,7 +124,11 @@ public class XmlWriterTest
 	// =========================================================================
 	
 	protected static final class ArbitraryNode
+			implements
+				Serializable
 	{
+		private static final long serialVersionUID = 1L;
+		
 		public Object nullValue = null;
 		
 		public int intValue = 42;
