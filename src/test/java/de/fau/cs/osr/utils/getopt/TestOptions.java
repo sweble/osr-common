@@ -192,7 +192,7 @@ public class TestOptions
 		Assert.assertTrue(options.has("some-opt"));
 		
 		thrown.expect(IllegalOptionException.class);
-		thrown.expectMessage("'some-opt'");
+		thrown.expectMessage("'--some-opt'");
 		
 		options.checkForInvalidOptions();
 	}
@@ -264,7 +264,7 @@ public class TestOptions
 		Assert.assertFalse(options.has("some-opt"));
 		
 		thrown.expect(MissingOptionException.class);
-		thrown.expectMessage("'some-opt'");
+		thrown.expectMessage("'--some-opt'");
 		
 		options.expected("some-opt");
 	}
