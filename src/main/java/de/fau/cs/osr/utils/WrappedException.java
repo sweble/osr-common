@@ -28,15 +28,6 @@ public class WrappedException
 		super();
 	}
 	
-	public WrappedException(
-			String message,
-			Throwable cause,
-			boolean enableSuppression,
-			boolean writableStackTrace)
-	{
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-	
 	public WrappedException(String message, Throwable cause)
 	{
 		super(message, cause);
