@@ -29,6 +29,12 @@
 
   <dependencies>
 
+    <!-- Apache Commons - Codec -->
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+
     <!-- Parser Toolkit - Common -->
     <dependency>
       <groupId>de.fau.cs.osr.ptk</groupId>

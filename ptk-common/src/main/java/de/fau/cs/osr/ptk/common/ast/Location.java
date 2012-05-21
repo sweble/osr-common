@@ -20,8 +20,8 @@ package de.fau.cs.osr.ptk.common.ast;
 import java.io.Serializable;
 
 public class Location
-        implements
-            Serializable
+		implements
+			Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -100,15 +100,36 @@ public class Location
 	
 	public String toString()
 	{
-		StringBuilder buf = new StringBuilder();
+		if (getFile() == null)
+			return getLine() + ":" + getColumn();
+		else
+			return getFile() + ":" + getLine() + ":" + getColumn();
+	}
+	
+	public static Location valueOf(String s)
+	{
+		int line;
+		int column;
+		String file = null;
 		
-		buf.append(file);
-		buf.append(':');
-		buf.append(line);
-		buf.append(':');
-		buf.append(column);
+		int i = s.indexOf(':');
+		if (i == -1)
+			return null;
 		
-		return buf.toString();
+		int j = s.indexOf(':', i + 1);
+		if (j == -1)
+		{
+			line = Integer.parseInt(s.substring(0, i));
+			column = Integer.parseInt(s.substring(i + 1));
+		}
+		else
+		{
+			file = s.substring(0, i);
+			line = Integer.parseInt(s.substring(i + 1, j));
+			column = Integer.parseInt(s.substring(j + 1));
+		}
+		
+		return new Location(file, line, column);
 	}
 	
 	// =========================================================================

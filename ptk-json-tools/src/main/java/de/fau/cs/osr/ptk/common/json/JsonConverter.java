@@ -99,8 +99,16 @@ public class JsonConverter
 			boolean prettyPrinting,
 			NameAbbrevService as)
 	{
+		return createGsonConverter(prettyPrinting, as, false);
+	}
+	
+	public static Gson createGsonConverter(
+			boolean prettyPrinting,
+			NameAbbrevService as,
+			boolean saveLocation)
+	{
 		GsonBuilder builder = new GsonBuilder();
-		registerAstTypeAdapters(builder, as);
+		registerAstTypeAdapters(builder, as, saveLocation);
 		
 		if (prettyPrinting)
 			builder.setPrettyPrinting();
@@ -111,15 +119,18 @@ public class JsonConverter
 	
 	public static void registerAstTypeAdapters(
 			GsonBuilder gson,
-			NameAbbrevService as)
+			NameAbbrevService as,
+			boolean saveLocation)
 	{
-		gson.registerTypeAdapter(NodeList.class, new NodeListGsonTypeAdapter());
-		gson.registerTypeAdapter(Text.class, new TextGsonTypeAdatper());
+		JsonConverterImpl config = new JsonConverterImpl(as, saveLocation);
+		
+		gson.registerTypeAdapter(NodeList.class, new NodeListGsonTypeAdapter(config));
+		gson.registerTypeAdapter(Text.class, new TextGsonTypeAdatper(config));
 		
 		// Fallback
 		gson.registerTypeHierarchyAdapter(
 				AstNode.class,
-				new AstNodeGsonTypeAdapter(as));
+				new AstNodeGsonTypeAdapter(config));
 		
 		// We require the serialization of null values
 		gson.serializeNulls();

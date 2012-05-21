@@ -19,16 +19,13 @@ package de.fau.cs.osr.ptk.common.xml;
 
 import static de.fau.cs.osr.ptk.common.xml.XmlConstants.*;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -38,6 +35,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -51,12 +50,15 @@ import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
 
 public class XmlWriter
 {
+	/*
 	private static final int MAX_ENTRIES = 128;
+	*/
 	
 	// =========================================================================
 	
 	private final AttributesImpl atts = new AttributesImpl();
 	
+	/*
 	private final Map<Class<?>, Marshaller> marshallerCache =
 			new LinkedHashMap<Class<?>, Marshaller>()
 			{
@@ -68,6 +70,7 @@ public class XmlWriter
 					return size() > MAX_ENTRIES;
 				}
 			};
+	*/
 	
 	private boolean compact = false;
 	
@@ -76,6 +79,12 @@ public class XmlWriter
 	private NameAbbrevService abbrevService;
 	
 	private TransformerHandler th;
+	
+	private ByteArrayOutputStream baos;
+	
+	private ObjectOutputStream oos;
+	
+	private Base64 b64;
 	
 	// =========================================================================
 	
@@ -153,6 +162,21 @@ public class XmlWriter
 		{
 			throw new SerializationException(e);
 		}
+		catch (IOException e)
+		{
+			throw new SerializationException(e);
+		}
+		finally
+		{
+			if (oos != null)
+				try
+				{
+					oos.close();
+				}
+				catch (IOException e)
+				{
+				}
+		}
 	}
 	
 	// =========================================================================
@@ -197,7 +221,7 @@ public class XmlWriter
 	
 	// =========================================================================
 	
-	private void dispatch(AstNode n) throws SAXException, JAXBException
+	private void dispatch(AstNode n) throws SAXException, JAXBException, IOException
 	{
 		switch (n.getNodeType())
 		{
@@ -212,19 +236,22 @@ public class XmlWriter
 		}
 	}
 	
-	private void iterate(AstNode n) throws SAXException, JAXBException
+	private void iterate(AstNode n) throws SAXException, JAXBException, IOException
 	{
 		for (AstNode c : n)
 			dispatch(c);
 	}
 	
-	private void visit(AstNode n) throws SAXException, JAXBException
+	private void visit(AstNode n) throws SAXException, JAXBException, IOException
 	{
 		String typeName = abbrevService.abbrev(n.getClass());
 		
 		String tagName = typeNameToTagName(typeName);
 		
+		if (n.getNativeLocation() != null)
+			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
 		startElement(tagName);
+		atts.clear();
 		{
 			for (Entry<String, Object> e : n.getAttributes().entrySet())
 				writeAttribute(e.getKey(), e.getValue());
@@ -246,7 +273,10 @@ public class XmlWriter
 	
 	private void visit(Text n) throws SAXException
 	{
+		if (n.getNativeLocation() != null)
+			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
 		startElement(TEXT_QNAME);
+		atts.clear();
 		{
 			String s = n.getContent();
 			th.characters(s.toCharArray(), 0, s.length());
@@ -254,9 +284,12 @@ public class XmlWriter
 		endElement(TEXT_QNAME);
 	}
 	
-	private void visit(NodeList n) throws SAXException, JAXBException
+	private void visit(NodeList n) throws SAXException, JAXBException, IOException
 	{
+		if (n.getNativeLocation() != null)
+			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
 		startElement(LIST_QNAME);
+		atts.clear();
 		{
 			iterate(n);
 		}
@@ -265,7 +298,7 @@ public class XmlWriter
 	
 	// =========================================================================
 	
-	private void writeProperty(String name, Object value) throws SAXException, JAXBException
+	private void writeProperty(String name, Object value) throws SAXException, JAXBException, IOException
 	{
 		if (value == null)
 		{
@@ -280,7 +313,7 @@ public class XmlWriter
 		}
 	}
 	
-	private void writeAttribute(String name, Object value) throws SAXException, JAXBException
+	private void writeAttribute(String name, Object value) throws SAXException, JAXBException, IOException
 	{
 		Class<?> type = null;
 		Class<?> clazz = null;
@@ -322,10 +355,10 @@ public class XmlWriter
 	
 	// =========================================================================
 	
-	public void marshal(String name, Object obj) throws SAXException, JAXBException
+	private void marshal(String name, Object obj) throws SAXException, JAXBException, IOException
 	{
 		Class<?> clazz = obj.getClass();
-		if (ReflectionUtils.isExtPrimitive(clazz))
+		if (ReflectionUtils.isExtPrimitive(clazz) || clazz == String.class)
 		{
 			String value = String.valueOf(obj);
 			
@@ -333,8 +366,29 @@ public class XmlWriter
 			th.characters(value.toCharArray(), 0, value.length());
 			endElement(name);
 		}
+		else if (obj instanceof Enum)
+		{
+			if (!clazz.isEnum())
+				clazz = clazz.getEnclosingClass();
+			
+			if (!clazz.isEnum())
+				throw new InternalError();
+			
+			String value = ((Enum<?>) obj).name();
+			
+			startElement(name);
+			th.characters(value.toCharArray(), 0, value.length());
+			endElement(name);
+		}
+		else if (obj instanceof AstNode)
+		{
+			startElement(name);
+			visit((AstNode) obj);
+			endElement(name);
+		}
 		else
 		{
+			/*
 			if (obj instanceof Enum && !clazz.isEnum())
 				clazz = clazz.getEnclosingClass();
 			
@@ -349,6 +403,24 @@ public class XmlWriter
 			JAXBElement elem = new JAXBElement(new QName(name), clazz, obj);
 			
 			marshaller.marshal(elem, th);
+			*/
+			
+			if (baos == null)
+			{
+				baos = new ByteArrayOutputStream();
+				oos = new ObjectOutputStream(baos);
+				b64 = new Base64();
+			}
+			
+			oos.writeObject(obj);
+			oos.flush();
+			
+			String value = b64.encodeToString(baos.toByteArray());
+			baos.reset();
+			
+			startElement(name);
+			th.characters(value.toCharArray(), 0, value.length());
+			endElement(name);
 		}
 	}
 	
