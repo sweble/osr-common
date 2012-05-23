@@ -55,12 +55,14 @@
     <version.plugin.gpg>1.4</version.plugin.gpg>
     <version.plugin.exec>1.2.1</version.plugin.exec>
 
+    <!-- Site plugin versions-->
     <version.site-plugin.project-info-reports>2.4</version.site-plugin.project-info-reports>
     <version.site-plugin.surefire-report>2.12</version.site-plugin.surefire-report>
     <version.site-plugin.cobertura>2.5.1</version.site-plugin.cobertura>
     <version.site-plugin.taglist>2.4</version.site-plugin.taglist>
     <version.site-plugin.jxr>2.3</version.site-plugin.jxr>
     <version.site-plugin.plugin>2.9</version.site-plugin.plugin>
+    <version.site-plugin.changes>2.7.1</version.site-plugin.changes>
 
     <!-- Extension versions -->
     <version.wagon.ssh-external>2.2</version.wagon.ssh-external>
@@ -199,6 +201,21 @@
 
             <plugin>
               <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
 
           </reportPlugins>
@@ -529,6 +546,13 @@
             </tagListOptions>
           </configuration>
           -->
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-changes-plugin</artifactId>
+          <version>${version.site-plugin.changes}</version>
+          <inherited>true</inherited>
         </plugin>
 
       </plugins>
