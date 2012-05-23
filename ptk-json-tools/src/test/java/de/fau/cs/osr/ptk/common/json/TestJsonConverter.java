@@ -159,11 +159,7 @@ public class TestJsonConverter
 		
 		String json = serialize(in, as);
 		
-		System.out.println(json);
-		
 		AstNode out = deserialize(json, as);
-		
-		System.out.println(serialize(out, as));
 		
 		// -------
 		
