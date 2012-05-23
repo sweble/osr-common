@@ -187,20 +187,6 @@
 
     </plugins>
 
-    <!-- ==[ Plugin Management ]============================================ -->
-
-    <pluginManagement>
-      <plugins>
-
-      <plugin>
-        <groupId>com.sun.tools.xjc.maven2</groupId>
-        <artifactId>maven-jaxb-plugin</artifactId>
-        <version>${version.plugin.jaxb}</version>
-      </plugin>
-
-      </plugins>
-    </pluginManagement>
-
   </build>
 
   <!-- ==[ Reporting ]====================================================== -->
