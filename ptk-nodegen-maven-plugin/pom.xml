@@ -142,6 +142,7 @@
             <exclude>src/test/resources/**</exclude>
             <exclude>src/main/resources/**/*.tmpl</exclude>
             <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/changes.xml</exclude>
             <exclude>src/site/apt/*.apt</exclude>
             <exclude>src/site/fml/*.fml</exclude>
             <exclude>src/site/resources/css/site.css</exclude>
@@ -165,6 +166,14 @@
 
             <plugin>
               <artifactId>maven-plugin-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <id>site-plugin</id>
+                  <reports>
+                    <report>report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
 
             <!-- >>> ADDITIONAL REPORT PLUGINS >>> -->
@@ -241,6 +250,21 @@
                   </tagClasses>
                 </tagListOptions>
               </configuration>
+            </plugin>
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
             <!-- <<< ADDITIONAL REPORT PLUGINS <<< -->
 
