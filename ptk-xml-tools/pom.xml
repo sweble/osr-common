@@ -7,14 +7,14 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - XML Tools -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>ptk-xml-tools</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>PTK - XML Tools</name>
@@ -71,6 +71,7 @@
             <exclude>**/.gitignore</exclude>
             <exclude>src/test/resources/*.xml</exclude>
             <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/changes.xml</exclude>
             <exclude>src/site/resources/css/site.css</exclude>
             <exclude>dependencies</exclude>
             <exclude>LICENSE</exclude>
@@ -179,6 +180,20 @@
                 </tagListOptions>
               </configuration>
             </plugin>
+
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
             <!-- <<< ADDITIONAL REPORT PLUGINS <<< -->
 
           </reportPlugins>
@@ -186,20 +201,6 @@
       </plugin>
 
     </plugins>
-
-    <!-- ==[ Plugin Management ]============================================ -->
-
-    <pluginManagement>
-      <plugins>
-
-      <plugin>
-        <groupId>com.sun.tools.xjc.maven2</groupId>
-        <artifactId>maven-jaxb-plugin</artifactId>
-        <version>${version.plugin.jaxb}</version>
-      </plugin>
-
-      </plugins>
-    </pluginManagement>
 
   </build>
 

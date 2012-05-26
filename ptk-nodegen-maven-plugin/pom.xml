@@ -7,14 +7,14 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - NodeGen Maven Plugin -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>ptk-nodegen-maven-plugin</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>PTK - NodeGen Maven Plugin</name>
@@ -142,6 +142,7 @@
             <exclude>src/test/resources/**</exclude>
             <exclude>src/main/resources/**/*.tmpl</exclude>
             <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/changes.xml</exclude>
             <exclude>src/site/apt/*.apt</exclude>
             <exclude>src/site/fml/*.fml</exclude>
             <exclude>src/site/resources/css/site.css</exclude>
@@ -165,6 +166,14 @@
 
             <plugin>
               <artifactId>maven-plugin-plugin</artifactId>
+              <reportSets>
+                <reportSet>
+                  <id>site-plugin</id>
+                  <reports>
+                    <report>report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
 
             <!-- >>> ADDITIONAL REPORT PLUGINS >>> -->
@@ -241,6 +250,20 @@
                   </tagClasses>
                 </tagListOptions>
               </configuration>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
             <!-- <<< ADDITIONAL REPORT PLUGINS <<< -->
 

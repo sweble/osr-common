@@ -7,14 +7,14 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - Common -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>ptk-common</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>PTK - Common</name>
@@ -81,6 +81,7 @@
             <exclude>**/.gitignore</exclude>
             <exclude>src/test/resources/*.xml</exclude>
             <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/changes.xml</exclude>
             <exclude>src/site/resources/css/site.css</exclude>
             <exclude>dependencies</exclude>
             <exclude>LICENSE</exclude>
@@ -188,6 +189,20 @@
                   </tagClasses>
                 </tagListOptions>
               </configuration>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
             <!-- <<< ADDITIONAL REPORT PLUGINS <<< -->
 
