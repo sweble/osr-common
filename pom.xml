@@ -6,7 +6,7 @@
 
   <groupId>de.fau.cs.osr</groupId>
   <artifactId>tooling</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
 
   <name>Tooling</name>
