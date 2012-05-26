@@ -47,10 +47,11 @@ public final class StringUtils
 				case '&':
 					sb.append("&amp;");
 					break;
-				case '\'': // needs to be escaped in attributes
-					sb.append("&#39;"); // &apos; is not valid HTML 4.0 escape
+				case '\'':
+					// &apos; cannot safely be used, see wikipedia
+					sb.append("&#39;");
 					break;
-				case '"': // needs to be escaped in attributes
+				case '"':
 					sb.append("&quot;");
 					break;
 				default:

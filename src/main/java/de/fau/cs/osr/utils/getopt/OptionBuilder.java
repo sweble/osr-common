@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionParser;
+import joptsimple.OptionSpec;
 import joptsimple.OptionSpecBuilder;
 
 public final class OptionBuilder
@@ -39,55 +41,87 @@ public final class OptionBuilder
 	
 	private char valueSep = 0;
 	
+	private String propertyKey = null;
+	
+	private boolean isFixed = false;
+	
+	private String[] defaultValues = null;
+	
 	// =========================================================================
 	
-	private final Options getOpt;
+	private final Configuration config;
 	
-	public OptionBuilder(Options getOpt)
+	private final OptionParser optionParser;
+	
+	public OptionBuilder(Configuration config, OptionParser optionParser)
 	{
-		super();
-		this.getOpt = getOpt;
+		this.config = config;
+		this.optionParser = optionParser;
 	}
 	
 	// =========================================================================
 	
 	public void create() throws IllegalArgumentException
 	{
-		if (shortOpt == 0 && longOpt == null)
-			throw new IllegalArgumentException(
-			        "must specify either short option or long option");
-		
 		List<String> names = new ArrayList<String>();
 		
-		if (shortOpt != 0)
-			names.add(String.valueOf(shortOpt));
+		OptionSpec<?> spec = null;
 		
-		if (longOpt != null)
-			names.add(longOpt);
+		String delim = "\u0000";
 		
-		OptionSpecBuilder builder =
-		        getOpt.acceptsAll(
-		                names, description);
+		boolean hasCmdLine = (shortOpt != 0 || longOpt != null);
+		if (!hasCmdLine && propertyKey == null)
+			throw new IllegalArgumentException(
+					"must specify either short option, long option or property key");
 		
-		ArgumentAcceptingOptionSpec<String> spec = null;
-		
-		if (optionalArg)
+		if (!isFixed && hasCmdLine)
 		{
-			spec = builder.withOptionalArg();
-		}
-		else if (requiredArg)
-		{
-			spec = builder.withRequiredArg();
-		}
-		
-		if (spec != null)
-		{
-			if (argName != null)
-				spec.describedAs(argName);
+			if (shortOpt != 0)
+				names.add(String.valueOf(shortOpt));
 			
-			if (valueSep != 0)
-				spec.withValuesSeparatedBy(valueSep);
+			if (longOpt != null)
+				names.add(longOpt);
+			
+			OptionSpecBuilder builder = optionParser.acceptsAll(names, description);
+			spec = builder;
+			
+			ArgumentAcceptingOptionSpec<String> aaSpec = null;
+			if (optionalArg)
+			{
+				aaSpec = builder.withOptionalArg();
+			}
+			else if (requiredArg)
+			{
+				aaSpec = builder.withRequiredArg();
+			}
+			
+			if (aaSpec != null)
+			{
+				spec = aaSpec;
+				
+				if (argName != null)
+					aaSpec.describedAs(argName);
+				
+				if (valueSep != 0)
+				{
+					aaSpec.withValuesSeparatedBy(valueSep);
+					delim = String.valueOf(valueSep);
+				}
+				
+				if (defaultValues != null)
+					aaSpec.defaultsTo(defaultValues);
+			}
 		}
+		
+		config.add(new OptionState(
+				spec,
+				names,
+				propertyKey,
+				isFixed,
+				defaultValues,
+				delim,
+				argName,
+				description));
 	}
 	
 	// =========================================================================
@@ -133,6 +167,41 @@ public final class OptionBuilder
 	public OptionBuilder withArgName(String name)
 	{
 		this.argName = name;
+		return this;
+	}
+	
+	public OptionBuilder withPropertyKey(String propertyKey)
+	{
+		this.propertyKey = propertyKey;
+		return this;
+	}
+	
+	public OptionBuilder withDefault(String[] values)
+	{
+		this.defaultValues = values;
+		return this;
+	}
+	
+	public OptionBuilder withDefault(String value, String... values)
+	{
+		int len = 1;
+		if (values != null)
+			len += values.length;
+		this.defaultValues = new String[len];
+		
+		int i = 0;
+		this.defaultValues[i++] = value;
+		if (values != null)
+		{
+			for (String v : values)
+				this.defaultValues[i++] = v;
+		}
+		return this;
+	}
+	
+	protected OptionBuilder withIsFixed()
+	{
+		this.isFixed = true;
 		return this;
 	}
 }

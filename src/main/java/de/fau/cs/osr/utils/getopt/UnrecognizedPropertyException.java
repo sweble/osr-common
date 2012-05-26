@@ -15,19 +15,32 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils;
+package de.fau.cs.osr.utils.getopt;
 
-/**
- * @deprecated Use WrappedException instead!
- */
-public class ExceptionWrapper
+import java.util.Arrays;
+
+import joptsimple.OptionException;
+
+public class UnrecognizedPropertyException
 		extends
-			WrappedException
+			OptionException
 {
 	private static final long serialVersionUID = 1L;
 	
-	public ExceptionWrapper(String message, Exception cause)
+	// =========================================================================
+	
+	protected UnrecognizedPropertyException(String option)
 	{
-		super(message, cause);
+		super(Arrays.asList(option));
+	}
+	
+	// =========================================================================
+	
+	@Override
+	public String getMessage()
+	{
+		return String.format(
+				"%s is not a known property key",
+				singleOptionMessage());
 	}
 }

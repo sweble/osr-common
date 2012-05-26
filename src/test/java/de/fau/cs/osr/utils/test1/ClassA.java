@@ -15,19 +15,9 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils;
+package de.fau.cs.osr.utils.test1;
 
-/**
- * @deprecated Use WrappedException instead!
- */
-public class ExceptionWrapper
-		extends
-			WrappedException
+public class ClassA
 {
-	private static final long serialVersionUID = 1L;
 	
-	public ExceptionWrapper(String message, Exception cause)
-	{
-		super(message, cause);
-	}
 }

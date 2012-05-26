@@ -17,17 +17,29 @@
 
 package de.fau.cs.osr.utils;
 
-/**
- * @deprecated Use WrappedException instead!
- */
-public class ExceptionWrapper
+public class WrappedException
 		extends
-			WrappedException
+			RuntimeException
 {
 	private static final long serialVersionUID = 1L;
 	
-	public ExceptionWrapper(String message, Exception cause)
+	public WrappedException()
+	{
+		super();
+	}
+	
+	public WrappedException(String message, Throwable cause)
 	{
 		super(message, cause);
+	}
+	
+	public WrappedException(String message)
+	{
+		super(message);
+	}
+	
+	public WrappedException(Throwable cause)
+	{
+		super(cause);
 	}
 }

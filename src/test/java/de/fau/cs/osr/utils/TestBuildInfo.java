@@ -14,20 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.fau.cs.osr.utils;
 
-/**
- * @deprecated Use WrappedException instead!
- */
-public class ExceptionWrapper
-		extends
-			WrappedException
+import java.io.IOException;
+
+import org.junit.Test;
+
+public class TestBuildInfo
 {
-	private static final long serialVersionUID = 1L;
-	
-	public ExceptionWrapper(String message, Exception cause)
+	@Test
+	public void test() throws IOException
 	{
-		super(message, cause);
+		ClassLoader cl;
+		
+		cl = getClass().getClassLoader();
+		
+		System.out.println(BuildInfo.build(
+		        "de.fau.cs.osr.utils",
+		        "utils",
+		        cl));
 	}
 }

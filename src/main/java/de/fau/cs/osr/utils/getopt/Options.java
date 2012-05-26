@@ -17,105 +17,179 @@
 
 package de.fau.cs.osr.utils.getopt;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpecBuilder;
 import de.fau.cs.osr.utils.FmtIllegalArgumentException;
 
 public final class Options
 {
-	private OptionParser optionParser = new OptionParser();
+	private final OptionParser optionParser = new OptionParser();
 	
-	private Map<String, OptionState> options = new HashMap<String, OptionState>();
-	
-	private OptionSet commandLine;
-	
-	private boolean quiet = false;
+	private final Configuration config = new Configuration();
 	
 	private final Map<Class<?>, Converter<?>> converters =
-	        new HashMap<Class<?>, Converter<?>>();
+			new HashMap<Class<?>, Converter<?>>();
+	
+	private boolean quiet = false;
 	
 	// =========================================================================
 	
 	public Options()
 	{
-		addConverter(String.class, new Converter<String>()
-		        {
-			        @Override
-			        public String convert(String option, String value)
-			        {
-				        return value;
-			        }
-		        });
+		Converter<String> strConv = new Converter<String>()
+		{
+			@Override
+			public String convert(String option, String value)
+			{
+				return value;
+			}
+		};
+		addConverter(String.class, strConv);
 		
-		addConverter(Integer.class, new Converter<Integer>()
-		        {
-			        @Override
-			        public Integer convert(String option, String value)
-			        {
-				        try
-				        {
-					        return Integer.parseInt(value);
-				        }
-				        catch (NumberFormatException e)
-				        {
-					        throw new FailedConversionException(
-					                option,
-					                value,
-					                Integer.class);
-				        }
-			        }
-		        });
+		Converter<Integer> intConv = new Converter<Integer>()
+		{
+			@Override
+			public Integer convert(String option, String value)
+			{
+				try
+				{
+					return Integer.parseInt(value);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new FailedConversionException(
+							option,
+							value,
+							Integer.class);
+				}
+			}
+		};
+		addConverter(Integer.class, intConv);
+		addConverter(int.class, intConv);
 		
-		addConverter(Boolean.class, new Converter<Boolean>()
-		        {
-			        @Override
-			        public Boolean convert(String option, String value)
-			        {
-				        if (value == null)
-					        return true;
-				        
-				        String cmp = value.trim().toLowerCase();
-				        return cmp.equals("true") ||
-				                cmp.equals("yes") ||
-				                cmp.equals("1");
-			        }
-		        });
+		Converter<Boolean> boolConv = new Converter<Boolean>()
+		{
+			@Override
+			public Boolean convert(String option, String value)
+			{
+				if (value == null)
+					return true;
+				
+				String cmp = value.trim().toLowerCase();
+				return cmp.equals("true") ||
+						cmp.equals("yes") ||
+						cmp.equals("1");
+			}
+		};
+		addConverter(Boolean.class, boolConv);
+		addConverter(boolean.class, boolConv);
 	}
 	
 	// =========================================================================
 	
+	/**
+	 * Start creation of an option with only a short name.
+	 * 
+	 * @param shortOpt
+	 *            The short name of the option.
+	 * @return An OptionBuilder object. You have to call .create() on this
+	 *         object to actually create the option.
+	 */
 	public OptionBuilder createOption(char shortOpt)
 	{
-		return new OptionBuilder(this).withShortOpt(shortOpt);
+		return new OptionBuilder(config, optionParser).withShortOpt(shortOpt);
 	}
 	
+	/**
+	 * Start creation of an option with only a long name.
+	 * 
+	 * @param longOpt
+	 *            The long name of the option.
+	 * @return An OptionBuilder object. You have to call .create() on this
+	 *         object to actually create the option.
+	 */
 	public OptionBuilder createOption(String longOpt)
 	{
-		return new OptionBuilder(this).withLongOpt(longOpt);
+		return new OptionBuilder(config, optionParser).withLongOpt(longOpt);
 	}
 	
+	/**
+	 * Start creation of an option with both short and long name.
+	 * 
+	 * @param shortOpt
+	 *            The short name of the option.
+	 * @param longOpt
+	 *            The long name of the option.
+	 * @return An OptionBuilder object. You have to call .create() on this
+	 *         object to actually create the option.
+	 */
 	public OptionBuilder createOption(char shortOpt, String longOpt)
 	{
-		return new OptionBuilder(this)
-		        .withShortOpt(shortOpt)
-		        .withLongOpt(longOpt);
+		return new OptionBuilder(config, optionParser)
+				.withShortOpt(shortOpt)
+				.withLongOpt(longOpt);
+	}
+	
+	/**
+	 * Start creation of an option that can only be specified in a properties
+	 * file but not on the command line.
+	 * 
+	 * @param propertyKey
+	 *            The key (name) of the property.
+	 * @return An OptionBuilder object. You have to call .create() on this
+	 *         object to actually create the option.
+	 */
+	
+	public OptionBuilder createPropertyOnlyOption(String propertyKey)
+	{
+		return new OptionBuilder(config, optionParser)
+				.withPropertyKey(propertyKey);
+	}
+	
+	/**
+	 * Create an option with a fixed value. The user cannot override this option
+	 * on the command line or in a properties file.
+	 * 
+	 * @param name
+	 *            The name of the option. The name is used as long name and
+	 *            property key.
+	 * @param value
+	 *            The fixed value of this option.
+	 */
+	public void createFixedValueOption(String name, String value)
+	{
+		new OptionBuilder(config, optionParser)
+				.withIsFixed()
+				.withLongOpt(name)
+				.withPropertyKey(name)
+				.withRequiredArg()
+				.withDefault(value)
+				.create();
 	}
 	
 	// =========================================================================
 	
+	/**
+	 * Whether this Options object prints warning messages on the console.
+	 */
 	public boolean isQuiet()
 	{
 		return quiet;
 	}
 	
+	/**
+	 * Set whether this Options object shall print warning message on the
+	 * console.
+	 */
 	public void setQuiet(boolean quiet)
 	{
 		this.quiet = quiet;
@@ -123,12 +197,68 @@ public final class Options
 	
 	// =========================================================================
 	
+	/**
+	 * Parse a command line after specifying all possible options.
+	 */
 	public void parse(String[] args)
 	{
-		commandLine = optionParser.parse(args);
+		config.setOptionSet(optionParser.parse(args));
 	}
 	
-	public void help(OutputStream sink)
+	/**
+	 * Merge given properties.
+	 */
+	public void load(Properties properties)
+	{
+		config.loadProperties(properties);
+	}
+	
+	/**
+	 * Load options from input stream.
+	 */
+	public void load(FileInputStream inputStream) throws IOException
+	{
+		Properties p = new Properties();
+		p.load(inputStream);
+		load(p);
+	}
+	
+	/**
+	 * Load options from properties file.
+	 */
+	public void load(File file) throws IOException
+	{
+		FileInputStream is = new FileInputStream(file);
+		try
+		{
+			load(is);
+		}
+		finally
+		{
+			is.close();
+		}
+	}
+	
+	/**
+	 * Print a help message after specifying all possible options.
+	 * 
+	 * @param sink
+	 *            Where to print the help message to.
+	 * 
+	 * @deprecated Use cmdLineHelp() instead.
+	 */
+	public void help(PrintStream sink)
+	{
+		cmdLineHelp(sink);
+	}
+	
+	/**
+	 * Print a help message after specifying all possible options.
+	 * 
+	 * @param sink
+	 *            Where to print the help message to.
+	 */
+	public void cmdLineHelp(OutputStream sink)
 	{
 		try
 		{
@@ -140,42 +270,102 @@ public final class Options
 		}
 	}
 	
-	public boolean has(String option)
+	/**
+	 * Print a help message after specifying all possible property keys.
+	 * 
+	 * @param sink
+	 *            Where to print the help message to.
+	 */
+	public void propertiesHelp(PrintStream out)
 	{
-		return commandLine.has(option);
+		config.propertiesHelp(out);
 	}
 	
+	/**
+	 * Print a help message after specifying all possible fixed options.
+	 * 
+	 * @param sink
+	 *            Where to print the help message to.
+	 */
+	public void fixedOptionsHelp(PrintStream out)
+	{
+		config.fixedOptionsHelp(out);
+	}
+	
+	/**
+	 * Tell whether an options was specified on the command line or in a
+	 * properties file. This method only returns true if the option was actually
+	 * specified. If it was not specified but has a default value, this method
+	 * still returns false.
+	 * 
+	 * @param option
+	 *            The name of the options to query. This can be either the short
+	 *            or long name or the property key of this option.
+	 */
+	public boolean has(String option)
+	{
+		return config.has(option);
+	}
+	
+	/**
+	 * Return the value of an option. First the value is searched on the command
+	 * line. Then the properties are scanned. And finally, if the option has a
+	 * default value, the default value will be returned. If none of the
+	 * aforementioned sources can provide a value, null is returned.
+	 * 
+	 * @param option
+	 *            The name of the options to query. This can be either the short
+	 *            or long name or the property key of this option.
+	 */
 	public String value(String option)
 	{
-		return (String) commandLine.valueOf(option);
+		return config.valueOf(option);
+	}
+	
+	/**
+	 * Return the value of an option. First the value is searched on the command
+	 * line. Then the properties are scanned. If none of the aforementioned
+	 * sources can provide a value, the default value given as parameter is
+	 * returned.
+	 * 
+	 * @param option
+	 *            The name of the options to query. This can be either the short
+	 *            or long name or the property key of this option.
+	 * @param default_
+	 *            The default value to use if neither the command line nor
+	 *            properties can provide a value.
+	 */
+	public String value(String option, String default_)
+	{
+		return config.valueOf(option, default_);
+	}
+	
+	public <T> T value(String option, Class<T> clazz)
+	{
+		return convert(option, value(option), clazz);
 	}
 	
 	public <T> T value(String option, Class<T> clazz, T default_)
 	{
 		T value = default_;
 		if (has(option))
-			value = convert(option, value(option), clazz);
+			value = convert(option, config.valueOfNoDefault(option), clazz);
 		return value;
-	}
-	
-	public List<String> getFreeArguments()
-	{
-		return commandLine.nonOptionArguments();
-	}
-	
-	public <T> T convert(String option, String value, Class<T> clazz)
-	{
-		@SuppressWarnings("unchecked")
-		Converter<T> converter = (Converter<T>) converters.get(clazz);
-		if (converter == null)
-			throw new UnknownConversionException(option, clazz);
-		
-		return converter.convert(option, value);
 	}
 	
 	public String[] values(String option)
 	{
-		return commandLine.valuesOf(option).toArray(new String[0]);
+		return config.valuesOf(option).toArray(new String[0]);
+	}
+	
+	public List<String> getFreeArguments()
+	{
+		return config.nonOptionArguments();
+	}
+	
+	public Properties propertySubset(String prefix)
+	{
+		return config.propertySubset(prefix);
 	}
 	
 	// =========================================================================
@@ -188,97 +378,177 @@ public final class Options
 	
 	// =========================================================================
 	
-	OptionSpecBuilder acceptsAll(List<String> names, String description)
+	/**
+	 * Assert that an expected short option was given on the command line. This
+	 * method also fails if the option was not given but had a default value.
+	 * 
+	 * @throws MissingOptionException
+	 */
+	public void expected(char shortOpt) throws MissingOptionException
 	{
-		OptionState option = new OptionState();
-		for (String name : names)
-		{
-			option.addName(name);
-			options.put(name, option);
-		}
-		return optionParser.acceptsAll(names, description);
+		OptionState state = config.updateState(shortOpt);
+		if (!config.has(String.valueOf(shortOpt)))
+			throw new MissingOptionException(state.formatNames());
 	}
 	
-	// =========================================================================
-	
-	public void expected(char shortOpt)
+	/**
+	 * Assert that an expected long option was given on the command line or
+	 * found in a properties file. This method also fails if the option was not
+	 * given but had a default value.
+	 * 
+	 * @param name
+	 *            The name of the long option or the property key.
+	 * 
+	 * @throws MissingOptionException
+	 */
+	public void expected(String name) throws MissingOptionException
 	{
-		OptionState state = updateState(shortOpt);
-		if (!commandLine.has(String.valueOf(shortOpt)))
-			throw new MissingOptionException(state.getNames());
+		OptionState state = config.updateState(name);
+		if (!config.has(name))
+			throw new MissingOptionException(state.formatNames());
 	}
 	
-	public void expected(String longOpt) throws MissingOptionException
-	{
-		OptionState state = updateState(longOpt);
-		if (!commandLine.has(longOpt))
-			throw new MissingOptionException(state.getNames());
-	}
-	
-	public String expectedOneOf(String... longOpts) throws ExpectedOneOfOptionException
+	/**
+	 * Assert that exactly one of a set of expected long options was given on
+	 * the command line or found in a properties file.
+	 * 
+	 * @param names
+	 *            The names of the long options or the property keys.
+	 * 
+	 * @throws MissingOptionException
+	 */
+	public String expectedOneOf(String... names) throws ExpectedOneOfOptionException
 	{
 		int found = 0;
 		String last = null;
-		for (String longOpt : longOpts)
+		for (String name : names)
 		{
-			updateState(longOpt);
-			if (commandLine.has(longOpt))
+			config.updateState(name);
+			if (config.has(name))
 			{
 				++found;
-				last = longOpt;
+				last = name;
 			}
 		}
 		
 		if (found != 1)
-			throw new ExpectedOneOfOptionException(longOpts);
+			throw new ExpectedOneOfOptionException(names);
 		
 		return last;
 	}
 	
+	/**
+	 * Indicate that a short option is optional. This becomes important when
+	 * calling checkForInvalidOptions() to check for unexpected options on the
+	 * command line.
+	 */
 	public void optional(char shortOpt)
 	{
-		updateState(shortOpt);
+		config.updateState(shortOpt);
 	}
 	
+	/**
+	 * Indicate that a long option option is optional. This becomes important
+	 * when calling checkForInvalidOptions() to check for unexpected options on
+	 * the command line.
+	 * 
+	 * Note that while certain options can be required (see expected()) in
+	 * properties files as well, all non-required properties are automatically
+	 * optional. Therefore this method does not affect the options defined in
+	 * properties files.
+	 */
 	public void optional(String longOpt)
 	{
-		updateState(longOpt);
+		config.updateState(longOpt);
 	}
 	
+	/**
+	 * Indicate that a short option is ignored. This becomes important when
+	 * calling checkForInvalidOptions() to check for unexpected options on the
+	 * command line.
+	 * 
+	 * This method also prints a warning to stderr if the option was given on
+	 * the command line.
+	 */
 	public void ignore(char shortOpt)
 	{
 		ignore(shortOpt, false);
 	}
 	
+	/**
+	 * Indicate that a short option is ignored. This becomes important when
+	 * calling checkForInvalidOptions() to check for unexpected options on the
+	 * command line.
+	 * 
+	 * This method also prints a warning to stderr if the option was given on
+	 * the command line.
+	 * 
+	 * @param quiet
+	 *            Supress the warning message.
+	 */
 	public void ignore(char shortOpt, boolean quiet)
 	{
-		if (!quiet && !this.quiet)
+		if (!quiet && !this.quiet && config.has(String.valueOf(shortOpt)))
 			System.err.format("Option `%c' is ignored!\n", shortOpt);
 		
-		updateState(shortOpt);
+		config.updateState(shortOpt);
 	}
 	
-	public void ignore(String longOpt)
+	/**
+	 * Indicate that a long option or property key is ignored. This becomes
+	 * important when calling checkForInvalidOptions() to check for unexpected
+	 * options on the command line. It is not required for properties.
+	 * 
+	 * This method also prints a warning to stderr if the option was given on
+	 * the command line or defined in a properties file.
+	 */
+	public void ignore(String name)
 	{
-		ignore(longOpt, false);
+		ignore(name, false);
 	}
 	
-	public void ignore(String longOpt, boolean quiet)
+	/**
+	 * Indicate that a long option or property key is ignored. This becomes
+	 * important when calling checkForInvalidOptions() to check for unexpected
+	 * options on the command line. It is not required for properties.
+	 * 
+	 * This method also prints a warning to stderr if the option was given on
+	 * the command line or defined in a properties file.
+	 * 
+	 * @param quiet
+	 *            Supress the warning message.
+	 */
+	public void ignore(String name, boolean quiet)
 	{
-		if (!quiet && !this.quiet)
-			System.err.format("Option `%s' is ignored!\n", longOpt);
+		if (!quiet && !this.quiet && config.has(name))
+			System.err.format("Option `%s' is ignored!\n", name);
 		
-		updateState(longOpt);
+		config.updateState(name);
 	}
 	
+	/**
+	 * Assert that a given short option's value is one of given set.
+	 * 
+	 * @throws IllegalOptionArgumentException
+	 */
+	public <E extends Enum<?>> E optionOneOf(char shortOpt, Class<E> enum_) throws IllegalOptionArgumentException
+	{
+		return optionOneOf(String.valueOf(shortOpt), enum_);
+	}
+	
+	/**
+	 * Assert that a given long option or property's value is one of given set.
+	 * 
+	 * @throws IllegalOptionArgumentException
+	 */
 	@SuppressWarnings("unchecked")
-	public <E extends Enum<?>> E optionOneOf(String longOpt, Class<E> enum_) throws IllegalOptionArgumentException
+	public <E extends Enum<?>> E optionOneOf(String name, Class<E> enum_) throws IllegalOptionArgumentException
 	{
-		OptionState state = updateState(longOpt);
+		OptionState state = config.updateState(name);
 		
-		String value = (String) commandLine.valueOf(longOpt);
+		String value = (String) config.valueOf(name);
 		if (value == null)
-			throw new MissingOptionException(state.getNames());
+			throw new MissingOptionException(state.formatNames());
 		
 		E[] values;
 		try
@@ -288,8 +558,8 @@ public final class Options
 		catch (Exception e)
 		{
 			throw new FmtIllegalArgumentException(
-			        e,
-			        "Argument `enum_' of illegal type");
+					e,
+					"Argument `enum_' of illegal type");
 		}
 		
 		E actualValue = null;
@@ -297,7 +567,7 @@ public final class Options
 		{
 			if (!(valueType instanceof OptionEnum))
 				throw new FmtIllegalArgumentException(
-				        "Argument `enum_' does not inherit `OptionEnum'");
+						"Argument `enum_' does not inherit `OptionEnum'");
 			
 			if (((OptionEnum) valueType).getOptionName().equals(value))
 			{
@@ -307,74 +577,25 @@ public final class Options
 		}
 		
 		if (actualValue == null)
-			throw new IllegalOptionArgumentException(state.getNames(), value);
+			throw new IllegalOptionArgumentException(state.formatNames(), value);
 		
 		return actualValue;
 	}
 	
-	// =========================================================================
-	
-	protected OptionState updateState(char shortOpt)
-	{
-		OptionState state = options.get(String.valueOf(shortOpt));
-		if (state == null)
-			throw new FmtIllegalArgumentException(
-			        "Short option `%s' was not specified.",
-			        String.valueOf(shortOpt));
-		
-		state.setValid(true);
-		return state;
-	}
-	
-	protected OptionState updateState(String longOpt)
-	{
-		OptionState state = options.get(longOpt);
-		if (state == null)
-			throw new FmtIllegalArgumentException(
-			        "Long option `%s' was not specified.",
-			        longOpt);
-		
-		state.setValid(true);
-		return state;
-	}
-	
-	// =========================================================================
-	
 	public void checkForInvalidOptions() throws IllegalOptionException
 	{
-		for (OptionState state : options.values())
-		{
-			if (commandLine.has(state.getNames().get(0)) && !state.isValid())
-				throw new IllegalOptionException(state.getNames());
-		}
+		config.checkForInvalidOptions();
 	}
 	
 	// =========================================================================
 	
-	private static final class OptionState
+	protected <T> T convert(String option, String value, Class<T> clazz)
 	{
-		private boolean valid = false;
+		@SuppressWarnings("unchecked")
+		Converter<T> converter = (Converter<T>) converters.get(clazz);
+		if (converter == null)
+			throw new UnknownConversionException(option, clazz);
 		
-		private List<String> names = new ArrayList<String>();
-		
-		public boolean isValid()
-		{
-			return valid;
-		}
-		
-		public List<String> getNames()
-		{
-			return names;
-		}
-		
-		public void addName(String name)
-		{
-			names.add(name);
-		}
-		
-		public void setValid(boolean valid)
-		{
-			this.valid = valid;
-		}
+		return converter.convert(option, value);
 	}
 }

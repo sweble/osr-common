@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>1.0.4.1</version>
+    <version>1.1.0</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -15,7 +15,7 @@
 
   <groupId>de.fau.cs.osr.utils</groupId>
   <artifactId>utils</artifactId>
-  <version>0.2.0.1</version>
+  <version>0.3.0</version>
   <packaging>jar</packaging>
 
   <name>Utils</name>
@@ -30,13 +30,19 @@
   <properties>
 
     <!-- Dependency versions -->
-    <version.dep.jopt-simple>3.2</version.dep.jopt-simple>
+    <version.dep.jopt-simple>4.3</version.dep.jopt-simple>
 
   </properties>
 
   <!-- ==[ Dependencies ]=================================================== -->
 
   <dependencies>
+
+    <!-- Apache commons -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>net.sf.jopt-simple</groupId>
@@ -55,6 +61,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>
@@ -98,12 +105,28 @@
           <excludes>
             <exclude>**/.gitignore</exclude>
             <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/changes.xml</exclude>
             <exclude>src/site/resources/css/site.css</exclude>
             <exclude>dependencies</exclude>
             <exclude>LICENSE</exclude>
             <exclude>NOTICE</exclude>
           </excludes>
         </configuration>
+      </plugin>
+
+      <!-- Make Git information available as properties -->
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <!-- Disabled until problem
+            https://github.com/ktoso/maven-git-commit-id-plugin/issues/19
+            is resolved -->
+          <execution>
+            <id>git-commit-info-disabled</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
       </plugin>
 
       <!-- Maven site generation -->
@@ -190,6 +213,20 @@
                   </tagClasses>
                 </tagListOptions>
               </configuration>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
             <!-- <<< ADDITIONAL REPORT PLUGINS <<< -->
 
