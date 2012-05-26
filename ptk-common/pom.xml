@@ -7,14 +7,14 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.0.0.1</version>
+    <version>1.1.0</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - Common -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>ptk-common</artifactId>
-  <version>1.0.0.1</version>
+  <version>1.1.0</version>
   <packaging>jar</packaging>
 
   <name>PTK - Common</name>
@@ -24,15 +24,6 @@
     The parser toolkit common module provides the basic facilities for AST
     building, traversal, persistence and much more.
   </description>
-
-  <!-- ==[ Properties ]===================================================== -->
-
-  <properties>
-
-    <!-- Plugin dependency versions -->
-    <version.plugin.jaxb>1.1.1</version.plugin.jaxb>
-
-  </properties>
 
   <!-- ==[ Dependencies ]=================================================== -->
 
@@ -46,18 +37,6 @@
     <dependency>
       <groupId>commons-jxpath</groupId>
       <artifactId>commons-jxpath</artifactId>
-    </dependency>
-
-    <!-- XStream -->
-    <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-    </dependency>
-
-    <!-- JAXB -->
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
     </dependency>
 
     <!-- Rats! -->
@@ -92,43 +71,6 @@
 
     <plugins>
 
-      <!-- Add XML schema source directory -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>add-source</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>src/main/schema</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Compile schema files -->
-      <plugin>
-        <groupId>com.sun.tools.xjc.maven2</groupId>
-        <artifactId>maven-jaxb-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <schemaDirectory>${basedir}/src/main/schema</schemaDirectory>
-          <generatePackage>de.fau.cs.osr.ptk.common.xml</generatePackage>
-        </configuration>
-      </plugin>
-
       <!-- Check and format license headers -->
       <plugin>
         <groupId>com.mycila.maven-license-plugin</groupId>
@@ -137,14 +79,30 @@
           <header>../etc/license-header.txt</header>
           <excludes>
             <exclude>**/.gitignore</exclude>
+            <exclude>src/test/resources/*.xml</exclude>
             <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/changes.xml</exclude>
             <exclude>src/site/resources/css/site.css</exclude>
-            <exclude>src/test/resources/simple.xml</exclude>
             <exclude>dependencies</exclude>
             <exclude>LICENSE</exclude>
             <exclude>NOTICE</exclude>
           </excludes>
         </configuration>
+      </plugin>
+
+      <!-- Make Git information available as properties -->
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <!-- Disabled until problem
+            https://github.com/ktoso/maven-git-commit-id-plugin/issues/19
+            is resolved -->
+          <execution>
+            <id>git-commit-info-disabled</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
       </plugin>
 
       <!-- Maven site generation -->
@@ -232,6 +190,20 @@
                 </tagListOptions>
               </configuration>
             </plugin>
+
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
             <!-- <<< ADDITIONAL REPORT PLUGINS <<< -->
 
           </reportPlugins>
@@ -239,21 +211,6 @@
       </plugin>
 
     </plugins>
-
-    <!-- ==[ Plugin Management ]============================================ -->
-
-    <pluginManagement>
-      <plugins>
-
-      <plugin>
-        <groupId>com.sun.tools.xjc.maven2</groupId>
-        <artifactId>maven-jaxb-plugin</artifactId>
-        <version>${version.plugin.jaxb}</version>
-      </plugin>
-
-      </plugins>
-    </pluginManagement>
-
   </build>
 
   <!-- ==[ Reporting ]====================================================== -->

@@ -17,8 +17,6 @@
 
 package de.fau.cs.osr.ptk.common;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
-
 /**
  * Thrown when an exception occurs during visitation but not inside a visit()
  * method.
@@ -29,15 +27,15 @@ public class VisitorException
 {
 	private static final long serialVersionUID = 1L;
 	
-	private final AstNode node;
+	private final Object node;
 	
-	public VisitorException(AstNode node, Throwable cause)
+	public VisitorException(Object node, Throwable cause)
 	{
 		super(cause);
 		this.node = node;
 	}
 	
-	public AstNode getNode()
+	public Object getNode()
 	{
 		return node;
 	}

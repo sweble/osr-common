@@ -29,7 +29,7 @@ import java.util.Stack;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 
-import de.fau.cs.osr.ptk.common.Visitor;
+import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
@@ -56,7 +56,7 @@ import de.fau.cs.osr.utils.StringUtils;
 
 public final class PrinterTemplateVisitor
         extends
-            Visitor
+            AstVisitor
 {
 	private static String tmplClass = null;
 	
@@ -546,7 +546,7 @@ public final class PrinterTemplateVisitor
 	
 	public final class CallMethodVisitor
 	        extends
-	            Visitor
+	            AstVisitor
 	{
 		public void visit(NodeList n)
 		{

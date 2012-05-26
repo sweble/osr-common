@@ -35,7 +35,7 @@ public class VisitorTest
 	
 	static class VisitorA
 	        extends
-	            Visitor
+	            AstVisitor
 	{
 		public void visit(AstNode n)
 		{

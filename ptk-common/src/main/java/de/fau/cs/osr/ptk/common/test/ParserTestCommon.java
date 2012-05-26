@@ -30,8 +30,8 @@ import org.junit.Assert;
 
 import xtc.parser.ParseException;
 import de.fau.cs.osr.ptk.common.AstPrinterInterface;
+import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ParserInterface;
-import de.fau.cs.osr.ptk.common.Visitor;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public class ParserTestCommon
@@ -73,7 +73,7 @@ public class ParserTestCommon
 	
 	// =========================================================================
 	
-	public List<String> gatherParseAndPrint(String wikitextDir, Visitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
+	public List<String> gatherParseAndPrint(String wikitextDir, AstVisitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
 	{
 		final List<File> input =
 		        resources.gather(wikitextDir, ".*?\\.wikitext", true);
@@ -88,7 +88,12 @@ public class ParserTestCommon
 		return result;
 	}
 	
-	public void gatherParseAndPrintTest(String wikitextDir, String asttextDir, Visitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
+	public void gatherParseAndPrintTest(String wikitextDir, String asttextDir, AstVisitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
+	{
+		gatherParseAndPrintTest(null, wikitextDir, asttextDir, visitors, printer);
+	}
+	
+	public void gatherParseAndPrintTest(String filter, String wikitextDir, String asttextDir, AstVisitor[] visitors, AstPrinterInterface printer) throws IOException, ParseException
 	{
 		System.out.println();
 		System.out.println("Parser & Print test:");
@@ -102,6 +107,9 @@ public class ParserTestCommon
 		
 		for (File wikitextFile : input)
 		{
+			if (filter != null && !wikitextFile.getName().equalsIgnoreCase(filter))
+				continue;
+			
 			File asttextFile = ParserTestResources.rebase(
 			        wikitextFile,
 			        wikitextDir,
@@ -116,7 +124,7 @@ public class ParserTestCommon
 		System.out.println();
 	}
 	
-	public String parseAndPrint(final Visitor[] visitors, AstPrinterInterface printer, File wikitextFile) throws IOException, ParseException
+	public String parseAndPrint(final AstVisitor[] visitors, AstPrinterInterface printer, File wikitextFile) throws IOException, ParseException
 	{
 		FileContent wikitext = new FileContent(wikitextFile);
 		
@@ -125,7 +133,7 @@ public class ParserTestCommon
 		return printToString(ast, printer);
 	}
 	
-	public void parseAndPrintTest(final Visitor[] visitors, AstPrinterInterface printer, File wikitextFile, File reftextFile) throws IOException, ParseException
+	public void parseAndPrintTest(final AstVisitor[] visitors, AstPrinterInterface printer, File wikitextFile, File reftextFile) throws IOException, ParseException
 	{
 		FileContent wikitext = new FileContent(wikitextFile);
 		AstNode ast = parse(wikitext, visitors);
@@ -179,6 +187,8 @@ public class ParserTestCommon
 	
 	private void testEquals(FileContent wikitext, FileContent reftext, String result, String reference)
 	{
+		if (!reference.equals(result))
+			System.out.println("  FAILED!");
 		Assert.assertEquals(reference, result);
 	}
 	
@@ -192,12 +202,15 @@ public class ParserTestCommon
 		
 		String result = writer.toString();
 		
-		return resources.stripBaseDirectory(result);
+		// For Windows builds:
+		result = result.replace("\r\n", "\n");
+		
+		return resources.stripBaseDirectoryAndFixPath(result);
 	}
 	
 	// =========================================================================
 	
-	public AstNode parse(FileContent wikitext, Visitor[] visitors) throws IOException, ParseException
+	public AstNode parse(FileContent wikitext, AstVisitor[] visitors) throws IOException, ParseException
 	{
 		ParserInterface parser = instantiateParser();
 		
@@ -205,8 +218,8 @@ public class ParserTestCommon
 			parser.addVisitors(Arrays.asList(visitors));
 		
 		return parser.parseArticle(
-		                wikitext.getContent(),
-		                wikitext.getFile().getAbsolutePath());
+		        wikitext.getContent(),
+		        wikitext.getFile().getAbsolutePath());
 	}
 	
 	private ParserInterface instantiateParser()

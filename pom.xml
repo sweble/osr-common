@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>1.0.4.1</version>
+    <version>1.1.0</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -15,7 +15,7 @@
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>parser-toolkit</artifactId>
-  <version>1.0.0.1</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
 
   <name>Parser Toolkit</name>
@@ -33,6 +33,8 @@
     <module>ptk-profiler</module>
     <module>ptk-printergen-maven-plugin</module>
     <module>ptk-nodegen-maven-plugin</module>
+    <module>ptk-json-tools</module>
+    <module>ptk-xml-tools</module>
   </modules>
 
   <!-- ==[ Properties ]===================================================== -->
@@ -43,9 +45,8 @@
     <version.dep.maven-plugin-api>2.0</version.dep.maven-plugin-api>
     <version.dep.maven-project>2.0.4</version.dep.maven-project>
     <version.dep.commons-jxpath>1.3</version.dep.commons-jxpath>
-    <version.dep.xstream>1.2.2</version.dep.xstream>
-    <version.dep.jaxb>2.2.1</version.dep.jaxb>
     <version.dep.rats>1.15.0</version.dep.rats>
+    <version.dep.gson>2.1</version.dep.gson>
 
     <!-- Plugin dependency versions -->
     <version.plugin.rats>1.3.0.1</version.plugin.rats>
@@ -77,18 +78,11 @@
         <version>${version.dep.commons-jxpath}</version>
       </dependency>
 
-      <!-- XStream -->
+      <!-- Gson -->
       <dependency>
-        <groupId>com.thoughtworks.xstream</groupId>
-        <artifactId>xstream</artifactId>
-        <version>${version.dep.xstream}</version>
-      </dependency>
-
-      <!-- JAXB -->
-      <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>${version.dep.jaxb}</version>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${version.dep.gson}</version>
       </dependency>
 
       <!-- Rats! -->
@@ -103,7 +97,7 @@
         <groupId>de.fau.cs.osr.utils</groupId>
         <artifactId>utils</artifactId>
         <!-- Version is given directly so the release plugin can see it -->
-        <version>0.2.0.1</version>
+        <version>0.3.0</version>
       </dependency>
 
       <!-- Parser Toolkit - Common -->
@@ -111,7 +105,7 @@
         <groupId>de.fau.cs.osr.ptk</groupId>
         <artifactId>ptk-common</artifactId>
         <!-- Version is given directly so the release plugin can see it -->
-        <version>1.0.0.1</version>
+        <version>1.1.0</version>
       </dependency>
 
     </dependencies>
@@ -141,6 +135,7 @@
           <excludes>
             <exclude>**/.gitignore</exclude>
             <exclude>src/site/site.xml</exclude>
+            <exclude>src/site/changes.xml</exclude>
             <exclude>src/site/resources/css/site.css</exclude>
             <exclude>LICENSE</exclude>
             <exclude>NOTICE</exclude>
@@ -156,6 +151,20 @@
 
             <plugin>
               <artifactId>maven-project-info-reports-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
             </plugin>
 
           </reportPlugins>

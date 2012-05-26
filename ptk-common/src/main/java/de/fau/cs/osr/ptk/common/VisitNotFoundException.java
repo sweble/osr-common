@@ -17,8 +17,6 @@
 
 package de.fau.cs.osr.ptk.common;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
-
 /**
  * Thrown if a suitable visit() method could not be found for a given node.
  */
@@ -28,31 +26,33 @@ public class VisitNotFoundException
 {
 	private static final long serialVersionUID = 1L;
 	
-	private final AstNode node;
+	private final Object node;
 	
-	private final Visitor visitor;
+	private final VisitorBase<?> visitor;
 	
-	public VisitNotFoundException(Visitor visitor, AstNode node)
+	public VisitNotFoundException(VisitorBase<?> visitorBase, Object node2)
 	{
-		super(makeMessage(visitor, node));
-		this.visitor = visitor;
-		this.node = node;
+		super(makeMessage(visitorBase, node2));
+		this.visitor = visitorBase;
+		this.node = node2;
 	}
 	
-	public AstNode getNode()
+	public Object getNode()
 	{
 		return node;
 	}
 	
-	public Visitor getVisitor()
+	public VisitorBase<?> getVisitor()
 	{
 		return visitor;
 	}
 	
-	private static String makeMessage(Visitor visitor, AstNode node)
+	private static String makeMessage(VisitorBase<?> visitorBase, Object node)
 	{
+		final String nodeName = node.getClass().getName();
+		final String visitorName = visitorBase.getClass().getName();
+		
 		return "Unable to find visit() method for node of type `" +
-		        node.getNodeName() + "' in visitor `" +
-		        visitor.getClass().getSimpleName() + "'";
+		        nodeName + "' in visitor `" + visitorName + "'";
 	}
 }

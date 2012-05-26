@@ -27,7 +27,7 @@ import org.junit.ComparisonFailure;
 
 import de.fau.cs.osr.ptk.common.AstPrinterInterface;
 import de.fau.cs.osr.ptk.common.ParserInterface;
-import de.fau.cs.osr.ptk.common.Visitor;
+import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.test.ParserTestCommon;
 import de.fau.cs.osr.ptk.common.test.ParserTestResources;
 import de.fau.cs.osr.utils.FmtIllegalArgumentException;
@@ -44,7 +44,7 @@ public class ParseAndPrintTest
 	
 	private File baseDirectory;
 	
-	private List<Visitor> visitors;
+	private List<AstVisitor> visitors;
 	
 	private AstPrinterInterface printer;
 	
@@ -136,7 +136,7 @@ public class ParseAndPrintTest
 	
 	private void loadVisitors()
 	{
-		visitors = new LinkedList<Visitor>();
+		visitors = new LinkedList<AstVisitor>();
 		
 		if (!commandLine.has("visitors"))
 			return;
@@ -155,14 +155,14 @@ public class ParseAndPrintTest
 			
 			Object visitor = Helpers.instantiateClass(visitorName, visitorClass, "visitor");
 			
-			if (!(visitor instanceof Visitor))
+			if (!(visitor instanceof AstVisitor))
 			{
 				throw new FmtIllegalArgumentException(
 				            "Not a valid visitor class `%s' (does not inherit from Visitor).",
 				            visitorName);
 			}
 			
-			visitors.add((Visitor) visitor);
+			visitors.add((AstVisitor) visitor);
 		}
 	}
 	
@@ -237,7 +237,7 @@ public class ParseAndPrintTest
 				if (generateRefs)
 				{
 					String reftext = common.parseAndPrint(
-					        visitors.toArray(new Visitor[0]),
+					        visitors.toArray(new AstVisitor[0]),
 					        printer,
 					        wikitextFile);
 					
@@ -247,7 +247,7 @@ public class ParseAndPrintTest
 				else
 				{
 					common.parseAndPrintTest(
-					        visitors.toArray(new Visitor[0]),
+					        visitors.toArray(new AstVisitor[0]),
 					        printer,
 					        wikitextFile,
 					        reftextFile);

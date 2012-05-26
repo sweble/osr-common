@@ -62,10 +62,6 @@ public abstract class AstNode
 	
 	public static final int NT_NODE_LIST = 0x002;
 	
-	public static final int NT_CONTENT_NODE = 0x003;
-	
-	public static final int NT_STRING_CONTENT_NODE = 0x004;
-	
 	public static final int NT_PARSER_ENTITY = 0x005;
 	
 	public static final int NT_TUPLE_1 = 0x101;
