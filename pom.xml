@@ -6,7 +6,7 @@
 
   <groupId>de.fau.cs.osr</groupId>
   <artifactId>tooling</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Tooling</name>
@@ -55,12 +55,14 @@
     <version.plugin.gpg>1.4</version.plugin.gpg>
     <version.plugin.exec>1.2.1</version.plugin.exec>
 
+    <!-- Site plugin versions-->
     <version.site-plugin.project-info-reports>2.4</version.site-plugin.project-info-reports>
     <version.site-plugin.surefire-report>2.12</version.site-plugin.surefire-report>
     <version.site-plugin.cobertura>2.5.1</version.site-plugin.cobertura>
     <version.site-plugin.taglist>2.4</version.site-plugin.taglist>
     <version.site-plugin.jxr>2.3</version.site-plugin.jxr>
     <version.site-plugin.plugin>2.9</version.site-plugin.plugin>
+    <version.site-plugin.changes>2.7.1</version.site-plugin.changes>
 
     <!-- Extension versions -->
     <version.wagon.ssh-external>2.2</version.wagon.ssh-external>
@@ -201,6 +203,20 @@
               <artifactId>maven-project-info-reports-plugin</artifactId>
             </plugin>
 
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+
           </reportPlugins>
         </configuration>
       </plugin>
@@ -240,6 +256,7 @@
               </manifest>
             </archive>
           </configuration>
+          <!--
           <executions>
             <execution>
               <inherited>true</inherited>
@@ -249,6 +266,7 @@
               </goals>
             </execution>
           </executions>
+          -->
         </plugin>
 
         <!-- Make sure MANIFEST files contain version information -->
@@ -531,6 +549,12 @@
           -->
         </plugin>
 
+        <plugin>
+          <artifactId>maven-changes-plugin</artifactId>
+          <version>${version.site-plugin.changes}</version>
+          <inherited>true</inherited>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -767,6 +791,7 @@
   <!-- ==[ Profiles ]======================================================= -->
 
   <profiles>
+
     <profile>
       <id>quick</id>
       <build>
@@ -840,6 +865,50 @@
                 </plugin>
               </reportPlugins>
             </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+
+          <!-- Maven Javadoc Plugin -->
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <id>javadoc-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <inherited>true</inherited>
+              </execution>
+            </executions>
+            <configuration>
+              <quiet>true</quiet>
+            </configuration>
+          </plugin>
+
+          <!-- Maven Source Plugin -->
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <id>sources-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+                <inherited>true</inherited>
+              </execution>
+            </executions>
           </plugin>
 
         </plugins>
