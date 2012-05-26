@@ -6,7 +6,7 @@
 
   <groupId>de.fau.cs.osr</groupId>
   <artifactId>tooling</artifactId>
-  <version>1.0.4.1</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
 
   <name>Tooling</name>
@@ -32,11 +32,15 @@
     <version.dep.junit>4.7</version.dep.junit>
     <version.dep.commons-io>1.4</version.dep.commons-io>
     <version.dep.commons-lang>2.5</version.dep.commons-lang>
+    <version.dep.commons-codec>1.6</version.dep.commons-codec>
+    <version.dep.commons-collections>3.2.1</version.dep.commons-collections>
 
     <!-- Plugin dependency versions -->
     <version.plugin.compiler>2.3.2</version.plugin.compiler>
+    <version.plugin.jar>2.3.1</version.plugin.jar>
+    <version.plugin.war>2.1.1</version.plugin.war>
     <version.plugin.assembly>2.2</version.plugin.assembly>
-    <version.plugin.eclipse>2.8</version.plugin.eclipse>
+    <version.plugin.eclipse>2.6</version.plugin.eclipse>
     <version.plugin.release>2.1</version.plugin.release>
     <version.plugin.javadoc>2.8</version.plugin.javadoc>
     <version.plugin.source>2.1.2</version.plugin.source>
@@ -45,15 +49,20 @@
     <version.plugin.deploy>2.7</version.plugin.deploy>
     <version.plugin.build-helper>1.5</version.plugin.build-helper>
     <version.plugin.surefire>2.12</version.plugin.surefire>
+    <version.plugin.archetype>2.2</version.plugin.archetype>
     <version.plugin.license>1.9.0</version.plugin.license>
+    <version.plugin.git-commit-id>2.0.3</version.plugin.git-commit-id>
     <version.plugin.gpg>1.4</version.plugin.gpg>
+    <version.plugin.exec>1.2.1</version.plugin.exec>
 
+    <!-- Site plugin versions-->
     <version.site-plugin.project-info-reports>2.4</version.site-plugin.project-info-reports>
     <version.site-plugin.surefire-report>2.12</version.site-plugin.surefire-report>
     <version.site-plugin.cobertura>2.5.1</version.site-plugin.cobertura>
     <version.site-plugin.taglist>2.4</version.site-plugin.taglist>
     <version.site-plugin.jxr>2.3</version.site-plugin.jxr>
     <version.site-plugin.plugin>2.9</version.site-plugin.plugin>
+    <version.site-plugin.changes>2.7.1</version.site-plugin.changes>
 
     <!-- Extension versions -->
     <version.wagon.ssh-external>2.2</version.wagon.ssh-external>
@@ -93,6 +102,16 @@
         <artifactId>commons-lang</artifactId>
         <version>${version.dep.commons-lang}</version>
       </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>${version.dep.commons-collections}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${version.dep.commons-codec}</version>
+      </dependency>
 
     </dependencies>
   </dependencyManagement>
@@ -102,8 +121,24 @@
     <!-- ==[ Resource Configuration ]======================================= -->
 
     <resources>
+      <!-- Doesn't work at least until maven-eclipse-plugin 2.8
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.buildinfo.properties</include>
+        </includes>
+      </resource>
       <resource>
         <filtering>false</filtering>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.buildinfo.properties</exclude>
+        </excludes>
+      </resource>
+       -->
+      <resource>
+        <filtering>true</filtering>
         <directory>src/main/resources</directory>
       </resource>
       <resource>
@@ -168,6 +203,20 @@
               <artifactId>maven-project-info-reports-plugin</artifactId>
             </plugin>
 
+            <plugin>
+              <artifactId>maven-changes-plugin</artifactId>
+              <configuration>
+                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+              </configuration>
+              <reportSets>
+                <reportSet>
+                  <reports>
+                    <report>changes-report</report>
+                  </reports>
+                </reportSet>
+              </reportSets>
+            </plugin>
+
           </reportPlugins>
         </configuration>
       </plugin>
@@ -207,6 +256,7 @@
               </manifest>
             </archive>
           </configuration>
+          <!--
           <executions>
             <execution>
               <inherited>true</inherited>
@@ -216,6 +266,23 @@
               </goals>
             </execution>
           </executions>
+          -->
+        </plugin>
+
+        <!-- Make sure MANIFEST files contain version information -->
+        <!-- Maven War Plugin -->
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>${version.plugin.war}</version>
+          <inherited>true</inherited>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
         </plugin>
 
         <!-- Maven Assembly Plugin -->
@@ -309,6 +376,12 @@
           <inherited>true</inherited>
         </plugin>
 
+        <!-- Maven Archetype Plugin -->
+        <plugin>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>${version.plugin.archetype}</version>
+        </plugin>
+
         <!-- Check and format license headers -->
         <plugin>
           <groupId>com.mycila.maven-license-plugin</groupId>
@@ -325,6 +398,33 @@
           </executions>
         </plugin>
 
+        <!-- Get Git commit information -->
+        <plugin>
+          <groupId>pl.project13.maven</groupId>
+          <artifactId>git-commit-id-plugin</artifactId>
+          <version>${version.plugin.git-commit-id}</version>
+          <inherited>true</inherited>
+          <configuration>
+            <verbose>false</verbose>
+          </configuration>
+          <executions>
+            <!-- Disabled until problem
+              https://github.com/ktoso/maven-git-commit-id-plugin/issues/19
+              is resolved -->
+            <execution>
+              <id>git-commit-info-disabled</id>
+              <phase>none</phase>
+            </execution>
+            <!--
+            <execution>
+              <goals>
+                <goal>revision</goal>
+              </goals>
+            </execution>
+            -->
+          </executions>
+        </plugin>
+
         <!-- Maven GPG Plugin -->
         <plugin>
           <artifactId>maven-gpg-plugin</artifactId>
@@ -333,6 +433,13 @@
           <configuration>
             <useAgent>true</useAgent>
           </configuration>
+        </plugin>
+
+        <!-- Execute system and Java programs -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${version.plugin.exec}</version>
         </plugin>
 
         <!-- Maven Site Plugin -->
@@ -440,6 +547,12 @@
             </tagListOptions>
           </configuration>
           -->
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-changes-plugin</artifactId>
+          <version>${version.site-plugin.changes}</version>
+          <inherited>true</inherited>
         </plugin>
 
       </plugins>
@@ -678,10 +791,41 @@
   <!-- ==[ Profiles ]======================================================= -->
 
   <profiles>
+
     <profile>
       <id>quick</id>
       <build>
         <plugins>
+
+          <!-- Skip assembly generation -->
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>${version.plugin.assembly}</version>
+            <inherited>true</inherited>
+            <configuration>
+              <skipAssembly>true</skipAssembly>
+            </configuration>
+          </plugin>
+
+          <!-- Skip javadoc generation -->
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${version.plugin.javadoc}</version>
+            <inherited>true</inherited>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <!-- Skip source generation -->
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${version.plugin.source}</version>
+            <inherited>true</inherited>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
 
           <!-- Don't check and format license headers -->
           <plugin>
@@ -726,6 +870,51 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+
+          <!-- Maven Javadoc Plugin -->
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <id>javadoc-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <inherited>true</inherited>
+              </execution>
+            </executions>
+            <configuration>
+              <quiet>true</quiet>
+            </configuration>
+          </plugin>
+
+          <!-- Maven Source Plugin -->
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <id>sources-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+                <inherited>true</inherited>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>sign</id>
       <build>
