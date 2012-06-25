@@ -27,7 +27,7 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 public class EntityMap
 {
 	private HashMap<Integer, AstNode> entityMap =
-	        new HashMap<Integer, AstNode>();
+			new HashMap<Integer, AstNode>();
 	
 	// =========================================================================
 	
@@ -51,5 +51,13 @@ public class EntityMap
 	public Map<Integer, AstNode> getMap()
 	{
 		return entityMap;
+	}
+	
+	// =========================================================================
+	
+	@Override
+	public String toString()
+	{
+		return "EntityMap " + entityMap;
 	}
 }
