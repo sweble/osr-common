@@ -17,6 +17,7 @@
 
 package de.fau.cs.osr.ptk.common;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +26,11 @@ import java.util.Set;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public class EntityMap
+		implements
+			Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private HashMap<Integer, AstNode> entityMap =
 			new HashMap<Integer, AstNode>();
 	
