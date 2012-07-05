@@ -56,7 +56,6 @@ public class AstPrinter
 	@Override
 	protected Object after(AstNode node, Object result)
 	{
-		this.out.close();
 		return super.after(node, result);
 	}
 	
