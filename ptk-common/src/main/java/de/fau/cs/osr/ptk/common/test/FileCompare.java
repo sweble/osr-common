@@ -16,6 +16,8 @@
  */
 package de.fau.cs.osr.ptk.common.test;
 
+import static de.fau.cs.osr.ptk.common.test.TestResourcesFixture.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -25,13 +27,15 @@ import org.junit.Assert;
 
 public class FileCompare
 {
-	protected final TestResourcesFixture resources;
+	private static Pattern inputPathToRefPathSearch;
 	
-	protected final Pattern noRefReplace;
+	private static String inputPathToRefPathReplaceWith;
 	
-	protected final String noRefReplaceBy;
+	private final TestResourcesFixture resources;
 	
-	protected final boolean randomRefName;
+	private final boolean randomRefName;
+	
+	private final boolean putInitialRefFilesIntoRefFileDir;
 	
 	// =========================================================================
 	
@@ -43,9 +47,8 @@ public class FileCompare
 	public FileCompare(TestResourcesFixture resources)
 	{
 		this.resources = resources;
-		this.noRefReplace = null;
-		this.noRefReplaceBy = null;
-		this.randomRefName = true;
+		this.randomRefName = false;
+		this.putInitialRefFilesIntoRefFileDir = false;
 	}
 	
 	/**
@@ -59,19 +62,19 @@ public class FileCompare
 	 */
 	public FileCompare(
 			TestResourcesFixture resources,
-			String pathPatternToReplace,
-			String pathToReplacePatternWith,
-			boolean randomRefName)
+			boolean randomRefName,
+			boolean putInitialRefFilesIntoRefFileDir)
 	{
 		this.resources = resources;
-		this.noRefReplace = Pattern.compile(pathPatternToReplace);
-		this.noRefReplaceBy = pathToReplacePatternWith;
 		this.randomRefName = randomRefName;
+		this.putInitialRefFilesIntoRefFileDir = putInitialRefFilesIntoRefFileDir;
 	}
 	
 	// =========================================================================
 	
-	public void printTest(File expectedFile, String actual) throws IOException
+	public void compareWithExpectedOrGenerateExpectedFromActual(
+			File expectedFile,
+			String actual) throws IOException
 	{
 		actual = fixActualText(actual);
 		
@@ -80,27 +83,42 @@ public class FileCompare
 		assertEquals(expectedFile, actual);
 	}
 	
+	// =========================================================================
+	
 	private String fixActualText(String actual)
 	{
-		// For Windows builds:
-		actual = actual.replace("\r\n", "\n");
-		
-		return resources.stripBaseDirectoryAndFixPath(actual);
+		return resources.stripBaseDirectoryAndFixPath(
+				lineEndToUnix(actual));
 	}
 	
-	private void checkReferenceFile(File expectedFile, String actual) throws IOException
+	private void checkReferenceFile(
+			File expectedFile,
+			String actual) throws IOException
 	{
 		if (!expectedFile.exists())
 		{
 			File create;
-			if (noRefReplace != null)
+			if (putInitialRefFilesIntoRefFileDir)
 			{
 				String dir = expectedFile.getParentFile().getAbsolutePath();
 				
-				if (!noRefReplace.matcher(dir).find())
-					Assert.fail("FAILED TO WRITE REFERENCE FILE!");
+				// We always operate with UNIX separator '/':
+				fileSeparatorToUnix(dir);
 				
-				dir = noRefReplace.matcher(dir).replaceAll(noRefReplaceBy);
+				if (inputPathToRefPathSearch == null)
+					inputPathToRefPathSearch = Pattern.compile(
+							"(.*?)" + Pattern.quote("/target/test-classes/"));
+				
+				if (!inputPathToRefPathSearch.matcher(dir).find())
+					Assert.fail(
+							"Reference file did not exist! " +
+									"FAILED TO WRITE REFERENCE FILE!");
+				
+				if (inputPathToRefPathReplaceWith == null)
+					inputPathToRefPathReplaceWith =
+							"$1" + Pattern.quote("/src/test/resources/");
+				
+				dir = inputPathToRefPathSearch.matcher(dir).replaceAll(inputPathToRefPathReplaceWith);
 				create = new File(dir);
 			}
 			else
@@ -128,7 +146,9 @@ public class FileCompare
 	private void assertEquals(File expectedFile, String actual) throws IOException
 	{
 		FileContent reftext = new FileContent(expectedFile);
-		String reference = reftext.getContent();
+		
+		// We always operate with UNIX line end '\n':
+		String reference = lineEndToUnix(reftext.getContent());
 		
 		Assert.assertEquals(reference, actual);
 	}

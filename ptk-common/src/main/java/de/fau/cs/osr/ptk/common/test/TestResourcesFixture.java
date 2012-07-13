@@ -17,6 +17,8 @@
 
 package de.fau.cs.osr.ptk.common.test;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -85,6 +87,8 @@ public class TestResourcesFixture
 		
 		return new File(url.getFile()).getParentFile();
 	}
+	
+	// =========================================================================
 	
 	/**
 	 * Recursively gather files which match a certain pattern.
@@ -166,6 +170,8 @@ public class TestResourcesFixture
 		}
 	}
 	
+	// =========================================================================
+	
 	/**
 	 * Fix paths found inside a text.
 	 * 
@@ -202,23 +208,26 @@ public class TestResourcesFixture
 		return b.toString();
 	}
 	
+	// =========================================================================
+	
 	/**
-	 * Exchange a prefix of a path with another prefix.
+	 * Change a path so that the filename it points to is located in a different
+	 * directory.
+	 * 
+	 * <b>Important:</b> Always use the UNIX file separator '/'.
 	 * 
 	 * @param file
-	 *            The path to process.
+	 *            The file whose filename will be moved to a different directory
+	 *            and whose extension will be altered.
 	 * @param base
-	 *            The prefix that should be exchanged.
+	 *            The part of the original path that will be changed.
 	 * @param rebase
-	 *            The new prefix.
-	 * @return The rebased path.
-	 * @throws IllegalArgumentException
-	 *             Thrown if the rebased path doesn't exist.
+	 *            The part of a path which will replace <code>base</code>.
 	 */
 	public static File rebase(File file, String base, String rebase)
 	{
-		File rebasedFile = new File(
-				file.getAbsolutePath().replace(base, rebase));
+		String unixPath = fileSeparatorToUnix(file.getAbsolutePath());
+		File rebasedFile = new File(unixPath.replace(base, rebase));
 		
 		if (!rebasedFile.exists())
 			throw new FmtIllegalArgumentException(
@@ -229,17 +238,20 @@ public class TestResourcesFixture
 	}
 	
 	/**
-	 * Exchange a prefix of a path with another prefix and replace the extension
-	 * on the new path.
+	 * Change a path so that the filename it points to is located in a different
+	 * directory. Also change the extension of the filename.
+	 * 
+	 * <b>Important:</b> Always use the UNIX file separator '/'.
 	 * 
 	 * @param file
-	 *            The path to process.
+	 *            The file whose filename will be moved to a different directory
+	 *            and whose extension will be altered.
 	 * @param base
-	 *            The prefix that should be exchanged.
+	 *            The part of the original path that will be changed.
 	 * @param rebase
-	 *            The new prefix.
+	 *            The part of a path which will replace <code>base</code>.
 	 * @param ext
-	 *            The new extension.
+	 *            The new extension of the file.
 	 * @return The rebased path.
 	 * @throws IllegalArgumentException
 	 *             Thrown if the rebased path doesn't exist.
@@ -250,20 +262,23 @@ public class TestResourcesFixture
 	}
 	
 	/**
-	 * Exchange a prefix of a path with another prefix and replace the extension
-	 * on the new path.
+	 * Change a path so that the filename it points to is located in a different
+	 * directory. Also change the extension of the filename.
+	 * 
+	 * <b>Important:</b> Always use the UNIX file separator '/'.
 	 * 
 	 * @param file
-	 *            The path to process.
+	 *            The file whose filename will be moved to a different directory
+	 *            and whose extension will be altered.
 	 * @param base
-	 *            The prefix that should be exchanged.
+	 *            The part of the original path that will be changed.
 	 * @param rebase
-	 *            The new prefix.
+	 *            The part of a path which will replace <code>base</code>.
 	 * @param ext
-	 *            The new extension.
+	 *            The new extension of the file.
 	 * @param noThrow
 	 *            If true this method will not throw an exception if the rebased
-	 *            path doesn't exist.
+	 *            file doesn't exist.
 	 * @return The rebased path.
 	 * @throws IllegalArgumentException
 	 *             Thrown if the rebased path doesn't exist and noThrow is
@@ -276,7 +291,8 @@ public class TestResourcesFixture
 			String ext,
 			boolean noThrow)
 	{
-		String rebased = file.getAbsolutePath().replace(base, rebase);
+		String unixPath = fileSeparatorToUnix(file.getAbsolutePath());
+		String rebased = unixPath.replace(base, rebase);
 		
 		int i = rebased.lastIndexOf('.');
 		rebased = i < 0 ?
@@ -290,5 +306,34 @@ public class TestResourcesFixture
 		throw new FmtIllegalArgumentException(
 				"Rebased file `%s' does not exist",
 				rebasedFile.getAbsolutePath());
+	}
+	
+	// =========================================================================
+	
+	/**
+	 * Convert non-UNIX file separators to UNIX file separators '/'.
+	 */
+	public static String fileSeparatorToUnix(String path)
+	{
+		if (File.separatorChar != '/')
+		{
+			assertTrue(
+					"Test code doesn't work properly if path conatins a '/'.",
+					path.indexOf('/') == -1);
+			
+			path = path.replace(File.separatorChar, '/');
+		}
+		
+		return path;
+	}
+	
+	/**
+	 * Convert non-UNIX line endings into UNIX line endings '\n'.
+	 */
+	public static String lineEndToUnix(String result)
+	{
+		result = result.replace("\r\n", "\n");
+		result = result.replace("\r", "\n");
+		return result;
 	}
 }
