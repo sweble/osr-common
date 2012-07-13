@@ -30,7 +30,6 @@
 
   <modules>
     <module>ptk-common</module>
-    <module>ptk-profiler</module>
     <module>ptk-printergen-maven-plugin</module>
     <module>ptk-nodegen-maven-plugin</module>
     <module>ptk-json-tools</module>
