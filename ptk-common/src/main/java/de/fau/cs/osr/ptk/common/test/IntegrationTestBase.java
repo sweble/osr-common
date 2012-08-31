@@ -29,7 +29,6 @@ import xtc.parser.ParseException;
 import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.GenericPrinterInterface;
 import de.fau.cs.osr.ptk.common.ParserInterface;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.WrappedException;
 
 public abstract class IntegrationTestBase
@@ -111,7 +110,7 @@ public abstract class IntegrationTestBase
 			String expectedSubDir,
 			GenericPrinterInterface printer) throws IOException, ParseException
 	{
-		AstNode ast = parse(inputFile, visitors);
+		Object ast = parse(inputFile, visitors);
 		
 		String actual = printToString(ast, printer);
 		
@@ -133,7 +132,7 @@ public abstract class IntegrationTestBase
 	
 	// =========================================================================
 	
-	private AstNode parse(File inputFile, AstVisitor[] visitors) throws IOException, ParseException
+	private Object parse(File inputFile, AstVisitor[] visitors) throws IOException, ParseException
 	{
 		ParserInterface parser = instantiateParser();
 		
@@ -147,7 +146,7 @@ public abstract class IntegrationTestBase
 				inputFile.getAbsolutePath());
 	}
 	
-	public String printToString(AstNode ast, GenericPrinterInterface printer) throws IOException
+	public String printToString(Object ast, GenericPrinterInterface printer) throws IOException
 	{
 		StringWriter writer = new StringWriter();
 		

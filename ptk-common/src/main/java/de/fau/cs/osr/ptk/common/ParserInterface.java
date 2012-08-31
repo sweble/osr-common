@@ -26,7 +26,7 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public interface ParserInterface
 {
-	public AstNode parseArticle(String src, String title) throws IOException, ParseException;
+	public Object parseArticle(String src, String title) throws IOException, ParseException;
 	
 	public List<AstVisitor> getVisitors();
 	
