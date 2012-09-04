@@ -428,4 +428,27 @@ public final class StringUtils
 		return true;
 		*/
 	}
+	
+	public static String collapseWhitespace(String trim)
+	{
+		if (trim.isEmpty())
+			return trim;
+		
+		StringBuilder b = new StringBuilder(trim.length());
+		for (int i = 0; i < trim.length(); ++i)
+		{
+			char ch = trim.charAt(i);
+			if (Character.isWhitespace(ch))
+			{
+				b.append(' ');
+				int j = i + 1;
+				while (j < trim.length() && Character.isWhitespace(trim.charAt(j)))
+					++j;
+				i = j - 1;
+			}
+			else
+				b.append(ch);
+		}
+		return b.toString();
+	}
 }
