@@ -168,6 +168,11 @@ public class AstPrinter
 			{
 				visit((AstNode) n);
 			}
+			else if (n.getContent() == null)
+			{
+				indent();
+				out.println(n.getClass().getSimpleName() + "([NULL])");
+			}
 			else if (n.getContent().isEmpty())
 			{
 				indent();
