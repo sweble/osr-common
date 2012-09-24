@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.List;
 
 import xtc.parser.ParseException;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public interface ParserInterface
 {

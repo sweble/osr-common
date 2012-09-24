@@ -16,26 +16,8 @@
  */
 package de.fau.cs.osr.ptk.common;
 
-public abstract class VisitorBase<T>
-		extends
-			VisitorInterface<T>
+public abstract class VisitorInterface<T>
 {
-	private final VisitorLogic<T> logic;
-	
-	// =========================================================================
-	
-	public VisitorBase()
-	{
-		this.logic = new VisitorLogic<T>(this);
-	}
-	
-	public VisitorBase(VisitorLogic<T> logic)
-	{
-		this.logic = logic;
-	}
-	
-	// =========================================================================
-	
 	protected abstract Object dispatch(T node);
 	
 	/**
@@ -47,10 +29,7 @@ public abstract class VisitorBase<T>
 	 *         this method returns <code>false</code> the visitation will be
 	 *         aborted.
 	 */
-	protected boolean before(T node)
-	{
-		return true;
-	}
+	protected abstract boolean before(T node);
 	
 	/**
 	 * Called after the visitation has finished. This method will not be called
@@ -64,10 +43,7 @@ public abstract class VisitorBase<T>
 	 *            returned.
 	 * @return Returns the result parameter.
 	 */
-	protected Object after(T node, Object result)
-	{
-		return result;
-	}
+	protected abstract Object after(T node, Object result);
 	
 	/**
 	 * This method is called if no suitable visit() method could be found. If
@@ -77,34 +53,5 @@ public abstract class VisitorBase<T>
 	 *            The node that should have been visited.
 	 * @return The result of the visitation.
 	 */
-	protected Object visitNotFound(T node)
-	{
-		throw new VisitNotFoundException(this, node);
-	}
-	
-	// =========================================================================
-	
-	/**
-	 * Start visitation at the given node.
-	 * 
-	 * @param node
-	 *            The node at which the visitation will start.
-	 * @return The result of the visitation. If the visit() method for the given
-	 *         node doesn't return a value, <code>null</code> is returned.
-	 */
-	public final Object go(T node)
-	{
-		if (!before(node))
-			return null;
-		
-		Object result = dispatch(node);
-		return after(node, result);
-	}
-	
-	// =========================================================================
-	
-	protected final Object resolveAndVisit(T node)
-	{
-		return logic.resolveAndVisit(node);
-	}
+	protected abstract Object visitNotFound(T node);
 }

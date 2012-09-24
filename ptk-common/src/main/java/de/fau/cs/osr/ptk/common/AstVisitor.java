@@ -26,9 +26,18 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 
 public class AstVisitor
-        extends
-            VisitorBase<AstNode>
+		extends
+			VisitorBase<AstNode>
 {
+	public AstVisitor()
+	{
+	}
+	
+	public AstVisitor(VisitorLogic<AstNode> logic)
+	{
+		super(logic);
+	}
+	
 	/**
 	 * Dispatches to the appropriate visit() method and returns the result of
 	 * the visitation. If the given node is <code>null</code> this method
