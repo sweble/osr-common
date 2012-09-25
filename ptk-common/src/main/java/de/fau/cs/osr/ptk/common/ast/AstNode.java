@@ -19,17 +19,15 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.AbstractList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 
 import xtc.tree.Locatable;
 import xtc.util.Pair;
@@ -44,13 +42,14 @@ import xtc.util.Pair;
  * @see LeafNode
  */
 public abstract class AstNode
-        implements
-            List<AstNode>,
-            AstNodePropertyInterface,
-            AstNodeAttributeInterface,
-            Locatable,
-            Cloneable,
-            Serializable
+		extends
+			AbstractList<AstNode>
+		implements
+			AstNodePropertyInterface,
+			AstNodeAttributeInterface,
+			Locatable,
+			Cloneable,
+			Serializable
 {
 	private static final long serialVersionUID = 3333532331617925714L;
 	
@@ -384,7 +383,7 @@ public abstract class AstNode
 	}
 	
 	// =========================================================================
-	// Implementation of the List interface
+	// Implementation of the AbstractList interface
 	
 	@Override
 	public int size()
@@ -393,171 +392,7 @@ public abstract class AstNode
 	}
 	
 	@Override
-	public boolean isEmpty()
-	{
-		return size() == 0;
-	}
-	
-	@Override
-	public boolean contains(Object o)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public Iterator<AstNode> iterator()
-	{
-		return new ChildIterator();
-	}
-	
-	@Override
-	public Object[] toArray()
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public <T> T[] toArray(T[] a)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	// Modification Operations
-	
-	@Override
-	public boolean add(AstNode e)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public boolean remove(Object o)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	// Bulk Modification Operations
-	
-	@Override
-	public boolean containsAll(Collection<?> c)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public boolean addAll(Collection<? extends AstNode> c)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public boolean addAll(int index, Collection<? extends AstNode> c)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public boolean removeAll(Collection<?> c)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public boolean retainAll(Collection<?> c)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public void clear()
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	// Comparison and hashing
-	
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		return equals((AstNode) obj);
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
-		result = prime * result + ((location == null) ? 0 : location.hashCode());
-		result = prime * result + propertyHash();
-		result = prime * result + childrenHash();
-		return result;
-	}
-	
-	// Positional Access Operations
-	
-	@Override
 	public AstNode get(int index)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public AstNode set(int index, AstNode value)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public void add(int index, AstNode element)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public AstNode remove(int index)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	// Search Operations
-	
-	@Override
-	public int indexOf(Object o)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public int lastIndexOf(Object o)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	// List Iterators
-	
-	@Override
-	public ListIterator<AstNode> listIterator()
-	{
-		return new ChildListIterator();
-	}
-	
-	@Override
-	public ListIterator<AstNode> listIterator(int index)
-	{
-		return new ChildListIterator(index);
-	}
-	
-	// View
-	
-	@Override
-	public List<AstNode> subList(int fromIndex, int toIndex)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -705,13 +540,15 @@ public abstract class AstNode
 		{
 			@SuppressWarnings("unchecked")
 			Entry<String, Object>[] props =
-			        (Entry<String, Object>[]) attributes.entrySet().toArray(
-			                new Entry[0]);
+					(Entry<String, Object>[]) attributes.entrySet().toArray(
+							new Entry[0]);
 			
 			Arrays.sort(props, new Comparator<Entry<String, Object>>()
 			{
 				@Override
-				public int compare(Entry<String, Object> o1, Entry<String, Object> o2)
+				public int compare(
+						Entry<String, Object> o1,
+						Entry<String, Object> o2)
 				{
 					return o1.getKey().compareTo(o2.getKey());
 				}
@@ -876,143 +713,5 @@ public abstract class AstNode
 			return false;
 		
 		return true;
-	}
-	
-	// =========================================================================
-	
-	private final class ChildIterator
-	        implements
-	            Iterator<AstNode>
-	{
-		final protected int size = size();
-		
-		protected int cursor = 0;
-		
-		@Override
-		public boolean hasNext()
-		{
-			return cursor < size;
-		}
-		
-		@Override
-		public AstNode next()
-		{
-			if (hasNext())
-				return get(cursor++);
-			throw new NoSuchElementException();
-		}
-		
-		@Override
-		public void remove()
-		{
-			throw new UnsupportedOperationException(
-			        "remove() not implemented for this iterator");
-		}
-	}
-	
-	// =========================================================================
-	
-	private final class ChildListIterator
-	        implements
-	            AstChildIterator
-	{
-		final protected int size = size();
-		
-		protected int cursor;
-		
-		protected int current;
-		
-		protected int start;
-		
-		public ChildListIterator()
-		{
-			start = 0;
-			cursor = 0;
-			current = -1;
-		}
-		
-		public ChildListIterator(int index)
-		{
-			start = index;
-			cursor = index;
-			current = -1;
-		}
-		
-		@Override
-		public void reset()
-		{
-			cursor = start;
-			current = -1;
-		}
-		
-		@Override
-		public void set(AstNode e)
-		{
-			if (current == -1)
-				throw new IllegalStateException();
-			AstNode.this.set(current, e);
-		}
-		
-		@Override
-		public AstNode get()
-		{
-			if (current == -1)
-				throw new IllegalStateException();
-			return AstNode.this.get(current);
-		}
-		
-		@Override
-		public boolean hasPrevious()
-		{
-			return cursor > start;
-		}
-		
-		@Override
-		public AstNode previous()
-		{
-			if (!hasPrevious())
-				throw new NoSuchElementException();
-			current = --cursor;
-			return AstNode.this.get(current);
-		}
-		
-		@Override
-		public int previousIndex()
-		{
-			return cursor - 1;
-		}
-		
-		@Override
-		public boolean hasNext()
-		{
-			return cursor < size;
-		}
-		
-		@Override
-		public int nextIndex()
-		{
-			return cursor;
-		}
-		
-		@Override
-		public AstNode next()
-		{
-			if (!hasNext())
-				throw new NoSuchElementException();
-			current = cursor++;
-			return AstNode.this.get(current);
-		}
-		
-		@Override
-		public void add(AstNode e)
-		{
-			throw new UnsupportedOperationException();
-		}
-		
-		@Override
-		public void remove()
-		{
-			throw new UnsupportedOperationException();
-		}
 	}
 }
