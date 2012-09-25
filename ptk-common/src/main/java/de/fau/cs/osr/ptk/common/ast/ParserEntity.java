@@ -20,8 +20,8 @@ package de.fau.cs.osr.ptk.common.ast;
 import java.io.IOException;
 
 public class ParserEntity
-        extends
-            LeafNode
+		extends
+			LeafNode
 {
 	private static final long serialVersionUID = 3182955812498375838L;
 	
@@ -114,15 +114,6 @@ public class ParserEntity
 	public int getNodeType()
 	{
 		return AstNode.NT_PARSER_ENTITY;
-	}
-	
-	// =========================================================================
-	
-	private static final String[] PROPERTY_NAMES = new String[] { "id" };
-	
-	public final String[] getAttributeNames()
-	{
-		return PROPERTY_NAMES;
 	}
 	
 	// =========================================================================

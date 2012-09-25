@@ -21,7 +21,7 @@ package de.fau.cs.osr.ptk.common.ast;
  * An iterator for AstNode properties. This class does not offer a
  * <code>hasNext()</code> method, like the {@link java.util.Iterator}. Instead
  * it only offers a <code>next()</code> method, which returns <code>true</code>
- * if the iterator points to a valid property <b>after</b> after the call to
+ * if the iterator points to a valid property <b>after</b> the call to
  * <code>next()</code>.
  * 
  * <p>
