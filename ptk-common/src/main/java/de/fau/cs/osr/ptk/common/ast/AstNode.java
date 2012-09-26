@@ -18,16 +18,12 @@
 package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.AbstractList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import xtc.tree.Locatable;
 import xtc.util.Pair;
@@ -45,35 +41,9 @@ public abstract class AstNode
 		extends
 			AbstractList<AstNode>
 		implements
-			AstNodePropertyInterface,
-			AstNodeAttributeInterface,
-			Locatable,
-			Cloneable,
-			Serializable
+			AstNodeInterface
 {
 	private static final long serialVersionUID = 3333532331617925714L;
-	
-	// =========================================================================
-	
-	public static final int NT_CUSTOM_BIT = 0x10000;
-	
-	public static final int NT_UNTYPED = -1;
-	
-	public static final int NT_NODE_LIST = 0x002;
-	
-	public static final int NT_PARSER_ENTITY = 0x005;
-	
-	public static final int NT_TUPLE_1 = 0x101;
-	
-	public static final int NT_TUPLE_2 = 0x102;
-	
-	public static final int NT_TUPLE_3 = 0x103;
-	
-	public static final int NT_TUPLE_4 = 0x104;
-	
-	public static final int NT_TUPLE_5 = 0x105;
-	
-	public static final int NT_TEXT = 0x1001;
 	
 	// =========================================================================
 	
@@ -107,6 +77,7 @@ public abstract class AstNode
 	 * Returns an integer value that identifies the node type. It's the
 	 * programmers responsibility to make sure these values are unique.
 	 */
+	@Override
 	public int getNodeType()
 	{
 		return NT_UNTYPED;
@@ -116,6 +87,7 @@ public abstract class AstNode
 	 * Returns <code>true</code> if the given node type equals the node type
 	 * returned by getNodeType().
 	 */
+	@Override
 	public boolean isNodeType(int testType)
 	{
 		return getNodeType() == testType;
@@ -124,6 +96,7 @@ public abstract class AstNode
 	/**
 	 * Returns the fully qualified name of this node's class.
 	 */
+	@Override
 	public final String getNodeTypeName()
 	{
 		return getClass().getName();
@@ -133,6 +106,7 @@ public abstract class AstNode
 	 * Returns the name of this node. The name is the simple name of the node's
 	 * class.
 	 */
+	@Override
 	public final String getNodeName()
 	{
 		return getClass().getSimpleName();
@@ -372,11 +346,13 @@ public abstract class AstNode
 	
 	// =========================================================================
 	
+	@Override
 	public final Location getNativeLocation()
 	{
 		return location;
 	}
 	
+	@Override
 	public final void setNativeLocation(Location location)
 	{
 		this.location = location;
@@ -405,6 +381,7 @@ public abstract class AstNode
 	 * 
 	 * @return Returns <code>true</code> if the list of children has changed.
 	 */
+	@Override
 	public boolean addAll(Pair<? extends AstNode> p)
 	{
 		throw new UnsupportedOperationException();
@@ -417,6 +394,7 @@ public abstract class AstNode
 	 * Determine whether this node can have a variable number of children and
 	 * implements the {@link List} interface (or parts of it).
 	 */
+	@Override
 	public boolean isList()
 	{
 		return false;
@@ -426,6 +404,7 @@ public abstract class AstNode
 	 * Returns the names of the children. This method may only be called for
 	 * nodes with a fixed number of children (isList() returns false).
 	 */
+	@Override
 	public String[] getChildNames()
 	{
 		return EMPTY_CHILD_NAMES;
@@ -433,6 +412,7 @@ public abstract class AstNode
 	
 	// =========================================================================
 	
+	@Override
 	public void toString(Appendable out) throws IOException
 	{
 		out.append(getClass().getSimpleName());
@@ -483,182 +463,87 @@ public abstract class AstNode
 	// =========================================================================
 	
 	@Override
-	protected Object clone() throws CloneNotSupportedException
+	public Object clone() throws CloneNotSupportedException
 	{
 		AstNode n = (AstNode) super.clone();
+		
 		n.location = new Location(n.location);
+		
 		n.attributes = new HashMap<String, Object>(n.attributes);
+		
+		{
+			AstNodePropertyIterator i = propertyIterator();
+			AstNodePropertyIterator j = n.propertyIterator();
+			while (i.next() & j.next())
+				j.setValue(i.getValue());
+		}
+		
+		if (isList())
+		{
+			Iterator<AstNode> i = iterator();
+			while (i.hasNext())
+				n.add(i.next());
+		}
+		else
+		{
+			for (int i = 0; i < size(); ++i)
+				n.set(i, get(i));
+		}
+		
+		return n;
+	}
+	
+	@Override
+	public Object deepClone() throws CloneNotSupportedException
+	{
+		AstNode n = (AstNode) super.clone();
+		
+		n.location = new Location(n.location);
+		
+		n.attributes = new HashMap<String, Object>(n.attributes);
+		
+		{
+			AstNodePropertyIterator i = propertyIterator();
+			AstNodePropertyIterator j = n.propertyIterator();
+			while (i.next() & j.next())
+				j.setValue(i.getValue());
+		}
+		
+		if (isList())
+		{
+			Iterator<AstNode> i = iterator();
+			while (i.hasNext())
+				n.add((AstNode) i.next().deepClone());
+		}
+		else
+		{
+			for (int i = 0; i < size(); ++i)
+				n.set(i, (AstNode) get(i).deepClone());
+		}
+		
 		return n;
 	}
 	
 	// =========================================================================
 	
-	/**
-	 * @deprecated
+	/* hashCode is omitted intentionally. It's hard to implement a meaningful
+	 * hashCode method that does NOT recurse into the subtree. But recursing the
+	 * whole subtree defeats the purpose of a hash function, which should be
+	 * fast to allow quick look-ups.
 	 */
-	public void serializeTo(AstNodeOutputStream os) throws IOException
-	{
-		defaultSerializeTo(os);
-	}
 	
-	/**
-	 * @deprecated
-	 */
-	public void deserializeFrom(AstNodeInputStream is) throws IOException, ClassNotFoundException
+	@Override
+	public boolean equals(Object obj)
 	{
-		defaultDeserializeFrom(is);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void defaultSerializeTo(AstNodeOutputStream os) throws IOException
-	{
-		os.writeObject(location);
-		serializeAttributes(os);
-		serializeProperties(os);
-		serializeChildren(os);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void defaultDeserializeFrom(AstNodeInputStream is) throws IOException, ClassNotFoundException
-	{
-		location = (Location) is.readObject();
-		deserializeAttributes(is);
-		deserializeProperties(is);
-		deserializeChildren(is);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void serializeAttributes(AstNodeOutputStream os) throws IOException
-	{
-		if (attributes != null && !attributes.isEmpty())
-		{
-			@SuppressWarnings("unchecked")
-			Entry<String, Object>[] props =
-					(Entry<String, Object>[]) attributes.entrySet().toArray(
-							new Entry[0]);
-			
-			Arrays.sort(props, new Comparator<Entry<String, Object>>()
-			{
-				@Override
-				public int compare(
-						Entry<String, Object> o1,
-						Entry<String, Object> o2)
-				{
-					return o1.getKey().compareTo(o2.getKey());
-				}
-			});
-			
-			os.writeInt(props.length);
-			for (Entry<String, Object> prop : props)
-			{
-				os.writeUTF(prop.getKey());
-				os.writeObject(prop.getValue());
-			}
-		}
-		else
-		{
-			os.writeInt(0);
-		}
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void serializeProperties(AstNodeOutputStream os) throws IOException
-	{
-		AstNodePropertyIterator i = propertyIterator();
-		while (i.next())
-			os.writeObject(i.getValue());
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void serializeChildren(AstNodeOutputStream os) throws IOException
-	{
-		os.writeInt(size());
-		for (AstNode child : this)
-			os.writeNode(child);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void deserializeAttributes(AstNodeInputStream is) throws IOException, ClassNotFoundException
-	{
-		attributes = null;
+		// Type checking
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AstNode other = (AstNode) obj;
 		
-		int propCount = is.readInt();
-		for (int i = 0; i < propCount; ++i)
-		{
-			String key = is.readUTF();
-			Object value = is.readObject();
-			setAttribute(key, value);
-		}
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void deserializeProperties(AstNodeInputStream is) throws IOException, ClassNotFoundException
-	{
-		AstNodePropertyIterator i = propertyIterator();
-		while (i.next())
-			i.setValue(is.readObject());
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	protected final void deserializeChildren(AstNodeInputStream is) throws IOException, ClassNotFoundException
-	{
-		int size = is.readInt();
-		if (isList())
-		{
-			for (int i = 0; i < size; ++i)
-				add(is.readNode());
-		}
-		else
-		{
-			for (int i = 0; i < size; ++i)
-				set(i, is.readNode());
-		}
-	}
-	
-	// =========================================================================
-	
-	public final int propertyHash()
-	{
-		int hash = 0;
-		AstNodePropertyIterator i = propertyIterator();
-		while (i.next())
-		{
-			hash += i.getName().hashCode();
-			hash += ((i.getValue() == null) ? 0 : i.getValue().hashCode());
-		}
-		return hash;
-	}
-	
-	public final int childrenHash()
-	{
-		int hash = 0;
-		Iterator<AstNode> i = iterator();
-		while (i.hasNext())
-		{
-			AstNode n = i.next();
-			hash += (n == null) ? 0 : n.hashCode();
-		}
-		return hash;
-	}
-	
-	public final boolean equals(AstNode other)
-	{
 		// Check location
 		if (location == null)
 		{
