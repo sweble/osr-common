@@ -8,7 +8,8 @@ import de.fau.cs.osr.utils.StringUtils;
 
 public class RtDataPtk
 		implements
-			Serializable
+			Serializable,
+			Cloneable
 {
 	public static final String SEP = new String();
 	
@@ -91,6 +92,20 @@ public class RtDataPtk
 	{
 		this(size);
 		set(glue);
+	}
+	
+	protected RtDataPtk(RtDataPtk rtDataPtk)
+	{
+		Object[][] other = rtDataPtk.fields;
+		
+		this.fields = new Object[other.length][];
+		for (int i = 0; i < fields.length; ++i)
+		{
+			this.fields[i] =
+					(other[i] == EMPTY_FIELD) ?
+							EMPTY_FIELD :
+							other[i].clone();
+		}
 	}
 	
 	// =========================================================================
@@ -324,12 +339,24 @@ public class RtDataPtk
 	{
 		Object[] field = fields[index];
 		for (Object o : field)
-			sb.append(StringUtils.escJava(stringRep(o)));
+			stringRep(sb, o);
 	}
 	
-	protected String stringRep(Object o)
+	private void stringRep(StringBuilder sb, Object o)
 	{
-		return o.toString();
+		if (o instanceof StringContentNode)
+		{
+			sb.append(StringUtils.escJava(((StringContentNode) o).getContent()));
+		}
+		else if (o instanceof AstNode)
+		{
+			for (AstNode n : (AstNode) o)
+				stringRep(sb, n);
+		}
+		else
+		{
+			sb.append(StringUtils.escJava(o.toString()));
+		}
 	}
 	
 	@Override
@@ -340,7 +367,7 @@ public class RtDataPtk
 		for (int i = 0; i < fields.length; ++i)
 		{
 			if (i > 0)
-				sb.append(" O ");
+				sb.append(" <o> ");
 			sb.append('"');
 			toString(i, sb);
 			sb.append('"');
@@ -404,4 +431,11 @@ public class RtDataPtk
 		return true;
 	}
 	
+	// =========================================================================
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		return new RtDataPtk(this);
+	}
 }
