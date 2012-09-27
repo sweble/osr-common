@@ -90,7 +90,18 @@ public interface AstNodeInterface
 	 */
 	public String[] getChildNames();
 	
+	// =========================================================================
+	// Object
+	
+	public void toString(Appendable out) throws IOException;
+	
+	public boolean equals(Object obj);
+	
+	// =========================================================================
+	
 	public Object clone() throws CloneNotSupportedException;
+	
+	public AstNode cloneWrapException();
 	
 	/**
 	 * Only children and children's children are cloned by this method. Property
@@ -98,11 +109,6 @@ public interface AstNodeInterface
 	 */
 	public Object deepClone() throws CloneNotSupportedException;
 	
-	// =========================================================================
-	// Object
-	
-	public void toString(Appendable out) throws IOException;
-	
-	public boolean equals(Object obj);
+	public AstNode deepCloneWrapException();
 	
 }

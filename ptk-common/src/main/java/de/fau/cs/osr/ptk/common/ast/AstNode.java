@@ -27,6 +27,7 @@ import java.util.Map;
 
 import xtc.tree.Locatable;
 import xtc.util.Pair;
+import de.fau.cs.osr.utils.WrappedException;
 
 /**
  * The parent node of all AST (abstract/attributed syntax tree) nodes.
@@ -491,47 +492,40 @@ public abstract class AstNode
 	{
 		AstNode n = (AstNode) super.clone();
 		
-		n.location = new Location(n.location);
+		// not necessary, Location is immutable
+		//n.location = new Location(n.location);
 		
-		n.attributes = new HashMap<String, Object>(n.attributes);
+		if (n.attributes != null)
+			n.attributes = new HashMap<String, Object>(n.attributes);
 		
+		if (hasProperties())
 		{
 			AstNodePropertyIterator i = propertyIterator();
 			AstNodePropertyIterator j = n.propertyIterator();
 			while (i.next() & j.next())
+				// don't short-circuit!
 				j.setValue(i.getValue());
-		}
-		
-		if (isList())
-		{
-			Iterator<AstNode> i = iterator();
-			while (i.hasNext())
-				n.add(i.next());
-		}
-		else
-		{
-			for (int i = 0; i < size(); ++i)
-				n.set(i, get(i));
 		}
 		
 		return n;
 	}
 	
+	public AstNode cloneWrapException()
+	{
+		try
+		{
+			return (AstNode) this.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new WrappedException(e);
+		}
+	}
+	
 	@Override
 	public Object deepClone() throws CloneNotSupportedException
 	{
-		AstNode n = (AstNode) super.clone();
-		
-		n.location = new Location(n.location);
-		
-		n.attributes = new HashMap<String, Object>(n.attributes);
-		
-		{
-			AstNodePropertyIterator i = propertyIterator();
-			AstNodePropertyIterator j = n.propertyIterator();
-			while (i.next() & j.next())
-				j.setValue(i.getValue());
-		}
+		AstNode n = (AstNode) clone();
 		
 		if (isList())
 		{
@@ -546,6 +540,18 @@ public abstract class AstNode
 		}
 		
 		return n;
+	}
+	
+	public AstNode deepCloneWrapException()
+	{
+		try
+		{
+			return (AstNode) this.deepClone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new WrappedException(e);
+		}
 	}
 	
 	// =========================================================================
