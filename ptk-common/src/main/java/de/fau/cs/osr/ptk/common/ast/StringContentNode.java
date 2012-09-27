@@ -22,8 +22,8 @@ import java.io.IOException;
 import de.fau.cs.osr.utils.StringUtils;
 
 public abstract class StringContentNode
-        extends
-            LeafNode
+		extends
+			LeafNode
 {
 	private static final long serialVersionUID = -3995972757553601033L;
 	
@@ -61,53 +61,57 @@ public abstract class StringContentNode
 	@Override
 	public AstNodePropertyIterator propertyIterator()
 	{
-		return new AstNodePropertyIterator()
+		return new StringContentNodePropertyIterator();
+	}
+	
+	protected class StringContentNodePropertyIterator
+			extends
+				AstNodePropertyIterator
+	{
+		@Override
+		protected int getPropertyCount()
 		{
-			@Override
-			protected int getPropertyCount()
+			return 1;
+		}
+		
+		@Override
+		protected String getName(int index)
+		{
+			switch (index)
 			{
-				return 1;
+				case 0:
+					return "content";
+					
+				default:
+					throw new IndexOutOfBoundsException();
 			}
-			
-			@Override
-			protected String getName(int index)
+		}
+		
+		@Override
+		protected Object getValue(int index)
+		{
+			switch (index)
 			{
-				switch (index)
-				{
-					case 0:
-						return "content";
-						
-					default:
-						throw new IndexOutOfBoundsException();
-				}
+				case 0:
+					return StringContentNode.this.getContent();
+					
+				default:
+					throw new IndexOutOfBoundsException();
 			}
-			
-			@Override
-			protected Object getValue(int index)
+		}
+		
+		@Override
+		protected Object setValue(int index, Object value)
+		{
+			switch (index)
 			{
-				switch (index)
-				{
-					case 0:
-						return StringContentNode.this.getContent();
-						
-					default:
-						throw new IndexOutOfBoundsException();
-				}
+				case 0:
+					return StringContentNode.this.setContent((String) value);
+					
+				default:
+					throw new IndexOutOfBoundsException();
 			}
-			
-			@Override
-			protected Object setValue(int index, Object value)
-			{
-				switch (index)
-				{
-					case 0:
-						return StringContentNode.this.setContent((String) value);
-						
-					default:
-						throw new IndexOutOfBoundsException();
-				}
-			}
-		};
+		}
 	}
 	
 	// =========================================================================
