@@ -274,6 +274,30 @@ public abstract class AstNode
 	}
 	
 	@Override
+	public Object getProperty(String name, Object default_)
+	{
+		AstNodePropertyIterator i = propertyIterator();
+		while (i.next())
+		{
+			if (i.getName().equals(name))
+				return i.getValue();
+		}
+		return default_;
+	}
+	
+	@Override
+	public boolean hasProperty(String name)
+	{
+		AstNodePropertyIterator i = propertyIterator();
+		while (i.next())
+		{
+			if (i.getName().equals(name))
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public Object setProperty(String name, Object value)
 	{
 		AstNodePropertyIterator i = propertyIterator();

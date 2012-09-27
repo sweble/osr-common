@@ -25,6 +25,10 @@ public interface AstNodePropertyInterface
 	
 	public Object getProperty(String name);
 	
+	public Object getProperty(String name, Object default_);
+	
+	public boolean hasProperty(String name);
+	
 	public Object setProperty(String name, Object value);
 	
 	/**
