@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import de.fau.cs.osr.utils.StringUtils;
 
-public class RtData
+public class RtDataPtk
 		implements
 			Serializable
 {
@@ -28,7 +28,7 @@ public class RtData
 	 * 
 	 * An AstNode with two children will need an RtData object with size three.
 	 */
-	public RtData(AstNode node)
+	public RtDataPtk(AstNode node)
 	{
 		this(node.size() + 1);
 	}
@@ -36,7 +36,7 @@ public class RtData
 	/**
 	 * Instantiates an empty RtData object with the given size.
 	 */
-	public RtData(int size)
+	public RtDataPtk(int size)
 	{
 		if (size <= 0)
 			throw new IllegalArgumentException("RtData must have a size of at least 1");
@@ -48,8 +48,10 @@ public class RtData
 	/**
 	 * Instantiates an RtData object, initializes its size to match that of the
 	 * given AstNode and immediately fills it with glue information.
+	 * 
+	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtData(AstNode node, Object... glue)
+	public RtDataPtk(AstNode node, Object... glue)
 	{
 		this(node);
 		set(glue);
@@ -61,7 +63,7 @@ public class RtData
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtData(int size, Object... glue)
+	public RtDataPtk(int size, Object... glue)
 	{
 		this(size);
 		set(glue);
@@ -70,10 +72,24 @@ public class RtData
 	/**
 	 * Instantiates an RtData object, initializes its size to match that of the
 	 * given AstNode and immediately fills it with glue information.
+	 * 
+	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtData(AstNode node, String... glue)
+	public RtDataPtk(AstNode node, String... glue)
 	{
 		this(node);
+		set(glue);
+	}
+	
+	/**
+	 * Instantiates an RtData object with the given size and immediately fills
+	 * it with glue information.
+	 * 
+	 * To move on to the next glue field insert a SEP object.
+	 */
+	public RtDataPtk(int size, String... glue)
+	{
+		this(size);
 		set(glue);
 	}
 	
@@ -320,7 +336,7 @@ public class RtData
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("RtData: [ ");
+		sb.append("RTD[ ");
 		for (int i = 0; i < fields.length; ++i)
 		{
 			if (i > 0)
@@ -382,7 +398,7 @@ public class RtData
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RtData other = (RtData) obj;
+		RtDataPtk other = (RtDataPtk) obj;
 		if (!Arrays.deepEquals(fields, other.fields))
 			return false;
 		return true;
