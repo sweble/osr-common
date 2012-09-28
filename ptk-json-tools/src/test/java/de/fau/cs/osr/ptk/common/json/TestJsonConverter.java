@@ -31,7 +31,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import de.fau.cs.osr.ptk.common.AstComparer;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.ptk.common.test.TestNodeSection;
@@ -159,7 +159,7 @@ public class TestJsonConverter
 		
 		String json = serialize(in, as);
 		
-		AstNode out = deserialize(json, as);
+		AstNodeInterface out = deserialize(json, as);
 		
 		// -------
 		
@@ -172,14 +172,14 @@ public class TestJsonConverter
 	
 	// =========================================================================
 	
-	private String serialize(AstNode ast, NameAbbrevService as) throws Exception
+	private String serialize(AstNodeInterface ast, NameAbbrevService as) throws Exception
 	{
 		return JsonConverter.toJson(ast, as);
 	}
 	
-	private AstNode deserialize(String json, NameAbbrevService as) throws Exception
+	private AstNodeInterface deserialize(String json, NameAbbrevService as) throws Exception
 	{
-		return JsonConverter.fromJson(json, AstNode.class, as);
+		return JsonConverter.fromJson(json, AstNodeInterface.class, as);
 	}
 	
 	private boolean deepCompareMaps(

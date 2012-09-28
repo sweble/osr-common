@@ -25,7 +25,7 @@ import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.utils.FmtInternalLogicError;
 
 public class AstNodePointer
@@ -35,19 +35,19 @@ public class AstNodePointer
 	private static final long serialVersionUID = 1L;
 	
 	/** The node this pointer points to. */
-	private AstNode node;
+	private AstNodeInterface node;
 	
 	// =========================================================================
 	
-	public AstNodePointer(AstNode node)
+	public AstNodePointer(AstNodeInterface node)
 	{
 		super(null);
 		this.node = node;
-		//debug("AstNodePointer(AstNode node)");
+		//debug("AstNodePointer(AstNodeInterface node)");
 		
 	}
 	
-	public AstNodePointer(NodePointer parent, AstNode node)
+	public AstNodePointer(NodePointer parent, AstNodeInterface node)
 	{
 		// Usually called by an AstNodeIterator. In this case, `parent' would
 		// point to the node that we iterated over and `node' would be the 
@@ -55,7 +55,7 @@ public class AstNodePointer
 		
 		super(parent);
 		this.node = node;
-		//debug("AstNodePointer(NodePointer parent, AstNode node)");
+		//debug("AstNodePointer(NodePointer parent, AstNodeInterface node)");
 	}
 	
 	// =========================================================================
@@ -94,7 +94,7 @@ public class AstNodePointer
 		if (!isEmpty)
 		{
 			isEmpty = true;
-			for (AstNode child : node)
+			for (AstNodeInterface child : node)
 				if (child != null)
 				{
 					isEmpty = false;
@@ -145,7 +145,7 @@ public class AstNodePointer
 		// `null' as namespace prefix in names.
 		return new QName(null, getName2());
 		
-		//Class<? extends AstNode> clazz = node.getClass();
+		//Class<? extends AstNodeInterface> clazz = node.getClass();
 		//return new QName(
 		//        clazz.getPackage().getName(),
 		//        clazz.getSimpleName());
@@ -200,10 +200,10 @@ public class AstNodePointer
 		}
 		else
 		{
-			AstNode node1 = (AstNode) pointer1.getBaseValue();
-			AstNode node2 = (AstNode) pointer2.getBaseValue();
+			AstNodeInterface node1 = (AstNodeInterface) pointer1.getBaseValue();
+			AstNodeInterface node2 = (AstNodeInterface) pointer2.getBaseValue();
 			
-			for (AstNode child : node)
+			for (AstNodeInterface child : node)
 			{
 				if (child == node1)
 				{
@@ -261,10 +261,10 @@ public class AstNodePointer
 			{
 				NodePointer p = (NodePointer) parent;
 				
-				AstNode thisNode = (AstNode) getImmediateNode();
+				AstNodeInterface thisNode = (AstNodeInterface) getImmediateNode();
 				
 				int i = 1;
-				for (AstNode n : (AstNode) p.getImmediateNode())
+				for (AstNodeInterface n : (AstNodeInterface) p.getImmediateNode())
 				{
 					if (n == thisNode)
 						return i;
@@ -279,7 +279,7 @@ public class AstNodePointer
 				AstNodeFieldPointer p = (AstNodeFieldPointer) parent;
 				
 				int i = 1;
-				for (AstNode n : (AstNode) p.getImmediateNode())
+				for (AstNodeInterface n : (AstNodeInterface) p.getImmediateNode())
 				{
 					if (n == node)
 						return i;
@@ -370,7 +370,7 @@ public class AstNodePointer
 		else
 		{
 			// Unhandled: ProcessingInstructionTest
-			//   An AstNode can never be a PI.
+			//   An AstNodeInterface can never be a PI.
 			
 			return false;
 		}

@@ -20,7 +20,7 @@ package de.fau.cs.osr.ptk.common;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.LeafNode;
 
 @Ignore
@@ -37,9 +37,9 @@ public class VisitorTest
 	        extends
 	            AstVisitor
 	{
-		public void visit(AstNode n)
+		public void visit(AstNodeInterface n)
 		{
-			System.out.println("AstNode: " + n.getClass().getSimpleName());
+			System.out.println("AstNodeInterface: " + n.getClass().getSimpleName());
 		}
 	}
 	

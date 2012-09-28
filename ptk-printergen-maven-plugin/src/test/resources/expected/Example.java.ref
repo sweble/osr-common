@@ -23,14 +23,14 @@ public class Example
         	de.fau.cs.osr.ptk.common.PrinterBase
         implements Stuff
 {
-	public static String print(AstNode node)
+	public static String print(AstNodeInterface node)
 	{
 		StringWriter writer = new StringWriter();
 		new Example(writer).go(node);
 		return writer.toString();
 	}
 	
-	public static Writer print(Writer writer, AstNode node)
+	public static Writer print(Writer writer, AstNodeInterface node)
 	{
 		new Example(writer).go(node);
 		return writer;
@@ -49,7 +49,7 @@ public class Example
 		iterate(nodeList);
 
 	}
-	public void visit(AstNode astNode) throws IOException
+	public void visit(AstNodeInterface astNodeInterface) throws IOException
 	{
 		iterate(astNode);
 

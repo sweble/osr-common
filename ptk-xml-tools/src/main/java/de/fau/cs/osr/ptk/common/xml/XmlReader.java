@@ -36,7 +36,7 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.codec.binary.Base64;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
@@ -58,22 +58,22 @@ public class XmlReader
 	
 	// =========================================================================
 	
-	public static AstNode read(String xml) throws DeserializationException
+	public static AstNodeInterface read(String xml) throws DeserializationException
 	{
 		return new XmlReader().deserialize(new StringReader(xml));
 	}
 	
-	public static AstNode read(String xml, NameAbbrevService as) throws DeserializationException
+	public static AstNodeInterface read(String xml, NameAbbrevService as) throws DeserializationException
 	{
 		return new XmlReader().deserialize(new StringReader(xml), as);
 	}
 	
-	public static AstNode read(Reader reader) throws DeserializationException
+	public static AstNodeInterface read(Reader reader) throws DeserializationException
 	{
 		return new XmlReader().deserialize(reader);
 	}
 	
-	public static AstNode read(Reader reader, NameAbbrevService as) throws DeserializationException
+	public static AstNodeInterface read(Reader reader, NameAbbrevService as) throws DeserializationException
 	{
 		return new XmlReader().deserialize(reader, as);
 	}
@@ -86,12 +86,12 @@ public class XmlReader
 	
 	// =========================================================================
 	
-	public AstNode deserialize(Reader reader) throws DeserializationException
+	public AstNodeInterface deserialize(Reader reader) throws DeserializationException
 	{
 		return deserialize(reader, new NameAbbrevService());
 	}
 	
-	public AstNode deserialize(Reader reader, NameAbbrevService abbrevService) throws DeserializationException
+	public AstNodeInterface deserialize(Reader reader, NameAbbrevService abbrevService) throws DeserializationException
 	{
 		try
 		{
@@ -113,7 +113,7 @@ public class XmlReader
 	
 	// =========================================================================
 	
-	private AstNode readAst() throws XMLStreamException, DeserializationException
+	private AstNodeInterface readAst() throws XMLStreamException, DeserializationException
 	{
 		XMLEvent event = null;
 		while (reader.hasNext())
@@ -129,7 +129,7 @@ public class XmlReader
 		skipWhitespace();
 		expectStartElement(XmlConstants.AST_QNAME);
 		
-		AstNode root = readNodeListOrTextOrNode();
+		AstNodeInterface root = readNodeListOrTextOrNode();
 		
 		expectEndElement();
 		
@@ -147,7 +147,7 @@ public class XmlReader
 		return root;
 	}
 	
-	private AstNode readNodeListOrTextOrNode() throws XMLStreamException, DeserializationException
+	private AstNodeInterface readNodeListOrTextOrNode() throws XMLStreamException, DeserializationException
 	{
 		XMLEvent event = null;
 		if (skipWhitespace())
@@ -155,7 +155,7 @@ public class XmlReader
 			event = reader.nextEvent();
 			if (event.isStartElement())
 			{
-				AstNode node;
+				AstNodeInterface node;
 				
 				StartElement elem = event.asStartElement();
 				if (elem.getName().equals(XmlConstants.LIST_QNAME))
@@ -183,12 +183,12 @@ public class XmlReader
 		throw new DeserializationException(event, "Expected element");
 	}
 	
-	private AstNode readText(StartElement e) throws XMLStreamException
+	private AstNodeInterface readText(StartElement e) throws XMLStreamException
 	{
 		return new Text(readChars());
 	}
 	
-	private AstNode readNodeList(StartElement elem) throws XMLStreamException, DeserializationException
+	private AstNodeInterface readNodeList(StartElement elem) throws XMLStreamException, DeserializationException
 	{
 		NodeList list = new NodeList();
 		
@@ -205,7 +205,7 @@ public class XmlReader
 		return list;
 	}
 	
-	private AstNode readNode(StartElement elem) throws XMLStreamException, DeserializationException
+	private AstNodeInterface readNode(StartElement elem) throws XMLStreamException, DeserializationException
 	{
 		String name = elem.getName().getLocalPart();
 		
@@ -214,7 +214,7 @@ public class XmlReader
 		{
 			Class<?> clazz = abbrevService.resolve(name);
 			
-			AstNode n = (AstNode) clazz.newInstance();
+			AstNodeInterface n = (AstNodeInterface) clazz.newInstance();
 			
 			readNodeAttributes(n);
 			
@@ -249,7 +249,7 @@ public class XmlReader
 		throw new DeserializationException(elem, msg, e);
 	}
 	
-	private void readNodeAttributes(AstNode n) throws XMLStreamException, DeserializationException, IOException
+	private void readNodeAttributes(AstNodeInterface n) throws XMLStreamException, DeserializationException, IOException
 	{
 		XMLEvent event = null;
 		while (skipWhitespace())
@@ -268,7 +268,7 @@ public class XmlReader
 		}
 	}
 	
-	private void readNodeAttribute(StartElement elem, AstNode n) throws XMLStreamException, DeserializationException
+	private void readNodeAttribute(StartElement elem, AstNodeInterface n) throws XMLStreamException, DeserializationException
 	{
 		String attrName = null;
 		boolean isNull = false;
@@ -343,7 +343,7 @@ public class XmlReader
 		}
 	}
 	
-	private void readNodeProperties(AstNode n) throws XMLStreamException, DeserializationException
+	private void readNodeProperties(AstNodeInterface n) throws XMLStreamException, DeserializationException
 	{
 		AstNodePropertyIterator i = n.propertyIterator();
 		while (i.next())
@@ -398,13 +398,13 @@ public class XmlReader
 		}
 	}
 	
-	private void readNodeChildren(AstNode n) throws XMLStreamException, DeserializationException
+	private void readNodeChildren(AstNodeInterface n) throws XMLStreamException, DeserializationException
 	{
 		for (int i = 0; i < n.getChildNames().length; ++i)
 		{
 			expectStartElement(new QName(n.getChildNames()[i]));
 			
-			AstNode child = readNodeListOrTextOrNode();
+			AstNodeInterface child = readNodeListOrTextOrNode();
 			
 			n.set(i, child);
 			
@@ -527,10 +527,10 @@ public class XmlReader
 				
 				return Enum.valueOf((Class) clazz, chars);
 			}
-			else if (AstNode.class.isAssignableFrom(clazz))
+			else if (AstNodeInterface.class.isAssignableFrom(clazz))
 			{
 				expectStartElement(null);
-				AstNode node = readNodeListOrTextOrNode();
+				AstNodeInterface node = readNodeListOrTextOrNode();
 				expectEndElement();
 				return node;
 			}

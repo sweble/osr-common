@@ -20,18 +20,19 @@ package de.fau.cs.osr.ptk.common.jxpath;
 import java.io.IOException;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
 public class Document
-        extends
-            AstNode
+		extends
+			AstNode
 {
 	private static final long serialVersionUID = 1L;
 	
-	private AstNode n0;
+	private AstNodeInterface n0;
 	
 	// =========================================================================
 	
-	public Document(AstNode root)
+	public Document(AstNodeInterface root)
 	{
 		set(0, root);
 	}
@@ -45,7 +46,7 @@ public class Document
 	}
 	
 	@Override
-	public AstNode get(int index)
+	public AstNodeInterface get(int index)
 	{
 		switch (index)
 		{
@@ -53,14 +54,14 @@ public class Document
 				return n0;
 			default:
 				throw new IndexOutOfBoundsException(
-				        "Size: " + size() + ", Index: " + index);
+						"Size: " + size() + ", Index: " + index);
 		}
 	}
 	
 	@Override
-	public AstNode set(int index, AstNode n)
+	public AstNodeInterface set(int index, AstNodeInterface n)
 	{
-		AstNode o;
+		AstNodeInterface o;
 		switch (index)
 		{
 			case 0:
@@ -69,14 +70,14 @@ public class Document
 				break;
 			default:
 				throw new IndexOutOfBoundsException(
-				        "Size: " + size() + ", Index: " + index);
+						"Size: " + size() + ", Index: " + index);
 		}
 		
 		return o;
 	}
 	
 	@Override
-	public AstNode remove(int index)
+	public AstNodeInterface remove(int index)
 	{
 		return set(index, null);
 	}
@@ -92,7 +93,7 @@ public class Document
 	{
 		out.append(getClass().getSimpleName());
 		out.append('(');
-		AstNode child = get(0);
+		AstNodeInterface child = get(0);
 		if (child == null)
 			out.append("null");
 		else

@@ -17,7 +17,7 @@
 
 package de.fau.cs.osr.ptk.common.test;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
 
@@ -65,10 +65,10 @@ public class TestAstBuilder
 			return this;
 		}
 		
-		public TestSectionBuilder withTitle(AstNode... children)
+		public TestSectionBuilder withTitle(AstNodeInterface... children)
 		{
 			this.title = new NodeList();
-			for (AstNode c : children)
+			for (AstNodeInterface c : children)
 				this.title.add(c);
 			return this;
 		}
@@ -79,10 +79,10 @@ public class TestAstBuilder
 			return this;
 		}
 		
-		public TestSectionBuilder withBody(AstNode... children)
+		public TestSectionBuilder withBody(AstNodeInterface... children)
 		{
 			this.body = new NodeList();
-			for (AstNode c : children)
+			for (AstNodeInterface c : children)
 				this.body.add(c);
 			return this;
 		}

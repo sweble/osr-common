@@ -23,7 +23,7 @@
 
 %**********************%
 
-%visit(AstNode) {!iterate(astNode)}
+%visit(AstNodeInterface) {!iterate(astNode)}
 
 %visit(AstTemplate)
 <div class="attribute">

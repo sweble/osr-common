@@ -22,7 +22,7 @@ import java.io.Reader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.utils.NameAbbrevService;
@@ -146,7 +146,7 @@ public class JsonConverter
 		
 		// Fallback
 		gson.registerTypeHierarchyAdapter(
-				AstNode.class,
+				AstNodeInterface.class,
 				new AstNodeGsonTypeAdapter(config));
 		
 		// We require the serialization of null values

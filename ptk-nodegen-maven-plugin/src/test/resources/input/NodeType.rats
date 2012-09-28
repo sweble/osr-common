@@ -49,7 +49,7 @@
  *   AST node:
  *     Name        : NodeTypeNode
  *     Extends     : LeafNode
- *     NodeType    : AstNode.NT_CUSTOM_BIT
+ *     NodeType    : AstNodeInterface.NT_CUSTOM_BIT
  *
  */
 

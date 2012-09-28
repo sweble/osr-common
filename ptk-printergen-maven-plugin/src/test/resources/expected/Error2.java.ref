@@ -21,14 +21,14 @@ public class X
         	de.fau.cs.osr.ptk.common.PrinterBase
         
 {
-	public static String print(AstNode node)
+	public static String print(AstNodeInterface node)
 	{
 		StringWriter writer = new StringWriter();
 		new X(writer).go(node);
 		return writer.toString();
 	}
 	
-	public static Writer print(Writer writer, AstNode node)
+	public static Writer print(Writer writer, AstNodeInterface node)
 	{
 		new X(writer).go(node);
 		return writer;

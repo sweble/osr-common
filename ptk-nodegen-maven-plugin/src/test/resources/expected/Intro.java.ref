@@ -25,12 +25,12 @@ public class Intro
 
 	public Intro()
 	{
-		super((AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null);
+		super((AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null);
 
 	}
 	public Intro(String abstract_, String continue_, String for_, String new_, String switch_, String assert_, String default_)
 	{
-		super((AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null);
+		super((AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null);
 		setAbstract(abstract_);
 		setContinue(continue_);
 		setFor(for_);
@@ -42,7 +42,7 @@ public class Intro
 	}
 	public Intro(String goto_, String package_, String synchronized_, String boolean_, String do_, String if_, String private_)
 	{
-		super((AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null);
+		super((AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null);
 		setGoto(goto_);
 		setPackage(package_);
 		setSynchronized(synchronized_);
@@ -54,7 +54,7 @@ public class Intro
 	}
 	public Intro(String this_, String break_, String double_, String implements_, String protected_, String throw_, String byte_)
 	{
-		super((AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null);
+		super((AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null);
 		setThis(this_);
 		setBreak(break_);
 		setDouble(double_);
@@ -66,7 +66,7 @@ public class Intro
 	}
 	public Intro(String else_, String import_, String public_, String throws_, String case_, String enum_, String instanceof_)
 	{
-		super((AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null);
+		super((AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null);
 		setElse(else_);
 		setImport(import_);
 		setPublic(public_);
@@ -76,9 +76,9 @@ public class Intro
 		setInstanceof(instanceof_);
 
 	}
-	public Intro(String return_, AstNode transient_, AstNode catch_, String extends_, String int_, String short_, String try_, String char_)
+	public Intro(String return_, AstNodeInterface transient_, AstNodeInterface catch_, String extends_, String int_, String short_, String try_, String char_)
 	{
-		super((AstNode) null, (AstNode) null, (AstNode) null, transient_, catch_, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null);
+		super((AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, transient_, catch_, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null);
 		setReturn(return_);
 		setTransient(transient_);
 		setCatch(catch_);
@@ -89,9 +89,9 @@ public class Intro
 		setChar(char_);
 
 	}
-	public Intro(String final_, String interface_, String static_, String void_, String class_, AstNode finally_, AstNode long_)
+	public Intro(String final_, String interface_, String static_, String void_, String class_, AstNodeInterface finally_, AstNodeInterface long_)
 	{
-		super(finally_, long_, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null, (AstNode) null);
+		super(finally_, long_, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null, (AstNodeInterface) null);
 		setFinal(final_);
 		setInterface(interface_);
 		setStatic(static_);
@@ -99,9 +99,9 @@ public class Intro
 		setClass(class_);
 
 	}
-	public Intro(AstNode strictfp_, AstNode volatile_, AstNode const_, String float_, String native_, AstNode super_, AstNode while_)
+	public Intro(AstNodeInterface strictfp_, AstNodeInterface volatile_, AstNodeInterface const_, String float_, String native_, AstNodeInterface super_, AstNodeInterface while_)
 	{
-		super((AstNode) null, (AstNode) null, strictfp_, (AstNode) null, (AstNode) null, volatile_, const_, super_, while_);
+		super((AstNodeInterface) null, (AstNodeInterface) null, strictfp_, (AstNodeInterface) null, (AstNodeInterface) null, volatile_, const_, super_, while_);
 		setFloat(float_);
 		setNative(native_);
 
@@ -987,86 +987,86 @@ public class Intro
 	// =========================================================================
 	// Children
 
-	public final void setFinally(AstNode finally_)
+	public final void setFinally(AstNodeInterface finally_)
 	{
 		set(0, finally_);
 	}
 	
-	public final AstNode getFinally()
+	public final AstNodeInterface getFinally()
 	{
-		return (AstNode) get(0);
+		return (AstNodeInterface) get(0);
 	}
-	public final void setLong(AstNode long_)
+	public final void setLong(AstNodeInterface long_)
 	{
 		set(1, long_);
 	}
 	
-	public final AstNode getLong()
+	public final AstNodeInterface getLong()
 	{
-		return (AstNode) get(1);
+		return (AstNodeInterface) get(1);
 	}
-	public final void setStrictfp(AstNode strictfp_)
+	public final void setStrictfp(AstNodeInterface strictfp_)
 	{
 		set(2, strictfp_);
 	}
 	
-	public final AstNode getStrictfp()
+	public final AstNodeInterface getStrictfp()
 	{
-		return (AstNode) get(2);
+		return (AstNodeInterface) get(2);
 	}
-	public final void setTransient(AstNode transient_)
+	public final void setTransient(AstNodeInterface transient_)
 	{
 		set(3, transient_);
 	}
 	
-	public final AstNode getTransient()
+	public final AstNodeInterface getTransient()
 	{
-		return (AstNode) get(3);
+		return (AstNodeInterface) get(3);
 	}
-	public final void setCatch(AstNode catch_)
+	public final void setCatch(AstNodeInterface catch_)
 	{
 		set(4, catch_);
 	}
 	
-	public final AstNode getCatch()
+	public final AstNodeInterface getCatch()
 	{
-		return (AstNode) get(4);
+		return (AstNodeInterface) get(4);
 	}
-	public final void setVolatile(AstNode volatile_)
+	public final void setVolatile(AstNodeInterface volatile_)
 	{
 		set(5, volatile_);
 	}
 	
-	public final AstNode getVolatile()
+	public final AstNodeInterface getVolatile()
 	{
-		return (AstNode) get(5);
+		return (AstNodeInterface) get(5);
 	}
-	public final void setConst(AstNode const_)
+	public final void setConst(AstNodeInterface const_)
 	{
 		set(6, const_);
 	}
 	
-	public final AstNode getConst()
+	public final AstNodeInterface getConst()
 	{
-		return (AstNode) get(6);
+		return (AstNodeInterface) get(6);
 	}
-	public final void setSuper(AstNode super_)
+	public final void setSuper(AstNodeInterface super_)
 	{
 		set(7, super_);
 	}
 	
-	public final AstNode getSuper()
+	public final AstNodeInterface getSuper()
 	{
-		return (AstNode) get(7);
+		return (AstNodeInterface) get(7);
 	}
-	public final void setWhile(AstNode while_)
+	public final void setWhile(AstNodeInterface while_)
 	{
 		set(8, while_);
 	}
 	
-	public final AstNode getWhile()
+	public final AstNodeInterface getWhile()
 	{
-		return (AstNode) get(8);
+		return (AstNodeInterface) get(8);
 	}
 
 	private static final String[] CHILD_NAMES = new String[] {"finally", "long", "strictfp", "transient", "catch", "volatile", "const", "super", "while"};

@@ -21,14 +21,14 @@ import java.util.ListIterator;
 
 interface AstChildIterator
         extends
-            ListIterator<AstNode>
+            ListIterator<AstNodeInterface>
 {
 	/**
 	 * Returns the child last returned by a call to previous() or next(). This
 	 * method can only be called after previous() or next() have been called and
 	 * must not be called after a call to remove() or add().
 	 */
-	public AstNode get();
+	public AstNodeInterface get();
 	
 	/**
 	 * Resets the iterator.

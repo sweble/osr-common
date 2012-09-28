@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
 public abstract class ParserCommon
         implements
@@ -51,14 +51,14 @@ public abstract class ParserCommon
 		return this;
 	}
 	
-	protected AstNode process(AstNode n)
+	protected AstNodeInterface process(AstNodeInterface n)
 	{
-		AstNode result = n;
+		AstNodeInterface result = n;
 		for (AstVisitor v : getVisitors())
 		{
 			Object o = v.go(result);
-			if (o instanceof AstNode)
-				result = (AstNode) o;
+			if (o instanceof AstNodeInterface)
+				result = (AstNodeInterface) o;
 		}
 		return result;
 	}

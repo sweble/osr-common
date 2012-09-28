@@ -31,7 +31,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
@@ -75,7 +75,7 @@ public class JsonConverterImpl
 	// =========================================================================
 	
 	public JsonElement serializeAstNode(
-			AstNode src,
+			AstNodeInterface src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
@@ -127,7 +127,7 @@ public class JsonConverterImpl
 				JsonArray list = new JsonArray();
 				node.add("!list", list);
 				
-				for (AstNode child : src)
+				for (AstNodeInterface child : src)
 					list.add(context.serialize(child));
 			}
 			else
@@ -141,7 +141,7 @@ public class JsonConverterImpl
 		return node;
 	}
 	
-	public AstNode deserializeAstNode(
+	public AstNodeInterface deserializeAstNode(
 			JsonElement json,
 			Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException
@@ -158,7 +158,7 @@ public class JsonConverterImpl
 		{
 			JsonObject jo = json.getAsJsonObject();
 			
-			AstNode n = instantiateNode(jo);
+			AstNodeInterface n = instantiateNode(jo);
 			
 			JsonElement location = jo.get("!location");
 			if (location != null)
@@ -170,7 +170,7 @@ public class JsonConverterImpl
 				if (list != null)
 				{
 					for (JsonElement i : list.getAsJsonArray())
-						n.add((AstNode) context.deserialize(i, AstNode.class));
+						n.add((AstNodeInterface) context.deserialize(i, AstNodeInterface.class));
 				}
 			}
 			
@@ -210,7 +210,7 @@ public class JsonConverterImpl
 		}
 	}
 	
-	private String locationToStr(AstNode src)
+	private String locationToStr(AstNodeInterface src)
 	{
 		return src.getNativeLocation().toString();
 	}
@@ -223,7 +223,7 @@ public class JsonConverterImpl
 		return Location.valueOf(s);
 	}
 	
-	private AstNode instantiateNode(JsonObject jo)
+	private AstNodeInterface instantiateNode(JsonObject jo)
 	{
 		JsonElement typeElem = jo.get("!type");
 		if (typeElem == null)
@@ -234,7 +234,7 @@ public class JsonConverterImpl
 		Exception e;
 		try
 		{
-			return (AstNode) resolve(typeSuffix).newInstance();
+			return (AstNodeInterface) resolve(typeSuffix).newInstance();
 		}
 		catch (ClassNotFoundException e_)
 		{
@@ -255,7 +255,7 @@ public class JsonConverterImpl
 	private void loadAttribute(
 			JsonDeserializationContext context,
 			Entry<String, JsonElement> field,
-			AstNode n)
+			AstNodeInterface n)
 	{
 		String name = field.getKey().substring(1);
 		
@@ -292,7 +292,7 @@ public class JsonConverterImpl
 	private void loadProperty(
 			JsonDeserializationContext context,
 			Entry<String, JsonElement> field,
-			AstNode n)
+			AstNodeInterface n)
 	{
 		PropSetter setter = getPropertyType(
 				n.getClass(),
@@ -308,13 +308,13 @@ public class JsonConverterImpl
 	private void loadChild(
 			JsonDeserializationContext context,
 			Entry<String, JsonElement> field,
-			AstNode n,
+			AstNodeInterface n,
 			int i)
 	{
-		AstNode value =
+		AstNodeInterface value =
 				context.deserialize(
 						field.getValue(),
-						AstNode.class);
+						AstNodeInterface.class);
 		
 		n.set(i, value);
 	}
@@ -330,7 +330,7 @@ public class JsonConverterImpl
 			return serializeAstNode(src, typeOfSrc, context);
 		
 		JsonArray array = new JsonArray();
-		for (AstNode c : (NodeList) src)
+		for (AstNodeInterface c : (NodeList) src)
 			array.add(context.serialize(c));
 		return array;
 	}
@@ -345,7 +345,7 @@ public class JsonConverterImpl
 		
 		NodeList l = new NodeList();
 		for (JsonElement i : json.getAsJsonArray())
-			l.add((AstNode) context.deserialize(i, AstNode.class));
+			l.add((AstNodeInterface) context.deserialize(i, AstNodeInterface.class));
 		return l;
 	}
 	
@@ -388,7 +388,7 @@ public class JsonConverterImpl
 	// =========================================================================
 	
 	private PropSetter getPropertyType(
-			Class<? extends AstNode> nodeClass,
+			Class<? extends AstNodeInterface> nodeClass,
 			String propertyName)
 	{
 		PropKey key = new PropKey(nodeClass, propertyName);
@@ -443,13 +443,15 @@ public class JsonConverterImpl
 	
 	private static final class PropKey
 	{
-		public final Class<? extends AstNode> nodeClazz;
+		public final Class<? extends AstNodeInterface> nodeClazz;
 		
 		public final String propName;
 		
 		// =====================================================================
 		
-		public PropKey(Class<? extends AstNode> nodeClazz, String propName)
+		public PropKey(
+				Class<? extends AstNodeInterface> nodeClazz,
+				String propName)
 		{
 			this.nodeClazz = nodeClazz;
 			this.propName = propName;
@@ -513,7 +515,7 @@ public class JsonConverterImpl
 		
 		// =====================================================================
 		
-		public void set(AstNode n, Object value)
+		public void set(AstNodeInterface n, Object value)
 		{
 			try
 			{

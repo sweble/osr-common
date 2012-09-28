@@ -37,7 +37,7 @@ public abstract class LeafNode
 	
 	public final String[] getChildNames()
 	{
-		return AstNode.EMPTY_CHILD_NAMES;
+		return EMPTY_CHILD_NAMES;
 	}
 	
 	// =========================================================================

@@ -29,17 +29,16 @@ import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
-import de.fau.cs.osr.ptk.common.jxpath.AstNodePointerFactory;
 import de.fau.cs.osr.ptk.common.jxpath.AstPropertyIterator.Property;
 
 public class XPathTest
 {
 	private static final boolean QUIET = true;
 	
-	private static final AstNode AST1 =
+	private static final AstNodeInterface AST1 =
 	        new Section(
 	                0,
 	                new NodeList(
@@ -54,7 +53,7 @@ public class XPathTest
 	                                "EOL2")),
 	                "EOL1");
 	
-	private static final AstNode AST2 =
+	private static final AstNodeInterface AST2 =
 	        new Document(
 	                new NodeList(
 	                        new Section(
@@ -69,7 +68,7 @@ public class XPathTest
 	                                "EOL2")));
 	
 	@SuppressWarnings("unused")
-	private static final AstNode AST3 =
+	private static final AstNodeInterface AST3 =
 	        new Document(
 	                new NodeList(
 	                        new Section(
@@ -83,7 +82,7 @@ public class XPathTest
 	                                null, // body
 	                                "EOL2")));
 	
-	private static final AstNode AST4 =
+	private static final AstNodeInterface AST4 =
 	        new Document(
 	                new NodeList(
 	                        new Text("1"),

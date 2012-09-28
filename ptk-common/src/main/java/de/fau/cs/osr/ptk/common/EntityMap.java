@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
 public class EntityMap
 		implements
@@ -31,29 +31,29 @@ public class EntityMap
 {
 	private static final long serialVersionUID = 1L;
 	
-	private HashMap<Integer, AstNode> entityMap =
-			new HashMap<Integer, AstNode>();
+	private HashMap<Integer, AstNodeInterface> entityMap =
+			new HashMap<Integer, AstNodeInterface>();
 	
 	// =========================================================================
 	
-	public int registerEntity(AstNode entity)
+	public int registerEntity(AstNodeInterface entity)
 	{
 		int id = entityMap.size();
 		entityMap.put(id, entity);
 		return id;
 	}
 	
-	public AstNode getEntity(int id)
+	public AstNodeInterface getEntity(int id)
 	{
 		return entityMap.get(id);
 	}
 	
-	public Set<Entry<Integer, AstNode>> getEntities()
+	public Set<Entry<Integer, AstNodeInterface>> getEntities()
 	{
 		return entityMap.entrySet();
 	}
 	
-	public Map<Integer, AstNode> getMap()
+	public Map<Integer, AstNodeInterface> getMap()
 	{
 		return entityMap;
 	}

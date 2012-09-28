@@ -20,14 +20,14 @@ package de.fau.cs.osr.ptk.common.ast;
 import java.io.IOException;
 
 public abstract class Tuple
-        extends
-            AstNode
+		extends
+			AstNode
 {
 	private static final long serialVersionUID = 4530863809977418257L;
 	
 	public static final class Tuple1<T1>
-	        extends
-	            Tuple
+			extends
+				Tuple
 	{
 		private static final long serialVersionUID = -7736773346527242367L;
 		
@@ -83,7 +83,7 @@ public abstract class Tuple
 		@Override
 		public int getNodeType()
 		{
-			return AstNode.NT_TUPLE_1;
+			return NT_TUPLE_1;
 		}
 		
 		@Override
@@ -96,8 +96,8 @@ public abstract class Tuple
 	// =========================================================================
 	
 	public static final class Tuple2<T1, T2>
-	        extends
-	        Tuple
+			extends
+				Tuple
 	{
 		private static final long serialVersionUID = -7736773346527242367L;
 		
@@ -166,7 +166,7 @@ public abstract class Tuple
 		@Override
 		public int getNodeType()
 		{
-			return AstNode.NT_TUPLE_2;
+			return NT_TUPLE_2;
 		}
 		
 		@Override
@@ -179,8 +179,8 @@ public abstract class Tuple
 	// =========================================================================
 	
 	public static final class Tuple3<T1, T2, T3>
-	        extends
-	            Tuple
+			extends
+				Tuple
 	{
 		private static final long serialVersionUID = -4734123596843998884L;
 		
@@ -223,7 +223,7 @@ public abstract class Tuple
 			if (getClass() != obj.getClass())
 				return false;
 			Tuple3<Object, Object, Object> other =
-			        (Tuple3<Object, Object, Object>) obj;
+					(Tuple3<Object, Object, Object>) obj;
 			if (_1 == null)
 			{
 				if (other._1 != null)
@@ -263,7 +263,7 @@ public abstract class Tuple
 		@Override
 		public int getNodeType()
 		{
-			return AstNode.NT_TUPLE_3;
+			return NT_TUPLE_3;
 		}
 		
 		@Override
@@ -276,8 +276,8 @@ public abstract class Tuple
 	// =========================================================================
 	
 	public static final class Tuple4<T1, T2, T3, T4>
-	        extends
-	            Tuple
+			extends
+				Tuple
 	{
 		private static final long serialVersionUID = -4734123596843998884L;
 		
@@ -372,7 +372,7 @@ public abstract class Tuple
 		@Override
 		public int getNodeType()
 		{
-			return AstNode.NT_TUPLE_4;
+			return NT_TUPLE_4;
 		}
 		
 		@Override
@@ -385,8 +385,8 @@ public abstract class Tuple
 	// =========================================================================
 	
 	public static final class Tuple5<T1, T2, T3, T4, T5>
-	        extends
-	            Tuple
+			extends
+				Tuple
 	{
 		private static final long serialVersionUID = -4734123596843998884L;
 		
@@ -494,7 +494,7 @@ public abstract class Tuple
 		@Override
 		public int getNodeType()
 		{
-			return AstNode.NT_TUPLE_5;
+			return NT_TUPLE_5;
 		}
 		
 		@Override
@@ -510,8 +510,8 @@ public abstract class Tuple
 	{
 		if (o == null)
 			out.append(null);
-		else if (o instanceof AstNode)
-			((AstNode) o).toString(out);
+		else if (o instanceof AstNodeInterface)
+			((AstNodeInterface) o).toString(out);
 		else
 			out.append(o.toString());
 	}
@@ -533,12 +533,21 @@ public abstract class Tuple
 		return new Tuple3<T1, T2, T3>(_1, _2, _3);
 	}
 	
-	public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> from(T1 _1, T2 _2, T3 _3, T4 _4)
+	public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> from(
+			T1 _1,
+			T2 _2,
+			T3 _3,
+			T4 _4)
 	{
 		return new Tuple4<T1, T2, T3, T4>(_1, _2, _3, _4);
 	}
 	
-	public static <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> from(T1 _1, T2 _2, T3 _3, T4 _4, T5 _5)
+	public static <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> from(
+			T1 _1,
+			T2 _2,
+			T3 _3,
+			T4 _4,
+			T5 _5)
 	{
 		return new Tuple5<T1, T2, T3, T4, T5>(_1, _2, _3, _4, _5);
 	}

@@ -188,8 +188,6 @@ public class AstNodeGeneratorMojo
 			
 			if (v.value instanceof RatsDocGrammar)
 			{
-				//System.err.println(AstPrinter.print((AstNode) v.value));
-				
 				transform((RatsDocGrammar) v.value);
 			}
 			else

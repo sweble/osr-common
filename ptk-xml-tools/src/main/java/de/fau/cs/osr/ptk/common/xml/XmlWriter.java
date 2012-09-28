@@ -40,7 +40,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
@@ -88,28 +88,30 @@ public class XmlWriter
 	
 	// =========================================================================
 	
-	public static String write(AstNode node) throws SerializationException
+	public static String write(AstNodeInterface node) throws SerializationException
 	{
 		StringWriter writer = new StringWriter();
 		new XmlWriter().serialize(node, writer);
 		return writer.toString();
 	}
 	
-	public static String write(AstNode node, NameAbbrevService abbrevService) throws SerializationException
+	public static String write(
+			AstNodeInterface node,
+			NameAbbrevService abbrevService) throws SerializationException
 	{
 		StringWriter writer = new StringWriter();
 		new XmlWriter().serialize(node, writer, abbrevService);
 		return writer.toString();
 	}
 	
-	public static Writer write(AstNode node, Writer writer) throws SerializationException
+	public static Writer write(AstNodeInterface node, Writer writer) throws SerializationException
 	{
 		new XmlWriter().serialize(node, writer);
 		return writer;
 	}
 	
 	public static Writer write(
-			AstNode node,
+			AstNodeInterface node,
 			Writer writer,
 			NameAbbrevService abbrevService) throws SerializationException
 	{
@@ -130,13 +132,13 @@ public class XmlWriter
 		this.compact = compact;
 	}
 	
-	public void serialize(AstNode node, Writer writer) throws SerializationException
+	public void serialize(AstNodeInterface node, Writer writer) throws SerializationException
 	{
 		serialize(node, writer, new NameAbbrevService());
 	}
 	
 	public void serialize(
-			AstNode node,
+			AstNodeInterface node,
 			Writer writer,
 			NameAbbrevService abbrevService) throws SerializationException
 	{
@@ -221,14 +223,14 @@ public class XmlWriter
 	
 	// =========================================================================
 	
-	private void dispatch(AstNode n) throws SAXException, JAXBException, IOException
+	private void dispatch(AstNodeInterface n) throws SAXException, JAXBException, IOException
 	{
 		switch (n.getNodeType())
 		{
-			case AstNode.NT_TEXT:
+			case AstNodeInterface.NT_TEXT:
 				visit((Text) n);
 				break;
-			case AstNode.NT_NODE_LIST:
+			case AstNodeInterface.NT_NODE_LIST:
 				visit((NodeList) n);
 				break;
 			default:
@@ -236,13 +238,13 @@ public class XmlWriter
 		}
 	}
 	
-	private void iterate(AstNode n) throws SAXException, JAXBException, IOException
+	private void iterate(AstNodeInterface n) throws SAXException, JAXBException, IOException
 	{
-		for (AstNode c : n)
+		for (AstNodeInterface c : n)
 			dispatch(c);
 	}
 	
-	private void visit(AstNode n) throws SAXException, JAXBException, IOException
+	private void visit(AstNodeInterface n) throws SAXException, JAXBException, IOException
 	{
 		String typeName = abbrevService.abbrev(n.getClass());
 		
@@ -380,10 +382,10 @@ public class XmlWriter
 			th.characters(value.toCharArray(), 0, value.length());
 			endElement(name);
 		}
-		else if (obj instanceof AstNode)
+		else if (obj instanceof AstNodeInterface)
 		{
 			startElement(name);
-			visit((AstNode) obj);
+			visit((AstNodeInterface) obj);
 			endElement(name);
 		}
 		else

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import de.fau.cs.osr.ptk.common.AstVisitor;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.ptk.nodegen.parser.Item;
@@ -32,8 +32,8 @@ import de.fau.cs.osr.ptk.nodegen.parser.RatsDocGrammar;
 import de.fau.cs.osr.ptk.nodegen.parser.Section;
 
 public final class RatsDocGrammarVisitor
-        extends
-            AstVisitor
+		extends
+			AstVisitor
 {
 	private StringBuilder javadoc;
 	
@@ -42,7 +42,7 @@ public final class RatsDocGrammarVisitor
 	private RatsDocGrammar ratsGrammar;
 	
 	private final LinkedList<AstNodeSpec> generatedNodes =
-	        new LinkedList<AstNodeSpec>();
+			new LinkedList<AstNodeSpec>();
 	
 	// =========================================================================
 	
@@ -54,14 +54,14 @@ public final class RatsDocGrammarVisitor
 	// =========================================================================
 	
 	@Override
-	protected boolean before(AstNode node)
+	protected boolean before(AstNodeInterface node)
 	{
 		javadoc = new StringBuilder();
 		return super.before(node);
 	}
 	
 	@Override
-	protected Object after(AstNode node, Object result)
+	protected Object after(AstNodeInterface node, Object result)
 	{
 		finishAstNodeSpec();
 		return super.after(node, result);
@@ -122,16 +122,16 @@ public final class RatsDocGrammarVisitor
 		{
 			if (n.getLevel() != 2)
 				throw new ParseException(
-				        "Section `AST node' only allowed as second level section.",
-				        n);
+						"Section `AST node' only allowed as second level section.",
+						n);
 			
 			if (nodeSpecVisitor != null)
 				throw new ParseException(
-				        "Only one `AST node' section allowed per Level 1 section.",
-				        n);
+						"Only one `AST node' section allowed per Level 1 section.",
+						n);
 			
 			nodeSpecVisitor = new AstNodeSpecVisitor(
-			        new AstNodeSpec(ratsGrammar.getModuleName()));
+					new AstNodeSpec(ratsGrammar.getModuleName()));
 			
 			nodeSpecVisitor.go(n.getBody());
 		}

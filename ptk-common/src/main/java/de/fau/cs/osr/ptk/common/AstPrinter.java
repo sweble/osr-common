@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.ContentNode;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
@@ -54,7 +54,7 @@ public class AstPrinter
 	}
 	
 	@Override
-	protected Object after(AstNode node, Object result)
+	protected Object after(AstNodeInterface node, Object result)
 	{
 		return super.after(node, result);
 	}
@@ -71,14 +71,14 @@ public class AstPrinter
 	
 	// =========================================================================
 	
-	public static String print(AstNode node)
+	public static String print(AstNodeInterface node)
 	{
 		StringWriter writer = new StringWriter();
 		new AstPrinter(writer).go(node);
 		return writer.toString();
 	}
 	
-	public static Writer print(Writer writer, AstNode node)
+	public static Writer print(Writer writer, AstNodeInterface node)
 	{
 		new AstPrinter(writer).go(node);
 		return writer;
@@ -86,7 +86,7 @@ public class AstPrinter
 	
 	// =========================================================================
 	
-	public void visit(AstNode n)
+	public void visit(AstNodeInterface n)
 	{
 		if (!replay(n))
 		{
@@ -122,7 +122,7 @@ public class AstPrinter
 			
 			if (n.hasAttributes() || n.hasProperties())
 			{
-				visit((AstNode) n);
+				visit((AstNodeInterface) n);
 			}
 			else if (n.isEmpty())
 			{
@@ -166,7 +166,7 @@ public class AstPrinter
 			
 			if (n.hasAttributes() || n.hasProperties())
 			{
-				visit((AstNode) n);
+				visit((AstNodeInterface) n);
 			}
 			else if (n.getContent() == null)
 			{
@@ -215,7 +215,7 @@ public class AstPrinter
 			
 			if (n.hasAttributes()/* || n.hasProperties()*/)
 			{
-				visit((AstNode) n);
+				visit((AstNodeInterface) n);
 			}
 			else
 			{
@@ -231,7 +231,7 @@ public class AstPrinter
 	
 	protected static final class Memoize
 	{
-		private final AstNode node;
+		private final AstNodeInterface node;
 		
 		private final int indent;
 		
@@ -239,7 +239,7 @@ public class AstPrinter
 		
 		private final StringWriter writer;
 		
-		public Memoize(int indent, AstNode node)
+		public Memoize(int indent, AstNodeInterface node)
 		{
 			this.indent = indent;
 			this.node = node;
@@ -249,7 +249,7 @@ public class AstPrinter
 		
 		public Memoize(
 				int indent,
-				AstNode node,
+				AstNodeInterface node,
 				PrintWriter oldOut,
 				StringWriter writer)
 		{
@@ -299,7 +299,7 @@ public class AstPrinter
 	
 	private final HashMap<Memoize, Memoize> cache = new HashMap<Memoize, Memoize>();
 	
-	protected boolean replay(AstNode n)
+	protected boolean replay(AstNodeInterface n)
 	{
 		Memoize m = cache.get(new Memoize(indentStr.length(), n));
 		if (m == null)
@@ -309,7 +309,7 @@ public class AstPrinter
 		return true;
 	}
 	
-	protected Memoize memoizeStart(AstNode n)
+	protected Memoize memoizeStart(AstNodeInterface n)
 	{
 		StringWriter w = new StringWriter();
 		Memoize m = new Memoize(indentStr.length(), n, out, w);
@@ -333,7 +333,7 @@ public class AstPrinter
 	
 	// =========================================================================
 	
-	protected void printNodeContent(AstNode n)
+	protected void printNodeContent(AstNodeInterface n)
 	{
 		Map<String, Object> attrs = n.getAttributes();
 		
@@ -378,11 +378,11 @@ public class AstPrinter
 			{
 				out.println(mkStr((String) value));
 			}
-			else if (value instanceof AstNode)
+			else if (value instanceof AstNodeInterface)
 			{
 				out.println();
 				incIndent();
-				dispatch((AstNode) value);
+				dispatch((AstNodeInterface) value);
 				decIndent();
 			}
 			else if (value instanceof Collection)
@@ -426,11 +426,11 @@ public class AstPrinter
 		if (!props.isEmpty() && !n.isEmpty())
 			out.println();
 		
-		for (AstNode c : n)
+		for (AstNodeInterface c : n)
 			dispatch(c);
 	}
 	
-	protected String printNodeContentToString(AstNode n)
+	protected String printNodeContentToString(AstNodeInterface n)
 	{
 		String singleLine = null;
 		

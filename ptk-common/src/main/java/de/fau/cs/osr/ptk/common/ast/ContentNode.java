@@ -33,12 +33,12 @@ public abstract class ContentNode
 		setContent(new NodeList());
 	}
 	
-	public ContentNode(AstNode content)
+	public ContentNode(AstNodeInterface content)
 	{
 		setContent(new NodeList(content));
 	}
 	
-	public ContentNode(AstNode content, Location location)
+	public ContentNode(AstNodeInterface content, Location location)
 	{
 		super(location);
 		setContent(new NodeList(content));

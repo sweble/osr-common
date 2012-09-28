@@ -113,7 +113,7 @@ public class ParserEntity
 	@Override
 	public int getNodeType()
 	{
-		return AstNode.NT_PARSER_ENTITY;
+		return NT_PARSER_ENTITY;
 	}
 	
 	// =========================================================================

@@ -40,7 +40,7 @@ import de.fau.cs.osr.utils.WrappedException;
  */
 public abstract class AstNode
 		extends
-			AbstractList<AstNode>
+			AbstractList<AstNodeInterface>
 		implements
 			AstNodeInterface
 {
@@ -393,7 +393,7 @@ public abstract class AstNode
 	}
 	
 	@Override
-	public AstNode get(int index)
+	public AstNodeInterface get(int index)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -407,7 +407,7 @@ public abstract class AstNode
 	 * @return Returns <code>true</code> if the list of children has changed.
 	 */
 	@Override
-	public boolean addAll(Pair<? extends AstNode> p)
+	public boolean addAll(Pair<? extends AstNodeInterface> p)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -444,7 +444,7 @@ public abstract class AstNode
 		out.append('(');
 		
 		boolean first = true;
-		for (AstNode node : this)
+		for (AstNodeInterface node : this)
 		{
 			if (first)
 			{
@@ -529,7 +529,7 @@ public abstract class AstNode
 		
 		if (isList())
 		{
-			Iterator<AstNode> i = iterator();
+			Iterator<AstNodeInterface> i = iterator();
 			while (i.hasNext())
 				n.add((AstNode) i.next().deepClone());
 		}
@@ -610,12 +610,12 @@ public abstract class AstNode
 		// Nodes of the same type have the same set of properties
 		
 		// Check children
-		Iterator<AstNode> i1 = iterator();
-		Iterator<AstNode> i2 = other.iterator();
+		Iterator<AstNodeInterface> i1 = iterator();
+		Iterator<AstNodeInterface> i2 = other.iterator();
 		while (i1.hasNext() && i2.hasNext())
 		{
-			AstNode n1 = i1.next();
-			AstNode n2 = i2.next();
+			AstNodeInterface n1 = i1.next();
+			AstNodeInterface n2 = i2.next();
 			if (n1 == null)
 			{
 				if (n2 != null)

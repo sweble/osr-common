@@ -29,7 +29,7 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import de.fau.cs.osr.ptk.common.AstComparer;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.test.TestNodeSection;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
@@ -67,7 +67,7 @@ public class XmlWriterTest
 		
 		//System.out.println(xml);
 		
-		AstNode out = deserialize(xml, as);
+		AstNodeInterface out = deserialize(xml, as);
 		
 		//System.out.println(serialize(out, as));
 		
@@ -82,12 +82,12 @@ public class XmlWriterTest
 	
 	// =========================================================================
 	
-	private String serialize(AstNode ast, NameAbbrevService as) throws Exception
+	private String serialize(AstNodeInterface ast, NameAbbrevService as) throws Exception
 	{
 		return XmlWriter.write(ast, as);
 	}
 	
-	private AstNode deserialize(String xml, NameAbbrevService as) throws Exception
+	private AstNodeInterface deserialize(String xml, NameAbbrevService as) throws Exception
 	{
 		return XmlReader.read(xml, as);
 	}

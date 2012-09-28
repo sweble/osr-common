@@ -22,8 +22,8 @@ import java.io.IOException;
 import xtc.tree.Location;
 
 public abstract class InnerNode
-        extends
-            AstNode
+		extends
+			AstNode
 {
 	private static final long serialVersionUID = 3931233748530723300L;
 	
@@ -56,7 +56,7 @@ public abstract class InnerNode
 			out.append('[');
 			out.append(String.valueOf(i));
 			out.append("] = ");
-			AstNode child = get(i);
+			AstNodeInterface child = get(i);
 			if (child == null)
 				out.append("null");
 			else
@@ -68,12 +68,12 @@ public abstract class InnerNode
 	// =========================================================================
 	
 	public static abstract class InnerNode1
-	        extends
-	            InnerNode
+			extends
+				InnerNode
 	{
 		private static final long serialVersionUID = -8841086798545623538L;
 		
-		private AstNode n0;
+		private AstNodeInterface n0;
 		
 		public InnerNode1()
 		{
@@ -85,13 +85,13 @@ public abstract class InnerNode
 			super(arg0);
 		}
 		
-		public InnerNode1(AstNode n0)
+		public InnerNode1(AstNodeInterface n0)
 		{
 			super();
 			set(0, n0);
 		}
 		
-		public InnerNode1(Location arg0, AstNode n0)
+		public InnerNode1(Location arg0, AstNodeInterface n0)
 		{
 			super(arg0);
 			set(0, n0);
@@ -104,7 +104,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNode get(int index)
+		public AstNodeInterface get(int index)
 		{
 			switch (index)
 			{
@@ -112,17 +112,17 @@ public abstract class InnerNode
 					return n0;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 		}
 		
 		@Override
-		public AstNode set(int index, AstNode n)
+		public AstNodeInterface set(int index, AstNodeInterface n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNode o;
+			AstNodeInterface o;
 			switch (index)
 			{
 				case 0:
@@ -131,14 +131,14 @@ public abstract class InnerNode
 					break;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 			
 			return o;
 		}
 		
 		@Override
-		public AstNode remove(int index)
+		public AstNodeInterface remove(int index)
 		{
 			return set(index, null);
 		}
@@ -147,14 +147,14 @@ public abstract class InnerNode
 	// =========================================================================
 	
 	public static abstract class InnerNode2
-	        extends
-	            InnerNode
+			extends
+				InnerNode
 	{
 		private static final long serialVersionUID = 6501151075140985136L;
 		
-		private AstNode n0;
+		private AstNodeInterface n0;
 		
-		private AstNode n1;
+		private AstNodeInterface n1;
 		
 		public InnerNode2()
 		{
@@ -166,14 +166,17 @@ public abstract class InnerNode
 			super(arg0);
 		}
 		
-		public InnerNode2(AstNode n0, AstNode n1)
+		public InnerNode2(AstNodeInterface n0, AstNodeInterface n1)
 		{
 			super();
 			set(0, n0);
 			set(1, n1);
 		}
 		
-		public InnerNode2(Location arg0, AstNode n0, AstNode n1)
+		public InnerNode2(
+				Location arg0,
+				AstNodeInterface n0,
+				AstNodeInterface n1)
 		{
 			super(arg0);
 			set(0, n0);
@@ -187,7 +190,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNode get(int index)
+		public AstNodeInterface get(int index)
 		{
 			switch (index)
 			{
@@ -197,17 +200,17 @@ public abstract class InnerNode
 					return n1;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 		}
 		
 		@Override
-		public AstNode set(int index, AstNode n)
+		public AstNodeInterface set(int index, AstNodeInterface n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNode o;
+			AstNodeInterface o;
 			switch (index)
 			{
 				case 0:
@@ -220,14 +223,14 @@ public abstract class InnerNode
 					break;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 			
 			return o;
 		}
 		
 		@Override
-		public AstNode remove(int index)
+		public AstNodeInterface remove(int index)
 		{
 			return set(index, null);
 		}
@@ -236,16 +239,16 @@ public abstract class InnerNode
 	// =========================================================================
 	
 	public static abstract class InnerNode3
-	        extends
-	            InnerNode
+			extends
+				InnerNode
 	{
 		private static final long serialVersionUID = 7450920544821225168L;
 		
-		private AstNode n0;
+		private AstNodeInterface n0;
 		
-		private AstNode n1;
+		private AstNodeInterface n1;
 		
-		private AstNode n2;
+		private AstNodeInterface n2;
 		
 		public InnerNode3()
 		{
@@ -257,7 +260,10 @@ public abstract class InnerNode
 			super(arg0);
 		}
 		
-		public InnerNode3(AstNode n0, AstNode n1, AstNode n2)
+		public InnerNode3(
+				AstNodeInterface n0,
+				AstNodeInterface n1,
+				AstNodeInterface n2)
 		{
 			super();
 			set(0, n0);
@@ -265,7 +271,11 @@ public abstract class InnerNode
 			set(2, n2);
 		}
 		
-		public InnerNode3(Location arg0, AstNode n0, AstNode n1, AstNode n2)
+		public InnerNode3(
+				Location arg0,
+				AstNodeInterface n0,
+				AstNodeInterface n1,
+				AstNodeInterface n2)
 		{
 			super(arg0);
 			set(0, n0);
@@ -280,7 +290,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNode get(int index)
+		public AstNodeInterface get(int index)
 		{
 			switch (index)
 			{
@@ -292,17 +302,17 @@ public abstract class InnerNode
 					return n2;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 		}
 		
 		@Override
-		public AstNode set(int index, AstNode n)
+		public AstNodeInterface set(int index, AstNodeInterface n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNode o;
+			AstNodeInterface o;
 			switch (index)
 			{
 				case 0:
@@ -319,14 +329,14 @@ public abstract class InnerNode
 					break;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 			
 			return o;
 		}
 		
 		@Override
-		public AstNode remove(int index)
+		public AstNodeInterface remove(int index)
 		{
 			return set(index, null);
 		}
@@ -335,18 +345,18 @@ public abstract class InnerNode
 	// =========================================================================
 	
 	public static abstract class InnerNode4
-	        extends
-	            InnerNode
+			extends
+				InnerNode
 	{
 		private static final long serialVersionUID = -6518009272746861741L;
 		
-		private AstNode n0;
+		private AstNodeInterface n0;
 		
-		private AstNode n1;
+		private AstNodeInterface n1;
 		
-		private AstNode n2;
+		private AstNodeInterface n2;
 		
-		private AstNode n3;
+		private AstNodeInterface n3;
 		
 		public InnerNode4()
 		{
@@ -358,7 +368,11 @@ public abstract class InnerNode
 			super(arg0);
 		}
 		
-		public InnerNode4(AstNode n0, AstNode n1, AstNode n2, AstNode n3)
+		public InnerNode4(
+				AstNodeInterface n0,
+				AstNodeInterface n1,
+				AstNodeInterface n2,
+				AstNodeInterface n3)
 		{
 			super();
 			set(0, n0);
@@ -367,7 +381,12 @@ public abstract class InnerNode
 			set(3, n3);
 		}
 		
-		public InnerNode4(Location arg0, AstNode n0, AstNode n1, AstNode n2, AstNode n3)
+		public InnerNode4(
+				Location arg0,
+				AstNodeInterface n0,
+				AstNodeInterface n1,
+				AstNodeInterface n2,
+				AstNodeInterface n3)
 		{
 			super(arg0);
 			set(0, n0);
@@ -383,7 +402,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNode get(int index)
+		public AstNodeInterface get(int index)
 		{
 			switch (index)
 			{
@@ -397,17 +416,17 @@ public abstract class InnerNode
 					return n3;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 		}
 		
 		@Override
-		public AstNode set(int index, AstNode n)
+		public AstNodeInterface set(int index, AstNodeInterface n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNode o;
+			AstNodeInterface o;
 			switch (index)
 			{
 				case 0:
@@ -428,14 +447,14 @@ public abstract class InnerNode
 					break;
 				default:
 					throw new IndexOutOfBoundsException(
-					        "Size: " + size() + ", Index: " + index);
+							"Size: " + size() + ", Index: " + index);
 			}
 			
 			return o;
 		}
 		
 		@Override
-		public AstNode remove(int index)
+		public AstNodeInterface remove(int index)
 		{
 			return set(index, null);
 		}

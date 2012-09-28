@@ -17,7 +17,7 @@
 
 package de.fau.cs.osr.ptk.common;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 
 public class AstComparer
@@ -51,8 +51,8 @@ public class AstComparer
 	 * @return True if both subtrees are equal, false otherwise.
 	 */
 	public static boolean compare(
-			AstNode rootA,
-			AstNode rootB,
+			AstNodeInterface rootA,
+			AstNodeInterface rootB,
 			boolean compareAttributes,
 			boolean compareLocation)
 	{
@@ -61,7 +61,7 @@ public class AstComparer
 	
 	// =========================================================================
 	
-	private boolean compareIntern(AstNode a, AstNode b)
+	private boolean compareIntern(AstNodeInterface a, AstNodeInterface b)
 	{
 		if (a == b)
 			return true;

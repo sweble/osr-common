@@ -18,15 +18,15 @@
 package de.fau.cs.osr.ptk.nodegen;
 
 import de.fau.cs.osr.ptk.common.AstVisitor;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.ptk.nodegen.parser.NameValue;
 import de.fau.cs.osr.ptk.nodegen.parser.Section;
 
 public final class AstNodeSpecVisitor
-        extends
-            AstVisitor
+		extends
+			AstVisitor
 {
 	private final AstNodeSpec astNodeSpec;
 	
@@ -47,12 +47,12 @@ public final class AstNodeSpecVisitor
 	// =========================================================================
 	
 	@Override
-	protected Object visitNotFound(AstNode node)
+	protected Object visitNotFound(AstNodeInterface node)
 	{
 		throw new ParseException(
-		        "syntax error: unexpected `%s'.",
-		        node,
-		        node.toString());//node.getClass().getSimpleName());
+				"syntax error: unexpected `%s'.",
+				node,
+				node.toString());//node.getClass().getSimpleName());
 	}
 	
 	// =========================================================================
@@ -92,9 +92,9 @@ public final class AstNodeSpecVisitor
 		else
 		{
 			throw new ParseException(
-			        "unsupported field `%s'.",
-			        n,
-			        name);
+					"unsupported field `%s'.",
+					n,
+					name);
 		}
 	}
 	
@@ -120,25 +120,25 @@ public final class AstNodeSpecVisitor
 		else
 		{
 			throw new ParseException(
-			        "unsupported section `%s'.",
-			        n,
-			        name);
+					"unsupported section `%s'.",
+					n,
+					name);
 		}
 	}
 	
 	// =========================================================================
 	
 	public final class AstNodeSpecPropertiesVisitor
-	        extends
-	        AstVisitor
+			extends
+				AstVisitor
 	{
 		@Override
-		public Object visitNotFound(AstNode node)
+		public Object visitNotFound(AstNodeInterface node)
 		{
 			throw new ParseException(
-			                "syntax error: unexpected `%s'.",
-			                node,
-			                node.getClass().getSimpleName());
+					"syntax error: unexpected `%s'.",
+					node,
+					node.getClass().getSimpleName());
 		}
 		
 		public void visit(NodeList n)
@@ -155,16 +155,16 @@ public final class AstNodeSpecVisitor
 	// =========================================================================
 	
 	public final class AstNodeSpecChildrenVisitor
-	        extends
-	        AstVisitor
+			extends
+				AstVisitor
 	{
 		@Override
-		public Object visitNotFound(AstNode node)
+		public Object visitNotFound(AstNodeInterface node)
 		{
 			throw new ParseException(
-			        "syntax error: unexpected `%s'.",
-			        node,
-			        node.getClass().getSimpleName());
+					"syntax error: unexpected `%s'.",
+					node,
+					node.getClass().getSimpleName());
 		}
 		
 		public void visit(NodeList n)
@@ -181,16 +181,16 @@ public final class AstNodeSpecVisitor
 	// =========================================================================
 	
 	public final class AstNodeSpecHeaderVisitor
-	        extends
-	        AstVisitor
+			extends
+				AstVisitor
 	{
 		@Override
-		public Object visitNotFound(AstNode node)
+		public Object visitNotFound(AstNodeInterface node)
 		{
 			throw new ParseException(
-			        "syntax error: unexpected `%s'.",
-			        node,
-			        node.getClass().getSimpleName());
+					"syntax error: unexpected `%s'.",
+					node,
+					node.getClass().getSimpleName());
 		}
 		
 		public void visit(Text n)
@@ -205,16 +205,16 @@ public final class AstNodeSpecVisitor
 	// =========================================================================
 	
 	public final class AstNodeSpecBodyVisitor
-	        extends
-	        AstVisitor
+			extends
+				AstVisitor
 	{
 		@Override
-		public Object visitNotFound(AstNode node)
+		public Object visitNotFound(AstNodeInterface node)
 		{
 			throw new ParseException(
-			        "syntax error: unexpected `%s'.",
-			        node,
-			        node.getClass().getSimpleName());
+					"syntax error: unexpected `%s'.",
+					node,
+					node.getClass().getSimpleName());
 		}
 		
 		public void visit(Text n)

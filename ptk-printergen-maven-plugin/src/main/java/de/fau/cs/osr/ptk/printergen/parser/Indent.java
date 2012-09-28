@@ -43,10 +43,10 @@ public class Indent
 
 	public Indent()
 	{
-		super((AstNode) null);
+		super((AstNodeInterface) null);
 
 	}
-	public Indent(String indent, AstNode inst)
+	public Indent(String indent, AstNodeInterface inst)
 	{
 		super(inst);
 		setIndent(indent);
@@ -135,14 +135,14 @@ public class Indent
 	// =========================================================================
 	// Children
 
-	public final void setInst(AstNode inst)
+	public final void setInst(AstNodeInterface inst)
 	{
 		set(0, inst);
 	}
 	
-	public final AstNode getInst()
+	public final AstNodeInterface getInst()
 	{
-		return (AstNode) get(0);
+		return (AstNodeInterface) get(0);
 	}
 
 	private static final String[] CHILD_NAMES = new String[] {"inst"};

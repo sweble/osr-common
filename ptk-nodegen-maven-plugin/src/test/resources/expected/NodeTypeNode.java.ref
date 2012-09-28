@@ -72,7 +72,7 @@ public class NodeTypeNode
 	@Override
 	public int getNodeType()
 	{
-		return AstNode.NT_CUSTOM_BIT;
+		return AstNodeInterface.NT_CUSTOM_BIT;
 	}
 
 	// =========================================================================

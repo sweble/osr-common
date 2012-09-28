@@ -28,7 +28,7 @@ import java.util.Stack;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.utils.StringUtils;
 
 public class PrinterBase
@@ -51,7 +51,7 @@ public class PrinterBase
 	}
 	
 	@Override
-	protected Object after(AstNode node, Object result)
+	protected Object after(AstNodeInterface node, Object result)
 	{
 		this.out.close();
 		return super.after(node, result);

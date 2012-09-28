@@ -60,15 +60,15 @@
  *       native       : String
  *
  *     Children:
- *       finally      : AstNode
- *       long         : AstNode
- *       strictfp     : AstNode
- *       transient    : AstNode
- *       catch        : AstNode
- *       volatile     : AstNode
- *       const        : AstNode
- *       super        : AstNode
- *       while        : AstNode
+ *       finally      : AstNodeInterface
+ *       long         : AstNodeInterface
+ *       strictfp     : AstNodeInterface
+ *       transient    : AstNodeInterface
+ *       catch        : AstNodeInterface
+ *       volatile     : AstNodeInterface
+ *       const        : AstNodeInterface
+ *       super        : AstNodeInterface
+ *       while        : AstNodeInterface
  *
  */
 

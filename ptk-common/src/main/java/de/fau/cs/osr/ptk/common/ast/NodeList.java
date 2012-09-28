@@ -27,7 +27,7 @@ import java.util.ListIterator;
 import xtc.util.Pair;
 
 /**
- * List of nodes using a Pair<AstNode> as underlying data structure.
+ * List of nodes using a Pair<AstNodeInterface> as underlying data structure.
  * 
  * Invariants: <br />
  * <ul>
@@ -47,7 +47,7 @@ public class NodeList
 	
 	// =========================================================================
 	
-	private LinkedList<AstNode> children = new LinkedList<AstNode>();
+	private LinkedList<AstNodeInterface> children = new LinkedList<AstNodeInterface>();
 	
 	// =========================================================================
 	
@@ -55,31 +55,31 @@ public class NodeList
 	{
 	}
 	
-	public NodeList(AstNode child)
+	public NodeList(AstNodeInterface child)
 	{
 		add(child);
 	}
 	
-	public NodeList(AstNode car, Pair<? extends AstNode> cdr)
+	public NodeList(AstNodeInterface car, Pair<? extends AstNodeInterface> cdr)
 	{
 		add(car);
 		addAll(cdr);
 	}
 	
-	public NodeList(AstNode a, AstNode b)
+	public NodeList(AstNodeInterface a, AstNodeInterface b)
 	{
 		add(a);
 		add(b);
 	}
 	
-	public NodeList(AstNode a, AstNode b, AstNode c)
+	public NodeList(AstNodeInterface a, AstNodeInterface b, AstNodeInterface c)
 	{
 		add(a);
 		add(b);
 		add(c);
 	}
 	
-	public NodeList(AstNode a, AstNode b, AstNode c, AstNode d)
+	public NodeList(AstNodeInterface a, AstNodeInterface b, AstNodeInterface c, AstNodeInterface d)
 	{
 		add(a);
 		add(b);
@@ -87,12 +87,12 @@ public class NodeList
 		add(d);
 	}
 	
-	public NodeList(Pair<? extends AstNode> list)
+	public NodeList(Pair<? extends AstNodeInterface> list)
 	{
 		addAll(list);
 	}
 	
-	public NodeList(Collection<? extends AstNode> list)
+	public NodeList(Collection<? extends AstNodeInterface> list)
 	{
 		addAll(list);
 	}
@@ -126,7 +126,7 @@ public class NodeList
 	}
 	
 	@Override
-	public Iterator<AstNode> iterator()
+	public Iterator<AstNodeInterface> iterator()
 	{
 		return children.iterator();
 	}
@@ -146,7 +146,7 @@ public class NodeList
 	// Modification Operations
 	
 	@Override
-	public boolean add(AstNode e)
+	public boolean add(AstNodeInterface e)
 	{
 		if (e == null)
 		{
@@ -177,19 +177,19 @@ public class NodeList
 	}
 	
 	@Override
-	public boolean addAll(Collection<? extends AstNode> c)
+	public boolean addAll(Collection<? extends AstNodeInterface> c)
 	{
 		boolean changed = false;
-		for (AstNode n : c)
+		for (AstNodeInterface n : c)
 			changed |= add(n);
 		return changed;
 	}
 	
 	@Override
-	public boolean addAll(int index, Collection<? extends AstNode> c)
+	public boolean addAll(int index, Collection<? extends AstNodeInterface> c)
 	{
-		final LinkedList<AstNode> insert = new LinkedList<AstNode>();
-		for (AstNode n : c)
+		final LinkedList<AstNodeInterface> insert = new LinkedList<AstNodeInterface>();
+		for (AstNodeInterface n : c)
 		{
 			if (n == null)
 			{
@@ -228,13 +228,13 @@ public class NodeList
 	// Positional Access Operations
 	
 	@Override
-	public AstNode get(int index)
+	public AstNodeInterface get(int index)
 	{
 		return children.get(index);
 	}
 	
 	@Override
-	public AstNode set(int index, AstNode value)
+	public AstNodeInterface set(int index, AstNodeInterface value)
 	{
 		if (value == null)
 		{
@@ -253,7 +253,7 @@ public class NodeList
 	}
 	
 	@Override
-	public void add(int index, AstNode element)
+	public void add(int index, AstNodeInterface element)
 	{
 		if (element == null)
 			return;
@@ -269,7 +269,7 @@ public class NodeList
 	}
 	
 	@Override
-	public AstNode remove(int index)
+	public AstNodeInterface remove(int index)
 	{
 		return children.remove(index);
 	}
@@ -291,13 +291,13 @@ public class NodeList
 	// List Iterators
 	
 	@Override
-	public ListIterator<AstNode> listIterator()
+	public ListIterator<AstNodeInterface> listIterator()
 	{
 		return new ChildListIterator();
 	}
 	
 	@Override
-	public ListIterator<AstNode> listIterator(int index)
+	public ListIterator<AstNodeInterface> listIterator(int index)
 	{
 		return new ChildListIterator(index);
 	}
@@ -305,7 +305,7 @@ public class NodeList
 	// View
 	
 	@Override
-	public List<AstNode> subList(int fromIndex, int toIndex)
+	public List<AstNodeInterface> subList(int fromIndex, int toIndex)
 	{
 		return children.subList(fromIndex, toIndex);
 	}
@@ -314,7 +314,7 @@ public class NodeList
 	// Extension of the List interface for Pair
 	
 	@Override
-	public boolean addAll(Pair<? extends AstNode> p)
+	public boolean addAll(Pair<? extends AstNodeInterface> p)
 	{
 		boolean changed = false;
 		while (!p.isEmpty())
@@ -348,7 +348,7 @@ public class NodeList
 		out.append('[');
 		
 		boolean first = true;
-		for (AstNode node : this)
+		for (AstNodeInterface node : this)
 		{
 			if (first)
 			{
@@ -378,9 +378,9 @@ public class NodeList
 	            implements
 	                AstChildIterator
 	{
-		private ListIterator<AstNode> i;
+		private ListIterator<AstNodeInterface> i;
 		
-		private AstNode current = null;
+		private AstNodeInterface current = null;
 		
 		private final int start;
 		
@@ -403,7 +403,7 @@ public class NodeList
 		}
 		
 		@Override
-		public AstNode next()
+		public AstNodeInterface next()
 		{
 			current = i.next();
 			return current;
@@ -416,7 +416,7 @@ public class NodeList
 		}
 		
 		@Override
-		public AstNode previous()
+		public AstNodeInterface previous()
 		{
 			current = i.previous();
 			return current;
@@ -442,7 +442,7 @@ public class NodeList
 		}
 		
 		@Override
-		public void set(AstNode e)
+		public void set(AstNodeInterface e)
 		{
 			if (e == null)
 			{
@@ -462,14 +462,14 @@ public class NodeList
 		}
 		
 		@Override
-		public void add(AstNode e)
+		public void add(AstNodeInterface e)
 		{
 			if (e == null)
 				return;
 			
 			if (e.getNodeType() == NT_NODE_LIST)
 			{
-				for (AstNode n : (NodeList) e)
+				for (AstNodeInterface n : (NodeList) e)
 					i.add(n);
 				current = null;
 			}
@@ -481,7 +481,7 @@ public class NodeList
 		}
 		
 		@Override
-		public AstNode get()
+		public AstNodeInterface get()
 		{
 			if (current == null)
 				throw new IllegalStateException();

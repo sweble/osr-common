@@ -25,7 +25,7 @@ import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.utils.FmtInternalLogicError;
 
 public class AstNodeFieldPointer
@@ -35,14 +35,14 @@ public class AstNodeFieldPointer
 	private static final long serialVersionUID = 1L;
 	
 	/** This pointer points to a field of this node. */
-	private AstNode node;
+	private AstNodeInterface node;
 	
 	/** The index of the field in `node' this pointer points to. */
 	private int fieldIndex;
 	
 	// =========================================================================
 	
-	public AstNodeFieldPointer(NodePointer parent, AstNode node, int index)
+	public AstNodeFieldPointer(NodePointer parent, AstNodeInterface node, int index)
 	{
 		// Only called by an AstNodeFieldIterator.
 		// The `parent' pointer points to `node'. Index refers to the field
@@ -62,7 +62,7 @@ public class AstNodeFieldPointer
 		//debug("attributeIterator");
 		
 		// Shortcut ...
-		if (((AstNode) getImmediateNode()).hasAttributes())
+		if (((AstNodeInterface) getImmediateNode()).hasAttributes())
 			return null;
 		
 		return new AstPropertyIterator(this, name);
@@ -73,7 +73,7 @@ public class AstNodeFieldPointer
 	{
 		//debug("childIterator");
 		
-		AstNode pointee = (AstNode) getImmediateNode();
+		AstNodeInterface pointee = (AstNodeInterface) getImmediateNode();
 		
 		// Shortcut ...
 		if (isLeaf())
@@ -83,7 +83,7 @@ public class AstNodeFieldPointer
 			return null;
 		}
 		
-		if (pointee.isNodeType(AstNode.NT_NODE_LIST))
+		if (pointee.isNodeType(AstNodeInterface.NT_NODE_LIST))
 		{
 			return new AstNodeFieldIterator(
 			        this,
@@ -104,7 +104,7 @@ public class AstNodeFieldPointer
 	@Override
 	public boolean isLeaf()
 	{
-		AstNode pointee = (AstNode) getImmediateNode();
+		AstNodeInterface pointee = (AstNodeInterface) getImmediateNode();
 		return pointee == null || pointee.isEmpty();
 	}
 	
@@ -183,10 +183,10 @@ public class AstNodeFieldPointer
 		}
 		else
 		{
-			AstNode node1 = (AstNode) pointer1.getBaseValue();
-			AstNode node2 = (AstNode) pointer2.getBaseValue();
+			AstNodeInterface node1 = (AstNodeInterface) pointer1.getBaseValue();
+			AstNodeInterface node2 = (AstNodeInterface) pointer2.getBaseValue();
 			
-			for (AstNode child : (AstNode) getImmediateNode())
+			for (AstNodeInterface child : (AstNodeInterface) getImmediateNode())
 			{
 				if (child == node1)
 				{
@@ -261,10 +261,10 @@ public class AstNodeFieldPointer
 			{
 				NodePointer p = (NodePointer) parent;
 				
-				AstNode thisNode = (AstNode) getImmediateNode();
+				AstNodeInterface thisNode = (AstNodeInterface) getImmediateNode();
 				
 				int i = 1;
-				for (AstNode n : (AstNode) p.getImmediateNode())
+				for (AstNodeInterface n : (AstNodeInterface) p.getImmediateNode())
 				{
 					if (n == thisNode)
 						return i;
@@ -279,7 +279,7 @@ public class AstNodeFieldPointer
 				AstNodeFieldPointer p = (AstNodeFieldPointer) parent;
 				
 				int i = 1;
-				for (AstNode n : (AstNode) p.getImmediateNode())
+				for (AstNodeInterface n : (AstNodeInterface) p.getImmediateNode())
 				{
 					if (n == node)
 						return i;
@@ -347,7 +347,7 @@ public class AstNodeFieldPointer
 		else
 		{
 			// Unhandled: ProcessingInstructionTest
-			//   An AstNode can never be a PI.
+			//   An AstNodeInterface can never be a PI.
 			
 			return false;
 		}

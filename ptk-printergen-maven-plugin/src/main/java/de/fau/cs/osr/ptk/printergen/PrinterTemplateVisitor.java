@@ -30,7 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 
 import de.fau.cs.osr.ptk.common.AstVisitor;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.ptk.printergen.parser.Call;
@@ -151,7 +151,7 @@ public final class PrinterTemplateVisitor
 		if (params != null && !params.isEmpty())
 		{
 			defaultCtor = "";
-			for (AstNode x : params)
+			for (AstNodeInterface x : params)
 			{
 				Parameter p = (Parameter) x;
 				ctorArgs += ", ";
@@ -195,7 +195,7 @@ public final class PrinterTemplateVisitor
 			body.append(newline(false));
 		
 		wasIndentStmt = false;
-		for (AstNode n : visit.getBody())
+		for (AstNodeInterface n : visit.getBody())
 		{
 			if (!wasIndentStmt || !(n instanceof Newline))
 			{
@@ -308,7 +308,7 @@ public final class PrinterTemplateVisitor
 		
 		isCall = true;
 		
-		Iterator<AstNode> template = call.getBody().iterator();
+		Iterator<AstNodeInterface> template = call.getBody().iterator();
 		while (true)
 		{
 			Indent isIndent = null;
@@ -317,7 +317,7 @@ public final class PrinterTemplateVisitor
 			
 			while (template.hasNext())
 			{
-				AstNode n = template.next();
+				AstNodeInterface n = template.next();
 				if (n instanceof CtrlContent)
 				{
 					doInsert = true;
@@ -357,7 +357,7 @@ public final class PrinterTemplateVisitor
 				                this.indent.peek() + "incIndent(\"" + escapedIndent + "\");\n");
 			}
 			
-			for (AstNode n : ctrlCall.getContent())
+			for (AstNodeInterface n : ctrlCall.getContent())
 			{
 				if (wasIndentStmt && (n instanceof Newline))
 				{
@@ -488,7 +488,7 @@ public final class PrinterTemplateVisitor
 		return indent.peek() + "printNewline(" + (force ? "true" : "false") + ");\n";
 	}
 	
-	private void checkBlockIndentation(AstNode n)
+	private void checkBlockIndentation(AstNodeInterface n)
 	{
 		String expected = blockIndent.peek();
 		String actual = ((Instruction) n).getIndent();
@@ -506,7 +506,7 @@ public final class PrinterTemplateVisitor
 		log.warn(n.getLocation() + ": Inconsistent indentation!");
 	}
 	
-	private String trimIndent(AstNode n, String actual)
+	private String trimIndent(AstNodeInterface n, String actual)
 	{
 		if (hadNewline && !blockIndent.isEmpty())
 		{

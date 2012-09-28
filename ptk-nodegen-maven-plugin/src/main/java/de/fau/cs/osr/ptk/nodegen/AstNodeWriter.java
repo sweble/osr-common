@@ -351,6 +351,10 @@ public class AstNodeWriter
 				{
 					superInvocation.append("(AstNode) null");
 				}
+				else if (type.equals("AstNodeInterface"))
+				{
+					superInvocation.append("(AstNodeInterface) null");
+				}
 				else
 				{
 					superInvocation.append("new ");

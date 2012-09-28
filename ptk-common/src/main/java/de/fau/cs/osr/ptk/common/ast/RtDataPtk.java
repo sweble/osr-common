@@ -1,3 +1,20 @@
+/**
+ * Copyright 2011 The Open Source Research Group,
+ *                University of Erlangen-Nürnberg
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.Serializable;
@@ -25,11 +42,12 @@ public class RtDataPtk
 	
 	/**
 	 * Instantiates an RtData object and initializes its size to match that of
-	 * the given AstNode.
+	 * the given AstNodeInterface.
 	 * 
-	 * An AstNode with two children will need an RtData object with size three.
+	 * An AstNodeInterface with two children will need an RtData object with
+	 * size three.
 	 */
-	public RtDataPtk(AstNode node)
+	public RtDataPtk(AstNodeInterface node)
 	{
 		this(node.size() + 1);
 	}
@@ -48,11 +66,11 @@ public class RtDataPtk
 	
 	/**
 	 * Instantiates an RtData object, initializes its size to match that of the
-	 * given AstNode and immediately fills it with glue information.
+	 * given AstNodeInterface and immediately fills it with glue information.
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(AstNode node, Object... glue)
+	public RtDataPtk(AstNodeInterface node, Object... glue)
 	{
 		this(node);
 		set(glue);
@@ -72,11 +90,11 @@ public class RtDataPtk
 	
 	/**
 	 * Instantiates an RtData object, initializes its size to match that of the
-	 * given AstNode and immediately fills it with glue information.
+	 * given AstNodeInterface and immediately fills it with glue information.
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(AstNode node, String... glue)
+	public RtDataPtk(AstNodeInterface node, String... glue)
 	{
 		this(node);
 		set(glue);
@@ -129,7 +147,8 @@ public class RtDataPtk
 			
 			setFieldFromArraySection(field, glue, from, to);
 			
-			++to;
+			if (to < glue.length)
+				++to;
 			from = to;
 		}
 		
@@ -149,7 +168,6 @@ public class RtDataPtk
 				if (glue[to] == SEP)
 				{
 					++seps;
-					++to;
 					break;
 				}
 				++to;
@@ -157,7 +175,8 @@ public class RtDataPtk
 			
 			setFieldFromArraySection(field, glue, from, to);
 			
-			++to;
+			if (to < glue.length)
+				++to;
 			from = to;
 		}
 		
@@ -197,6 +216,9 @@ public class RtDataPtk
 			int from,
 			int to)
 	{
+		if (from < 0 || to > glue.length)
+			throw new IndexOutOfBoundsException();
+		
 		if (to <= from)
 			return;
 		
@@ -204,15 +226,15 @@ public class RtDataPtk
 		for (int i = from; i < to; ++i)
 		{
 			Object o = glue[i];
-			if (o instanceof AstNode)
+			if (o instanceof AstNodeInterface)
 			{
-				AstNode n = (AstNode) o;
+				AstNodeInterface n = (AstNodeInterface) o;
 				switch (n.getNodeType())
 				{
-					case AstNode.NT_NODE_LIST:
-						for (AstNode c : (NodeList) n)
+					case AstNodeInterface.NT_NODE_LIST:
+						for (AstNodeInterface c : (NodeList) n)
 						{
-							if (c.getNodeType() == AstNode.NT_TEXT)
+							if (c.getNodeType() == AstNodeInterface.NT_TEXT)
 							{
 								rtAddString(result, ((Text) c).getContent());
 							}
@@ -223,7 +245,7 @@ public class RtDataPtk
 						}
 						break;
 					
-					case AstNode.NT_TEXT:
+					case AstNodeInterface.NT_TEXT:
 						rtAddString(result, ((Text) n).getContent());
 						break;
 					
@@ -287,12 +309,20 @@ public class RtDataPtk
 			int from,
 			int to)
 	{
+		if (from < 0 || to > glue.length)
+			throw new IndexOutOfBoundsException();
+		
 		if (to <= from)
 			return;
 		
 		StringBuilder sb = new StringBuilder();
 		for (int i1 = from; i1 < to; ++i1)
-			sb.append(glue[i1]);
+		{
+			String g = glue[i1];
+			if (g == null)
+				continue;
+			sb.append(g);
+		}
 		
 		setField(field, sb.toString());
 	}
@@ -342,15 +372,15 @@ public class RtDataPtk
 			stringRep(sb, o);
 	}
 	
-	private void stringRep(StringBuilder sb, Object o)
+	protected void stringRep(StringBuilder sb, Object o)
 	{
 		if (o instanceof StringContentNode)
 		{
 			sb.append(StringUtils.escJava(((StringContentNode) o).getContent()));
 		}
-		else if (o instanceof AstNode)
+		else if (o instanceof AstNodeInterface)
 		{
-			for (AstNode n : (AstNode) o)
+			for (AstNodeInterface n : (AstNodeInterface) o)
 				stringRep(sb, n);
 		}
 		else

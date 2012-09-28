@@ -37,6 +37,6 @@ public class Text
 	@Override
 	public int getNodeType()
 	{
-		return AstNode.NT_TEXT;
+		return NT_TEXT;
 	}
 }

@@ -1,3 +1,20 @@
+/**
+ * Copyright 2011 The Open Source Research Group,
+ *                University of Erlangen-Nürnberg
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.fau.cs.osr.ptk.common.ast;
 
 import static de.fau.cs.osr.ptk.common.ast.RtDataPtk.*;
@@ -60,16 +77,16 @@ public class RtDataTest
 	public void testRtdIsNicelyFormatted() throws Exception
 	{
 		assertEquals(
-				"RtData: [ \"1\" O \"2.12.2\" O \"\" ]",
-				new RtDataPtk(3, "1", SEP, "2.1", "2.2", SEP, null).toString());
+				"RTD[ \"1\" <o> \"2.1, 2.2\" <o> \"\" ]",
+				new RtDataPtk(3, "1", SEP, "2.1", ", ", "2.2", SEP, null).toString());
 	}
 	
 	@Test
-	public void testTooManySEPraiseException() throws Exception
+	public void testTooManySepRaiseException() throws Exception
 	{
 		thrown.expect(IndexOutOfBoundsException.class);
 		thrown.expectMessage("too many");
-		new RtDataPtk(3, SEP, SEP, SEP);
+		new RtDataPtk(2, SEP, SEP, SEP);
 	}
 	
 	@Test
@@ -91,7 +108,7 @@ public class RtDataTest
 	{
 		RtDataPtk rtd = new RtDataPtk(2);
 		rtd.prepend("1");
-		assertEquals("RtData: [ \"1\" O \"\" ]", rtd.toString());
+		assertEquals("RTD[ \"1\" <o> \"\" ]", rtd.toString());
 	}
 	
 	@Test
@@ -99,14 +116,14 @@ public class RtDataTest
 	{
 		RtDataPtk rtd = new RtDataPtk(2, "1");
 		rtd.prepend("2");
-		assertEquals("RtData: [ \"21\" O \"\" ]", rtd.toString());
+		assertEquals("RTD[ \"21\" <o> \"\" ]", rtd.toString());
 	}
 	
 	@Test
 	public void testPrependToRtDataWithObjects() throws Exception
 	{
-		RtDataPtk rtd = new RtDataPtk(2, astUrl().build());
+		RtDataPtk rtd = new RtDataPtk(2, astText("<Some Node>"));
 		rtd.prepend("1");
-		assertEquals("RtData: [ \"1TestNodeUrl()\" O \"\" ]", rtd.toString());
+		assertEquals("RTD[ \"1<Some Node>\" <o> \"\" ]", rtd.toString());
 	}
 }

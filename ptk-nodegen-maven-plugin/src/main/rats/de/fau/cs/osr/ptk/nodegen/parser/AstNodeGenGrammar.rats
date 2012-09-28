@@ -51,7 +51,7 @@
  *       title : String
  *
  *     Children:
- *       body : AstNode
+ *       body : AstNodeInterface
  *
  * Itemize
  * -------
@@ -97,7 +97,7 @@ header
 {
   import java.util.HashSet;
 
-  import de.fau.cs.osr.ptk.common.ast.AstNode;
+  import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
   import de.fau.cs.osr.ptk.common.ast.NodeList;
   import de.fau.cs.osr.ptk.common.ast.Text;
   import de.fau.cs.osr.utils.StringUtils;
@@ -153,7 +153,7 @@ RatsDoc =
 ;
 
 transient
-AstNode
+AstNodeInterface
 RatsDocContent =
     EmptyLine
     {
@@ -212,7 +212,7 @@ SectionTitleString =
 
 transient
 stateful
-AstNode
+AstNodeInterface
 Body =
   {
     yyState.incIndent();
@@ -221,7 +221,7 @@ Body =
 ;
 
 transient
-AstNode
+AstNodeInterface
 BodyChoiceStar =
   content:BodyChoice*
   {
@@ -230,14 +230,14 @@ BodyChoiceStar =
 ;
 
 inline
-AstNode
+AstNodeInterface
 BodyChoice =
     BodyBlockChoice
   / Text
 ;
 
 inline
-AstNode
+AstNodeInterface
 BodyBlockChoice =
     List
   / Subsection
@@ -282,7 +282,7 @@ LineEnding =
 // -- List ---------------------------------------------------------------------
 
 transient
-AstNode
+AstNodeInterface
 List =
   EmptyLine* items:ListItem+
   {
@@ -348,7 +348,7 @@ ListItemTextCont =
 // -- Subsection ---------------------------------------------------------------
 
 transient
-AstNode
+AstNodeInterface
 Subsection =
   EmptyLine+
   CorrectIndentation title:SubsectionTitleString ':' LineEnding
@@ -367,7 +367,7 @@ SubsectionTitleString =
 
 transient
 stateful
-AstNode
+AstNodeInterface
 IndentedJavaCode =
   CorrectIndentation '{'
   {
@@ -385,7 +385,7 @@ IndentedJavaCode =
 // -- NameValue ----------------------------------------------------------------
 
 transient
-AstNode
+AstNodeInterface
 NameValue =
   EmptyLine*
   CorrectIndentation name:Name SpaceStar ':' value:Value
@@ -431,7 +431,7 @@ PlainValue =
 // -- Text ---------------------------------------------------------------------
 
 transient
-AstNode
+AstNodeInterface
 Text =
   EmptyLine*
   CorrectIndentation line1:TextString Eol

@@ -21,14 +21,14 @@ public class CtorParams
         	de.fau.cs.osr.ptk.common.PrinterBase
         
 {
-	public static String print(AstNode node, int someNumber, float someFloat)
+	public static String print(AstNodeInterface node, int someNumber, float someFloat)
 	{
 		StringWriter writer = new StringWriter();
 		new CtorParams(writer, someNumber, someFloat).go(node);
 		return writer.toString();
 	}
 	
-	public static Writer print(Writer writer, AstNode node, int someNumber, float someFloat)
+	public static Writer print(Writer writer, AstNodeInterface node, int someNumber, float someFloat)
 	{
 		new CtorParams(writer, someNumber, someFloat).go(node);
 		return writer;

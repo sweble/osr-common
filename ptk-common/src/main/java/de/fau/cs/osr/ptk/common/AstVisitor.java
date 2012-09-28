@@ -22,18 +22,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.NodeList;
 
 public class AstVisitor
 		extends
-			VisitorBase<AstNode>
+			VisitorBase<AstNodeInterface>
 {
 	public AstVisitor()
 	{
 	}
 	
-	public AstVisitor(VisitorLogic<AstNode> logic)
+	public AstVisitor(VisitorLogic<AstNodeInterface> logic)
 	{
 		super(logic);
 	}
@@ -43,29 +43,29 @@ public class AstVisitor
 	 * the visitation. If the given node is <code>null</code> this method
 	 * returns immediately with <code>null</code> as result.
 	 */
-	protected final Object dispatch(AstNode node)
+	protected final Object dispatch(AstNodeInterface node)
 	{
 		if (node == null)
 			return null;
 		return resolveAndVisit(node);
 	}
 	
-	protected final void iterate(AstNode node)
+	protected final void iterate(AstNodeInterface node)
 	{
 		if (node != null)
 		{
-			for (AstNode n : node)
+			for (AstNodeInterface n : node)
 				dispatch(n);
 		}
 	}
 	
-	protected final List<Object> map(AstNode node)
+	protected final List<Object> map(AstNodeInterface node)
 	{
 		if (node == null)
 			return Collections.emptyList();
 		
 		List<Object> result = new ArrayList<Object>(node.size());
-		for (AstNode n : node)
+		for (AstNodeInterface n : node)
 			result.add(dispatch(n));
 		return result;
 	}
@@ -76,23 +76,23 @@ public class AstVisitor
 	 * AST node is a NodeList, the call will be passed to mapInPlace(NodeList)
 	 * which has special semantics.
 	 */
-	protected final void mapInPlace(AstNode node)
+	protected final void mapInPlace(AstNodeInterface node)
 	{
 		if (node == null)
 		{
 			return;
 		}
-		else if (node.getNodeType() == AstNode.NT_NODE_LIST)
+		else if (node.getNodeType() == AstNodeInterface.NT_NODE_LIST)
 		{
 			mapInPlace((NodeList) node);
 		}
 		else
 		{
-			ListIterator<AstNode> i = node.listIterator();
+			ListIterator<AstNodeInterface> i = node.listIterator();
 			while (i.hasNext())
 			{
-				AstNode current = i.next();
-				AstNode result = (AstNode) dispatch(current);
+				AstNodeInterface current = i.next();
+				AstNodeInterface result = (AstNodeInterface) dispatch(current);
 				if (result != current)
 					i.set(result);
 			}
@@ -113,12 +113,12 @@ public class AstVisitor
 		if (list == null)
 			return;
 		
-		ListIterator<AstNode> i = list.listIterator();
+		ListIterator<AstNodeInterface> i = list.listIterator();
 		while (i.hasNext())
 		{
-			AstNode current = i.next();
+			AstNodeInterface current = i.next();
 			
-			AstNode result = (AstNode) dispatch(current);
+			AstNodeInterface result = (AstNodeInterface) dispatch(current);
 			if (result == current)
 				continue;
 			
@@ -126,7 +126,7 @@ public class AstVisitor
 			{
 				i.remove();
 			}
-			else if (result.getNodeType() == AstNode.NT_NODE_LIST)
+			else if (result.getNodeType() == AstNodeInterface.NT_NODE_LIST)
 			{
 				i.remove();
 				i.add(result);

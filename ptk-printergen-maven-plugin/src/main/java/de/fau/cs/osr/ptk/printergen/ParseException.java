@@ -18,7 +18,7 @@
 package de.fau.cs.osr.ptk.printergen;
 
 import xtc.tree.Location;
-import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
 public final class ParseException
         extends
@@ -33,7 +33,7 @@ public final class ParseException
 		super(String.format(message, arguments));
 	}
 	
-	public ParseException(String message, AstNode node, Object... arguments)
+	public ParseException(String message, AstNodeInterface node, Object... arguments)
 	{
 		super(makeMessage(message, node.getLocation(), arguments));
 	}
@@ -43,7 +43,7 @@ public final class ParseException
 		super(makeMessage(message, location, arguments));
 	}
 	
-	public ParseException(Throwable cause, String message, AstNode node, Object... arguments)
+	public ParseException(Throwable cause, String message, AstNodeInterface node, Object... arguments)
 	{
 		super(makeMessage(message, node.getLocation(), arguments), cause);
 	}

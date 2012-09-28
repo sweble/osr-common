@@ -274,7 +274,7 @@
  *       indent : String
  *
  *     Children:
- *       inst : AstNode
+ *       inst : AstNodeInterface
  *
  * Newline
  * -------
@@ -336,7 +336,7 @@ import de.fau.cs.osr.ptk.printergen.parser.Whitespace;
 
 header
 {
-  import de.fau.cs.osr.ptk.common.ast.AstNode;
+  import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
   import de.fau.cs.osr.ptk.common.ast.NodeList;
   import de.fau.cs.osr.ptk.common.ast.Text;
 
@@ -409,7 +409,7 @@ CtorParamList =
   }
 ;
 
-AstNode
+AstNodeInterface
 CtorParam =
   type:JavaType SpacingPlus name:Name
   {
@@ -437,7 +437,7 @@ Footer =
 
 // -- Templates ----------------------------------------------------------------
 
-AstNode
+AstNodeInterface
 Template =
     "%visit" SpacingStar '(' SpacingStar arg:TemplateArgument ')' CSpacesStar eol:IsBlockVisit body:TemplateDef* SpacingStar
     {
@@ -477,13 +477,13 @@ BIPredicate =
   BILead '{' JavaCode '}' BIEnd
 ;
 
-AstNode
+AstNodeInterface
 TemplateDef =
     OutputText
   / ControlSequence
 ;
 
-AstNode
+AstNodeInterface
 OutputText =
   output:OutputString
   {
@@ -501,7 +501,7 @@ OutputStopper =
   SpacingStar ( "%visit" / "%call" / Eof )
 ;
 
-AstNode
+AstNodeInterface
 ControlSequence =
     InlineInstruction
   / BlockInstruction
@@ -514,7 +514,7 @@ ControlSequence =
 
 // -- Inline instructions ------------------------------------------------------
 
-AstNode
+AstNodeInterface
 InlineInstruction =
     CtrlIf
   / CtrlCall
@@ -550,7 +550,7 @@ BIEnd = CSpacesStar &Eol ;
 
 // -- Escapes ------------------------------------------------------------------
 
-AstNode
+AstNodeInterface
 Escape =
     BlockComment
     {
@@ -594,7 +594,7 @@ Newline =
 
 // -- Statements, Expressions & Flow Control -----------------------------------
 
-AstNode
+AstNodeInterface
 Statement =
   "{!" stmt:JavaCode '}'
   {
@@ -602,7 +602,7 @@ Statement =
   }
 ;
 
-AstNode
+AstNodeInterface
 Expression =
   "{=" expr:JavaCode '}'
   {
@@ -610,7 +610,7 @@ Expression =
   }
 ;
 
-AstNode
+AstNodeInterface
 CtrlCall =
   head:CallHead output:TemplateDef* end:CtrlCallEnd
   {
@@ -627,7 +627,7 @@ CtrlCall =
   }
 ;
 
-AstNode
+AstNodeInterface
 CallHead =
     indent:BILead call:Call BIEnd
     {
@@ -636,7 +636,7 @@ CallHead =
   / Call
 ;
 
-AstNode
+AstNodeInterface
 Call =
   "{call" SpacingStar ':' SpacingStar target:Name SpacingStar '}'
   {
@@ -644,7 +644,7 @@ Call =
   }
 ;
 
-AstNode
+AstNodeInterface
 CtrlCallEnd =
     indent:BILead callEndKw:CallEndkw BIEnd
     {
@@ -653,7 +653,7 @@ CtrlCallEnd =
   / CallEndkw
 ;
 
-AstNode
+AstNodeInterface
 CallEndkw =
   "{/call" SpacingStar '}'
   {
@@ -671,7 +671,7 @@ CtrlIf =
   }
 ;
 
-AstNode
+AstNodeInterface
 IfHead =
     indent:BILead ifCond:IfCond BIEnd
     {
@@ -680,7 +680,7 @@ IfHead =
   / IfCond
 ;
 
-AstNode
+AstNodeInterface
 IfCond =
   "{if" SpacingStar '(' cond:JavaCode ')' SpacingStar '}'
   {
@@ -704,7 +704,7 @@ CtrlIfElif =
   }
 ;
 
-AstNode
+AstNodeInterface
 CtrlContent =
     indent:BILead content:Content BIEnd
     {
@@ -713,7 +713,7 @@ CtrlContent =
   / Content
 ;
 
-AstNode
+AstNodeInterface
 Content =
   "{content" SpacingStar '}'
   {
@@ -721,7 +721,7 @@ Content =
   }
 ;
 
-AstNode
+AstNodeInterface
 ElifHead =
     indent:BILead elif:ElifCond BIEnd
     {
@@ -730,7 +730,7 @@ ElifHead =
   / ElifCond
 ;
 
-AstNode
+AstNodeInterface
 ElifCond =
   "{elif" SpacingStar '(' cond:JavaCode ')' SpacingStar '}'
   {
@@ -746,7 +746,7 @@ CtrlIfElse =
   }
 ;
 
-AstNode
+AstNodeInterface
 ElseHead =
     indent:BILead elseKw:ElseKw BIEnd
     {
@@ -755,7 +755,7 @@ ElseHead =
   / ElseKw
 ;
 
-AstNode
+AstNodeInterface
 ElseKw =
   "{else" SpacingStar '}'
     {
@@ -763,7 +763,7 @@ ElseKw =
     }
 ;
 
-AstNode
+AstNodeInterface
 CtrlIfEnd =
     indent:BILead ifEndKw:IfEndKw BIEnd
     {
@@ -772,7 +772,7 @@ CtrlIfEnd =
   / IfEndKw
 ;
 
-AstNode
+AstNodeInterface
 IfEndKw =
   "{/if" SpacingStar '}'
   {

@@ -25,7 +25,9 @@
 
 package de.fau.cs.osr.ptk.nodegen.parser;
 
-import de.fau.cs.osr.ptk.common.ast.*;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
+import de.fau.cs.osr.ptk.common.ast.InnerNode;
 
 
 
@@ -43,10 +45,10 @@ public class Section
 
 	public Section()
 	{
-		super((AstNode) null);
+		super((AstNodeInterface) null);
 
 	}
-	public Section(int level, String title, AstNode body)
+	public Section(int level, String title, AstNodeInterface body)
 	{
 		super(body);
 		setLevel(level);
@@ -155,14 +157,14 @@ public class Section
 	// =========================================================================
 	// Children
 
-	public final void setBody(AstNode body)
+	public final void setBody(AstNodeInterface body)
 	{
 		set(0, body);
 	}
 	
-	public final AstNode getBody()
+	public final AstNodeInterface getBody()
 	{
-		return (AstNode) get(0);
+		return (AstNodeInterface) get(0);
 	}
 
 	private static final String[] CHILD_NAMES = new String[] {"body"};
