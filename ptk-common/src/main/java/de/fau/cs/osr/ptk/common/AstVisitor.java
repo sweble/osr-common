@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.utils.visitor.VisitorBase;
+import de.fau.cs.osr.utils.visitor.VisitorLogic;
 
 public class AstVisitor<T extends AstNodeInterface<T>>
 		extends
