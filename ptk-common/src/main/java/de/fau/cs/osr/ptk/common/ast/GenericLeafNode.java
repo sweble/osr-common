@@ -19,9 +19,9 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 
-public abstract class LeafNode
-        extends
-            AstNode
+public abstract class GenericLeafNode<T extends AstNodeInterface<T>>
+		extends
+			GenericAstNode<T>
 {
 	private static final long serialVersionUID = 3078845253977311630L;
 	
@@ -43,7 +43,7 @@ public abstract class LeafNode
 	// =========================================================================
 	
 	@Override
-    public void toString(Appendable out) throws IOException
+	public void toString(Appendable out) throws IOException
 	{
 		out.append(getClass().getSimpleName());
 		out.append("()");

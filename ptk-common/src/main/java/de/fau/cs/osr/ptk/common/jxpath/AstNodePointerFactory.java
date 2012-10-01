@@ -44,7 +44,7 @@ public class AstNodePointerFactory
 			Object bean,
 			Locale locale)
 	{
-		return bean instanceof AstNodeInterface ? new AstNodePointer((AstNodeInterface) bean) : null;
+		return bean instanceof AstNodeInterface ? new AstNodePointer((AstNodeInterface<?>) bean) : null;
 	}
 	
 	@Override
@@ -53,6 +53,6 @@ public class AstNodePointerFactory
 			QName name,
 			Object bean)
 	{
-		return bean instanceof AstNodeInterface ? new AstNodePointer(parent, (AstNodeInterface) bean) : null;
+		return bean instanceof AstNodeInterface ? new AstNodePointer(parent, (AstNodeInterface<?>) bean) : null;
 	}
 }

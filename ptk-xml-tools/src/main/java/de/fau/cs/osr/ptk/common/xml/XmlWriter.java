@@ -21,7 +21,6 @@ import static de.fau.cs.osr.ptk.common.xml.XmlConstants.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map.Entry;
 
@@ -42,13 +41,13 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.Text;
+import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
+import de.fau.cs.osr.ptk.common.ast.GenericText;
 import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
 import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
 
-public class XmlWriter
+public class XmlWriter<T extends AstNodeInterface<T>>
 {
 	/*
 	private static final int MAX_ENTRIES = 128;
@@ -86,9 +85,15 @@ public class XmlWriter
 	
 	private Base64 b64;
 	
-	// =========================================================================
+	private final Class<? extends T> nodeClass;
 	
-	public static String write(AstNodeInterface node) throws SerializationException
+	private final Class<? extends T> listClass;
+	
+	private final Class<? extends T> textClass;
+	
+	// =========================================================================
+	/*
+	public static String write(T node) throws SerializationException
 	{
 		StringWriter writer = new StringWriter();
 		new XmlWriter().serialize(node, writer);
@@ -96,7 +101,7 @@ public class XmlWriter
 	}
 	
 	public static String write(
-			AstNodeInterface node,
+			T node,
 			NameAbbrevService abbrevService) throws SerializationException
 	{
 		StringWriter writer = new StringWriter();
@@ -104,23 +109,44 @@ public class XmlWriter
 		return writer.toString();
 	}
 	
-	public static Writer write(AstNodeInterface node, Writer writer) throws SerializationException
+	public static Writer write(T node, Writer writer) throws SerializationException
 	{
 		new XmlWriter().serialize(node, writer);
 		return writer;
 	}
 	
 	public static Writer write(
-			AstNodeInterface node,
+			T node,
 			Writer writer,
 			NameAbbrevService abbrevService) throws SerializationException
 	{
 		new XmlWriter().serialize(node, writer, abbrevService);
 		return writer;
 	}
-	
+	*/
 	// =========================================================================
 	
+	public XmlWriter(
+			Class<? extends T> nodeClass,
+			Class<? extends T> listClass,
+			Class<? extends T> textClass)
+	{
+		this.nodeClass = nodeClass;
+		this.listClass = listClass;
+		this.textClass = textClass;
+		
+		if (!nodeClass.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to nodeClass");
+		if (!nodeClass.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to nodeClass");
+		
+		if (!GenericNodeList.class.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + GenericNodeList.class.getName());
+		if (!GenericText.class.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + GenericText.class.getName());
+	}
+	
+	// =========================================================================
 	/**
 	 * If set to true the output is not indented or otherwise beautified.
 	 * 
@@ -132,13 +158,13 @@ public class XmlWriter
 		this.compact = compact;
 	}
 	
-	public void serialize(AstNodeInterface node, Writer writer) throws SerializationException
+	public void serialize(T node, Writer writer) throws SerializationException
 	{
 		serialize(node, writer, new NameAbbrevService());
 	}
 	
 	public void serialize(
-			AstNodeInterface node,
+			T node,
 			Writer writer,
 			NameAbbrevService abbrevService) throws SerializationException
 	{
@@ -223,28 +249,29 @@ public class XmlWriter
 	
 	// =========================================================================
 	
-	private void dispatch(AstNodeInterface n) throws SAXException, JAXBException, IOException
+	private void dispatch(T n) throws SAXException, JAXBException, IOException
 	{
-		switch (n.getNodeType())
+		if (listClass.isInstance(n))
 		{
-			case AstNodeInterface.NT_TEXT:
-				visit((Text) n);
-				break;
-			case AstNodeInterface.NT_NODE_LIST:
-				visit((NodeList) n);
-				break;
-			default:
-				visit(n);
+			visit((GenericNodeList<T>) n);
+		}
+		else if (textClass.isInstance(n))
+		{
+			visit((GenericText<T>) n);
+		}
+		else
+		{
+			visit(n);
 		}
 	}
 	
-	private void iterate(AstNodeInterface n) throws SAXException, JAXBException, IOException
+	private void iterate(T n) throws SAXException, JAXBException, IOException
 	{
-		for (AstNodeInterface c : n)
+		for (T c : n)
 			dispatch(c);
 	}
 	
-	private void visit(AstNodeInterface n) throws SAXException, JAXBException, IOException
+	private void visit(T n) throws SAXException, JAXBException, IOException
 	{
 		String typeName = abbrevService.abbrev(n.getClass());
 		
@@ -261,19 +288,26 @@ public class XmlWriter
 			for (AstNodePropertyIterator i = n.propertyIterator(); i.next();)
 				writeProperty(i.getName(), i.getValue());
 			
-			for (int i = 0; i < n.getChildNames().length; ++i)
+			if (n.isList())
 			{
-				startElement(n.getChildNames()[i]);
+				iterate(n);
+			}
+			else
+			{
+				for (int i = 0; i < n.getChildNames().length; ++i)
 				{
-					dispatch(n.get(i));
+					startElement(n.getChildNames()[i]);
+					{
+						dispatch(n.get(i));
+					}
+					endElement(n.getChildNames()[i]);
 				}
-				endElement(n.getChildNames()[i]);
 			}
 		}
 		endElement(tagName);
 	}
 	
-	private void visit(Text n) throws SAXException
+	private void visit(GenericText<T> n) throws SAXException
 	{
 		if (n.getNativeLocation() != null)
 			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
@@ -286,14 +320,16 @@ public class XmlWriter
 		endElement(TEXT_QNAME);
 	}
 	
-	private void visit(NodeList n) throws SAXException, JAXBException, IOException
+	private void visit(GenericNodeList<T> n) throws SAXException, JAXBException, IOException
 	{
 		if (n.getNativeLocation() != null)
 			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
 		startElement(LIST_QNAME);
 		atts.clear();
 		{
-			iterate(n);
+			@SuppressWarnings("unchecked")
+			T node = (T) n;
+			iterate(node);
 		}
 		endElement(LIST_QNAME);
 	}
@@ -382,10 +418,12 @@ public class XmlWriter
 			th.characters(value.toCharArray(), 0, value.length());
 			endElement(name);
 		}
-		else if (obj instanceof AstNodeInterface)
+		else if (nodeClass.isAssignableFrom(clazz))
 		{
 			startElement(name);
-			visit((AstNodeInterface) obj);
+			@SuppressWarnings("unchecked")
+			T node = (T) obj;
+			visit(node);
 			endElement(name);
 		}
 		else

@@ -49,16 +49,16 @@ public class FileContent
 	{
 		if (encoding == null)
 			throw new FmtIllegalArgumentException(
-			        "Argument `encoding' must not be null");
+					"Argument `encoding' must not be null");
 		
 		if (file == null)
 			throw new FmtIllegalArgumentException(
-			        "Argument `file' must not be null");
+					"Argument `file' must not be null");
 		
 		if (!file.exists())
 			throw new FmtFileNotFoundException(
-			        "File not found: `%s'",
-			        file.getAbsolutePath());
+					"File not found: `%s'",
+					file.getAbsolutePath());
 		
 		this.file = file;
 		this.content = FileUtils.readFileToString(file, encoding);

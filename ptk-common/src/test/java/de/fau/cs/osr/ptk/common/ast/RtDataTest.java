@@ -25,7 +25,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import de.fau.cs.osr.ptk.common.test.TestNodeSection;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Section;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
 
 public class RtDataTest
 {
@@ -41,7 +42,7 @@ public class RtDataTest
 		Text text = astText();
 		assertEquals(text.size() + 1, new RtDataPtk(text).size());
 		
-		TestNodeSection section = astSection().build();
+		Section section = astSection().build();
 		assertEquals(section.size() + 1, new RtDataPtk(section).size());
 	}
 	
@@ -59,7 +60,7 @@ public class RtDataTest
 	@Test
 	public void testComplexCtorsHaveRightSize() throws Exception
 	{
-		TestNodeSection section = astSection().build();
+		Section section = astSection().build();
 		RtDataPtk rtd = new RtDataPtk(section, "1");
 		assertEquals(3, rtd.size());
 	}
@@ -67,7 +68,7 @@ public class RtDataTest
 	@Test
 	public void testNullInCtorDoesNotMeanNullInRtd() throws Exception
 	{
-		TestNodeSection section = astSection().build();
+		Section section = astSection().build();
 		RtDataPtk rtd = new RtDataPtk(section, "1", SEP, null, SEP, "3");
 		for (int i = 0; i < rtd.size(); ++i)
 			assertNotNull(rtd.getField(i));

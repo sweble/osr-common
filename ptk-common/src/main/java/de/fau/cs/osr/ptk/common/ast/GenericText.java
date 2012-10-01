@@ -15,13 +15,28 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.ptk.common.test;
+package de.fau.cs.osr.ptk.common.ast;
 
-public class TestNodes
+public class GenericText<T extends AstNodeInterface<T>>
+		extends
+			GenericStringContentNode<T>
 {
+	private static final long serialVersionUID = 7614892787867816308L;
 	
-	public static final int NT_SECTION = 0xFFFF0001;
+	public GenericText()
+	{
+	}
 	
-	public static final int NT_URL = 0xFFFF0002;
+	public GenericText(String content)
+	{
+		super(content);
+	}
 	
+	// =========================================================================
+	
+	@Override
+	public int getNodeType()
+	{
+		return NT_TEXT;
+	}
 }

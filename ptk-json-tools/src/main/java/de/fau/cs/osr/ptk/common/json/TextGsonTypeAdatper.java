@@ -26,25 +26,25 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import de.fau.cs.osr.ptk.common.ast.Text;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
-public final class TextGsonTypeAdatper
+public final class TextGsonTypeAdatper<T extends AstNodeInterface<T>>
 		implements
-			JsonSerializer<Text>,
-			JsonDeserializer<Text>
+			JsonSerializer<T>,
+			JsonDeserializer<T>
 {
-	private final JsonConverterImpl config;
+	private final JsonConverterImpl<T> config;
 	
 	// =========================================================================
 	
-	public TextGsonTypeAdatper(JsonConverterImpl config)
+	public TextGsonTypeAdatper(JsonConverterImpl<T> config)
 	{
 		this.config = config;
 	}
 	
 	@Override
 	public JsonElement serialize(
-			Text src,
+			T src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
@@ -52,7 +52,7 @@ public final class TextGsonTypeAdatper
 	}
 	
 	@Override
-	public Text deserialize(
+	public T deserialize(
 			JsonElement json,
 			Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException

@@ -31,29 +31,29 @@ public class EntityMap
 {
 	private static final long serialVersionUID = 1L;
 	
-	private HashMap<Integer, AstNodeInterface> entityMap =
-			new HashMap<Integer, AstNodeInterface>();
+	private HashMap<Integer, AstNodeInterface<?>> entityMap =
+			new HashMap<Integer, AstNodeInterface<?>>();
 	
 	// =========================================================================
 	
-	public int registerEntity(AstNodeInterface entity)
+	public int registerEntity(AstNodeInterface<?> entity)
 	{
 		int id = entityMap.size();
 		entityMap.put(id, entity);
 		return id;
 	}
 	
-	public AstNodeInterface getEntity(int id)
+	public AstNodeInterface<?> getEntity(int id)
 	{
 		return entityMap.get(id);
 	}
 	
-	public Set<Entry<Integer, AstNodeInterface>> getEntities()
+	public Set<Entry<Integer, AstNodeInterface<?>>> getEntities()
 	{
 		return entityMap.entrySet();
 	}
 	
-	public Map<Integer, AstNodeInterface> getMap()
+	public Map<Integer, AstNodeInterface<?>> getMap()
 	{
 		return entityMap;
 	}

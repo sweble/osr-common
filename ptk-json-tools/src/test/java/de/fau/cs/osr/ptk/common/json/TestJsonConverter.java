@@ -26,32 +26,47 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 
 import de.fau.cs.osr.ptk.common.AstComparer;
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.Text;
-import de.fau.cs.osr.ptk.common.test.TestNodeSection;
-import de.fau.cs.osr.ptk.common.test.TestNodeUrl;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.List;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Section;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Url;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
 public class TestJsonConverter
 {
+	private Gson jconv;
+	
+	@Before
+	public void before()
+	{
+		this.jconv = JsonConverter.createGsonConverter(
+				true,
+				new NameAbbrevService(
+						"de.fau.cs.osr.ptk.common.test",
+						"de.fau.cs.osr.ptk.common.json"),
+				false,
+				TestAstNode.class,
+				List.class,
+				Text.class);
+	}
+	
 	@Test
 	public void testAstToJsonConversion() throws Exception
 	{
-		TestNodeSection ast = astSection().build();
+		Section ast = astSection().build();
 		ast.setAttribute("someAttr", "someAttrValue");
 		
-		String json = JsonConverter.toJson(
-				ast,
-				new NameAbbrevService("de.fau.cs.osr.ptk.common.test"));
+		String json = jconv.toJson(ast);
 		
 		assertThat(json, containsString("\"!type\""));
-		assertThat(json, containsString("\"TestNodeSection\""));
+		assertThat(json, containsString("\"TestAstBuilder$Section\""));
 		
 		// attributes
 		assertThat(json, containsString("\"@someAttr\""));
@@ -71,16 +86,16 @@ public class TestJsonConverter
 	@Test
 	public void testJsonToTextConversion() throws Exception
 	{
-		Text t = JsonConverter.fromJson("\"Some text\"", Text.class);
+		Text t = jconv.fromJson("\"Some text\"", Text.class);
 		assertThat("Some text", equalTo(t.getContent()));
 	}
 	
 	@Test
 	public void testJsonToNodeListConversion() throws Exception
 	{
-		NodeList nl = JsonConverter.fromJson(
+		List nl = jconv.fromJson(
 				"[\"Some text\", [\"Some more text\"]]",
-				NodeList.class);
+				List.class);
 		
 		assertThat(nl.size(), equalTo(2));
 		assertThat(((Text) nl.get(0)).getContent(), equalTo("Some text"));
@@ -103,15 +118,10 @@ public class TestJsonConverter
 		System.out.println(JsonConverter.toJson(ast));
 		*/
 		
-		Gson json = JsonConverter.createGsonConverter(
-				false,
-				new NameAbbrevService(
-						"de.fau.cs.osr.ptk.common.test"));
-		
-		TestNodeUrl url = json.fromJson(
+		Url url = jconv.fromJson(
 				""
 						+ "{"
-						+ "  \"!type\": \"TestNodeUrl\","
+						+ "  \"!type\": \"TestAstBuilder$Url\","
 						+ "  \"@someAttr\": {"
 						+ "    \"type\": \"String\","
 						+ "    \"value\": \"someAttrValue\""
@@ -119,7 +129,7 @@ public class TestJsonConverter
 						+ "  \"protocol\": \"protocol\","
 						+ "  \"path\": \"path\""
 						+ "}",
-				TestNodeUrl.class);
+				Url.class);
 		
 		// attributes
 		assertThat((String) url.getAttribute("someAttr"), equalTo("someAttrValue"));
@@ -132,7 +142,7 @@ public class TestJsonConverter
 	@Test
 	public void testSerializationAndDeserialization() throws Exception
 	{
-		TestNodeSection in = astSection()
+		Section in = astSection()
 				.withLevel(1)
 				.withBody(
 						astText(),
@@ -153,13 +163,9 @@ public class TestJsonConverter
 		
 		// -------
 		
-		NameAbbrevService as = new NameAbbrevService(
-				"de.fau.cs.osr.ptk.common.test",
-				"de.fau.cs.osr.ptk.common.json");
+		String json = jconv.toJson(in);
 		
-		String json = serialize(in, as);
-		
-		AstNodeInterface out = deserialize(json, as);
+		TestAstNode out = jconv.fromJson(json, TestAstNode.class);
 		
 		// -------
 		
@@ -171,16 +177,6 @@ public class TestJsonConverter
 	}
 	
 	// =========================================================================
-	
-	private String serialize(AstNodeInterface ast, NameAbbrevService as) throws Exception
-	{
-		return JsonConverter.toJson(ast, as);
-	}
-	
-	private AstNodeInterface deserialize(String json, NameAbbrevService as) throws Exception
-	{
-		return JsonConverter.fromJson(json, AstNodeInterface.class, as);
-	}
 	
 	private boolean deepCompareMaps(
 			Map<String, Object> a,

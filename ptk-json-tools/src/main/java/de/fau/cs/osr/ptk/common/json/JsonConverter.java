@@ -17,18 +17,15 @@
 
 package de.fau.cs.osr.ptk.common.json;
 
-import java.io.Reader;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
 public class JsonConverter
 {
+	/*
 	public static String toJson(Object object)
 	{
 		return toJson(object, true);
@@ -81,9 +78,11 @@ public class JsonConverter
 	{
 		createGsonConverter(prettyPrinting, as).toJson(object, appendable);
 	}
+	*/
 	
 	// =========================================================================
 	
+	/*
 	public static <T> T fromJson(String json, Class<? extends T> clazz)
 	{
 		return createGsonConverter(false, null).fromJson(json, clazz);
@@ -109,47 +108,43 @@ public class JsonConverter
 	{
 		return createGsonConverter(false, as).fromJson(reader, clazz);
 	}
+	*/
 	
 	// =========================================================================
 	
-	public static Gson createGsonConverter(
-			boolean prettyPrinting,
-			NameAbbrevService as)
-	{
-		return createGsonConverter(prettyPrinting, as, false);
-	}
-	
-	public static Gson createGsonConverter(
+	public static <T extends AstNodeInterface<T>> Gson createGsonConverter(
 			boolean prettyPrinting,
 			NameAbbrevService as,
-			boolean saveLocation)
+			boolean saveLocation,
+			Class<? extends T> nodeClass,
+			Class<? extends T> listClass,
+			Class<? extends T> textClass)
 	{
 		GsonBuilder builder = new GsonBuilder();
-		registerAstTypeAdapters(builder, as, saveLocation);
+		JsonConverterImpl<T> config = new JsonConverterImpl<T>(
+				as,
+				saveLocation,
+				nodeClass,
+				listClass,
+				textClass);
+		
+		if (listClass != null)
+			builder.registerTypeAdapter(listClass, new NodeListGsonTypeAdapter<T>(config));
+		
+		if (textClass != null)
+			builder.registerTypeAdapter(textClass, new TextGsonTypeAdatper<T>(config));
+		
+		// All other AST nodes
+		builder.registerTypeHierarchyAdapter(
+				nodeClass,
+				new AstNodeGsonTypeAdapter<T>(config));
+		
+		// We require the serialization of null values
+		builder.serializeNulls();
 		
 		if (prettyPrinting)
 			builder.setPrettyPrinting();
 		
-		Gson gson = builder.create();
-		return gson;
-	}
-	
-	public static void registerAstTypeAdapters(
-			GsonBuilder gson,
-			NameAbbrevService as,
-			boolean saveLocation)
-	{
-		JsonConverterImpl config = new JsonConverterImpl(as, saveLocation);
-		
-		gson.registerTypeAdapter(NodeList.class, new NodeListGsonTypeAdapter(config));
-		gson.registerTypeAdapter(Text.class, new TextGsonTypeAdatper(config));
-		
-		// Fallback
-		gson.registerTypeHierarchyAdapter(
-				AstNodeInterface.class,
-				new AstNodeGsonTypeAdapter(config));
-		
-		// We require the serialization of null values
-		gson.serializeNulls();
+		return builder.create();
 	}
 }

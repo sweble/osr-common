@@ -21,24 +21,47 @@ import static de.fau.cs.osr.ptk.common.test.TestAstBuilder.*;
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import de.fau.cs.osr.ptk.common.AstComparer;
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
-import de.fau.cs.osr.ptk.common.test.TestNodeSection;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.List;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Section;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
 public class XmlWriterTest
 {
+	private XmlWriter<TestAstNode> writer;
+	
+	private XmlReader<TestAstNode> reader;
+	
+	@Before
+	public void before()
+	{
+		this.writer = new XmlWriter<TestAstNode>(
+				TestAstNode.class,
+				List.class,
+				Text.class);
+		
+		this.reader = new XmlReader<TestAstNode>(
+				TestAstNode.class,
+				List.class,
+				Text.class);
+	}
+	
 	@Test
 	public void testSerializationAndDeserialization() throws Exception
 	{
-		TestNodeSection in = astSection()
+		Section in = astSection()
 				.withLevel(1)
 				.withBody(
 						astText(),
@@ -65,9 +88,9 @@ public class XmlWriterTest
 		
 		String xml = serialize(in, as);
 		
-		//System.out.println(xml);
+		System.out.println(xml);
 		
-		AstNodeInterface out = deserialize(xml, as);
+		TestAstNode out = deserialize(xml, as);
 		
 		//System.out.println(serialize(out, as));
 		
@@ -82,14 +105,16 @@ public class XmlWriterTest
 	
 	// =========================================================================
 	
-	private String serialize(AstNodeInterface ast, NameAbbrevService as) throws Exception
+	private String serialize(TestAstNode ast, NameAbbrevService as) throws Exception
 	{
-		return XmlWriter.write(ast, as);
+		StringWriter sw = new StringWriter();
+		writer.serialize(ast, sw, as);
+		return sw.toString();
 	}
 	
-	private AstNodeInterface deserialize(String xml, NameAbbrevService as) throws Exception
+	private TestAstNode deserialize(String xml, NameAbbrevService as) throws Exception
 	{
-		return XmlReader.read(xml, as);
+		return reader.deserialize(new StringReader(xml), as);
 	}
 	
 	private boolean deepCompareMaps(

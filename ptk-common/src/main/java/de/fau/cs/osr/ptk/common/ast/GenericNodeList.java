@@ -32,54 +32,63 @@ import xtc.util.Pair;
  * Invariants: <br />
  * <ul>
  * <li>This list never contains {@code null} as node.</li>
- * <li>This list never contains another {@link NodeList} as node.</li>
+ * <li>This list never contains another {@link GenericNodeList} as node.</li>
  * </ul>
  * 
  * In order to assure these invariants, all functions adding nodes to this list
  * will discard null references and will recursively flatten any
- * {@link NodeList}.
+ * {@link GenericNodeList}.
  */
-public class NodeList
-        extends
-            InnerNode
+public class GenericNodeList<T extends AstNodeInterface<T>>
+		extends
+			GenericInnerNode<T>
 {
 	private static final long serialVersionUID = -3855416846550776026L;
 	
 	// =========================================================================
 	
-	private LinkedList<AstNodeInterface> children = new LinkedList<AstNodeInterface>();
+	private LinkedList<T> children = new LinkedList<T>();
 	
 	// =========================================================================
 	
-	public NodeList()
+	public GenericNodeList()
 	{
 	}
 	
-	public NodeList(AstNodeInterface child)
+	public GenericNodeList(T child)
 	{
 		add(child);
 	}
 	
-	public NodeList(AstNodeInterface car, Pair<? extends AstNodeInterface> cdr)
+	public GenericNodeList(
+			T car,
+			Pair<? extends T> cdr)
 	{
 		add(car);
 		addAll(cdr);
 	}
 	
-	public NodeList(AstNodeInterface a, AstNodeInterface b)
+	public GenericNodeList(T a, T b)
 	{
 		add(a);
 		add(b);
 	}
 	
-	public NodeList(AstNodeInterface a, AstNodeInterface b, AstNodeInterface c)
+	public GenericNodeList(
+			T a,
+			T b,
+			T c)
 	{
 		add(a);
 		add(b);
 		add(c);
 	}
 	
-	public NodeList(AstNodeInterface a, AstNodeInterface b, AstNodeInterface c, AstNodeInterface d)
+	public GenericNodeList(
+			T a,
+			T b,
+			T c,
+			T d)
 	{
 		add(a);
 		add(b);
@@ -87,14 +96,20 @@ public class NodeList
 		add(d);
 	}
 	
-	public NodeList(Pair<? extends AstNodeInterface> list)
+	public GenericNodeList(Pair<? extends T> list)
 	{
 		addAll(list);
 	}
 	
-	public NodeList(Collection<? extends AstNodeInterface> list)
+	public GenericNodeList(Collection<? extends T> list)
 	{
 		addAll(list);
+	}
+	
+	public GenericNodeList(T... children)
+	{
+		for (T x : children)
+			add(x);
 	}
 	
 	// =========================================================================
@@ -126,7 +141,7 @@ public class NodeList
 	}
 	
 	@Override
-	public Iterator<AstNodeInterface> iterator()
+	public Iterator<T> iterator()
 	{
 		return children.iterator();
 	}
@@ -138,7 +153,7 @@ public class NodeList
 	}
 	
 	@Override
-	public <T> T[] toArray(T[] a)
+	public <S> S[] toArray(S[] a)
 	{
 		return children.toArray(a);
 	}
@@ -146,15 +161,15 @@ public class NodeList
 	// Modification Operations
 	
 	@Override
-	public boolean add(AstNodeInterface e)
+	public boolean add(T e)
 	{
 		if (e == null)
 		{
 			return false;
 		}
-		else if (e.getNodeType() == NT_NODE_LIST)
+		else if (e.getClass() == this.getClass())
 		{
-			return children.addAll(((NodeList) e).children);
+			return children.addAll(((GenericNodeList<T>) e).children);
 		}
 		else
 		{
@@ -177,27 +192,27 @@ public class NodeList
 	}
 	
 	@Override
-	public boolean addAll(Collection<? extends AstNodeInterface> c)
+	public boolean addAll(Collection<? extends T> c)
 	{
 		boolean changed = false;
-		for (AstNodeInterface n : c)
+		for (T n : c)
 			changed |= add(n);
 		return changed;
 	}
 	
 	@Override
-	public boolean addAll(int index, Collection<? extends AstNodeInterface> c)
+	public boolean addAll(int index, Collection<? extends T> c)
 	{
-		final LinkedList<AstNodeInterface> insert = new LinkedList<AstNodeInterface>();
-		for (AstNodeInterface n : c)
+		final LinkedList<T> insert = new LinkedList<T>();
+		for (T n : c)
 		{
 			if (n == null)
 			{
 				continue;
 			}
-			else if (n.getNodeType() == NT_NODE_LIST)
+			else if (n.getClass() == this.getClass())
 			{
-				insert.addAll(((NodeList) n).children);
+				insert.addAll(((GenericNodeList<T>) n).children);
 			}
 			else
 			{
@@ -228,23 +243,23 @@ public class NodeList
 	// Positional Access Operations
 	
 	@Override
-	public AstNodeInterface get(int index)
+	public T get(int index)
 	{
 		return children.get(index);
 	}
 	
 	@Override
-	public AstNodeInterface set(int index, AstNodeInterface value)
+	public T set(int index, T value)
 	{
 		if (value == null)
 		{
 			throw new NullPointerException(
-			        "A NodeList must not contain a null element!");
+					"A NodeList must not contain a null element!");
 		}
-		else if (value.getNodeType() == NT_NODE_LIST)
+		else if (value.getClass() == this.getClass())
 		{
 			throw new IllegalArgumentException(
-			        "Must not set a single element to a NodeList");
+					"Must not set a single element to a NodeList");
 		}
 		else
 		{
@@ -253,12 +268,12 @@ public class NodeList
 	}
 	
 	@Override
-	public void add(int index, AstNodeInterface element)
+	public void add(int index, T element)
 	{
 		if (element == null)
 			return;
 		
-		else if (element.getNodeType() == NT_NODE_LIST)
+		else if (element.getClass() == this.getClass())
 		{
 			addAll(index, element);
 		}
@@ -269,7 +284,7 @@ public class NodeList
 	}
 	
 	@Override
-	public AstNodeInterface remove(int index)
+	public T remove(int index)
 	{
 		return children.remove(index);
 	}
@@ -291,13 +306,13 @@ public class NodeList
 	// List Iterators
 	
 	@Override
-	public ListIterator<AstNodeInterface> listIterator()
+	public ListIterator<T> listIterator()
 	{
 		return new ChildListIterator();
 	}
 	
 	@Override
-	public ListIterator<AstNodeInterface> listIterator(int index)
+	public ListIterator<T> listIterator(int index)
 	{
 		return new ChildListIterator(index);
 	}
@@ -305,7 +320,7 @@ public class NodeList
 	// View
 	
 	@Override
-	public List<AstNodeInterface> subList(int fromIndex, int toIndex)
+	public List<T> subList(int fromIndex, int toIndex)
 	{
 		return children.subList(fromIndex, toIndex);
 	}
@@ -314,7 +329,7 @@ public class NodeList
 	// Extension of the List interface for Pair
 	
 	@Override
-	public boolean addAll(Pair<? extends AstNodeInterface> p)
+	public boolean addAll(Pair<? extends T> p)
 	{
 		boolean changed = false;
 		while (!p.isEmpty())
@@ -348,7 +363,7 @@ public class NodeList
 		out.append('[');
 		
 		boolean first = true;
-		for (AstNodeInterface node : this)
+		for (T node : this)
 		{
 			if (first)
 			{
@@ -375,12 +390,12 @@ public class NodeList
 	// =========================================================================
 	
 	private final class ChildListIterator
-	            implements
-	                AstChildIterator
+			implements
+				AstChildIterator<T>
 	{
-		private ListIterator<AstNodeInterface> i;
+		private ListIterator<T> i;
 		
-		private AstNodeInterface current = null;
+		private T current = null;
 		
 		private final int start;
 		
@@ -403,7 +418,7 @@ public class NodeList
 		}
 		
 		@Override
-		public AstNodeInterface next()
+		public T next()
 		{
 			current = i.next();
 			return current;
@@ -416,7 +431,7 @@ public class NodeList
 		}
 		
 		@Override
-		public AstNodeInterface previous()
+		public T previous()
 		{
 			current = i.previous();
 			return current;
@@ -442,17 +457,17 @@ public class NodeList
 		}
 		
 		@Override
-		public void set(AstNodeInterface e)
+		public void set(T e)
 		{
 			if (e == null)
 			{
 				throw new NullPointerException(
-				        "A NodeList must not contain a null element!");
+						"A NodeList must not contain a null element!");
 			}
-			else if (e.getNodeType() == NT_NODE_LIST)
+			else if (e.getClass() == GenericNodeList.this.getClass())
 			{
 				throw new IllegalArgumentException(
-				        "Must not set a single element to a NodeList");
+						"Must not set a single element to a NodeList");
 			}
 			else
 			{
@@ -462,14 +477,14 @@ public class NodeList
 		}
 		
 		@Override
-		public void add(AstNodeInterface e)
+		public void add(T e)
 		{
 			if (e == null)
 				return;
 			
-			if (e.getNodeType() == NT_NODE_LIST)
+			if (e.getClass() == GenericNodeList.this.getClass())
 			{
-				for (AstNodeInterface n : (NodeList) e)
+				for (T n : (GenericNodeList<T>) e)
 					i.add(n);
 				current = null;
 			}
@@ -481,7 +496,7 @@ public class NodeList
 		}
 		
 		@Override
-		public AstNodeInterface get()
+		public T get()
 		{
 			if (current == null)
 				throw new IllegalStateException();
@@ -491,7 +506,7 @@ public class NodeList
 		@Override
 		public void reset()
 		{
-			i = NodeList.this.children.listIterator(start);
+			i = GenericNodeList.this.children.listIterator(start);
 		}
 	}
 }

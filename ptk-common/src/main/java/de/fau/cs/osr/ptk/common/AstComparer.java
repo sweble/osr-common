@@ -17,6 +17,8 @@
 
 package de.fau.cs.osr.ptk.common;
 
+import java.util.Iterator;
+
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 
@@ -51,8 +53,8 @@ public class AstComparer
 	 * @return True if both subtrees are equal, false otherwise.
 	 */
 	public static boolean compare(
-			AstNodeInterface rootA,
-			AstNodeInterface rootB,
+			AstNodeInterface<?> rootA,
+			AstNodeInterface<?> rootB,
 			boolean compareAttributes,
 			boolean compareLocation)
 	{
@@ -61,7 +63,7 @@ public class AstComparer
 	
 	// =========================================================================
 	
-	private boolean compareIntern(AstNodeInterface a, AstNodeInterface b)
+	private boolean compareIntern(AstNodeInterface<?> a, AstNodeInterface<?> b)
 	{
 		if (a == b)
 			return true;
@@ -117,6 +119,24 @@ public class AstComparer
 		}
 		
 		// Compare children
+		if (a.isList())
+		{
+			if (a.size() != b.size())
+				return false;
+			
+			@SuppressWarnings("unchecked")
+			Iterator<AstNodeInterface<?>> i = (Iterator<AstNodeInterface<?>>) a.iterator();
+			
+			@SuppressWarnings("unchecked")
+			Iterator<AstNodeInterface<?>> j = (Iterator<AstNodeInterface<?>>) b.iterator();
+			
+			while (i.hasNext() & j.hasNext())
+			{
+				if (!compareIntern(i.next(), j.next()))
+					return false;
+			}
+		}
+		else
 		{
 			String[] acn = a.getChildNames();
 			String[] bcn = b.getChildNames();
@@ -131,7 +151,8 @@ public class AstComparer
 				if (!acn[i].equals(bcn[i]))
 					return false;
 				
-				compareIntern(a.get(i), b.get(i));
+				if (!compareIntern(a.get(i), b.get(i)))
+					return false;
 			}
 		}
 		

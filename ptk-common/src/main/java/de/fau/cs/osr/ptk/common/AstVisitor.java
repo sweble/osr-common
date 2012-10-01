@@ -18,54 +18,59 @@
 package de.fau.cs.osr.ptk.common;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
 
-public class AstVisitor
+public class AstVisitor<T extends AstNodeInterface<T>>
 		extends
-			VisitorBase<AstNodeInterface>
+			VisitorBase<T>
 {
+	public static final Object REMOVE = new Object();
+	
+	// =========================================================================
+	
 	public AstVisitor()
 	{
 	}
 	
-	public AstVisitor(VisitorLogic<AstNodeInterface> logic)
+	public AstVisitor(VisitorLogic<T> logic)
 	{
 		super(logic);
 	}
+	
+	// =========================================================================
 	
 	/**
 	 * Dispatches to the appropriate visit() method and returns the result of
 	 * the visitation. If the given node is <code>null</code> this method
 	 * returns immediately with <code>null</code> as result.
 	 */
-	protected final Object dispatch(AstNodeInterface node)
+	protected final Object dispatch(T node)
 	{
 		if (node == null)
-			return null;
+			throw new NullPointerException();
 		return resolveAndVisit(node);
 	}
 	
-	protected final void iterate(AstNodeInterface node)
-	{
-		if (node != null)
-		{
-			for (AstNodeInterface n : node)
-				dispatch(n);
-		}
-	}
+	// =========================================================================
 	
-	protected final List<Object> map(AstNodeInterface node)
+	protected final void iterate(T node)
 	{
 		if (node == null)
-			return Collections.emptyList();
+			throw new NullPointerException();
+		for (T n : node)
+			dispatch(n);
+	}
+	
+	protected final List<Object> map(T node)
+	{
+		if (node == null)
+			throw new NullPointerException();
 		
 		List<Object> result = new ArrayList<Object>(node.size());
-		for (AstNodeInterface n : node)
+		for (T n : node)
 			result.add(dispatch(n));
 		return result;
 	}
@@ -76,64 +81,58 @@ public class AstVisitor
 	 * AST node is a NodeList, the call will be passed to mapInPlace(NodeList)
 	 * which has special semantics.
 	 */
-	protected final void mapInPlace(AstNodeInterface node)
+	protected final void mapInPlace(T node)
 	{
 		if (node == null)
+			throw new NullPointerException();
+		
+		if (node.getNodeType() == AstNodeInterface.NT_NODE_LIST)
 		{
-			return;
-		}
-		else if (node.getNodeType() == AstNodeInterface.NT_NODE_LIST)
-		{
-			mapInPlace((NodeList) node);
+			ListIterator<T> i = node.listIterator();
+			while (i.hasNext())
+			{
+				T current = i.next();
+				Object result = dispatch(current);
+				if (result == null)
+				{
+					throw new NullPointerException();
+				}
+				else if (result == REMOVE)
+				{
+					i.remove();
+				}
+				else
+				{
+					if (result == current)
+						continue;
+					
+					@SuppressWarnings("unchecked")
+					T resultNode = (T) result;
+					
+					if (resultNode.getNodeType() == AstNodeInterface.NT_NODE_LIST)
+					{
+						i.remove();
+						i.add(resultNode);
+					}
+					else
+					{
+						i.set(resultNode);
+					}
+				}
+			}
 		}
 		else
 		{
-			ListIterator<AstNodeInterface> i = node.listIterator();
+			ListIterator<T> i = node.listIterator();
 			while (i.hasNext())
 			{
-				AstNodeInterface current = i.next();
-				AstNodeInterface result = (AstNodeInterface) dispatch(current);
+				T current = i.next();
+				
+				@SuppressWarnings("unchecked")
+				T result = (T) dispatch(current);
+				
 				if (result != current)
 					i.set(result);
-			}
-		}
-	}
-	
-	/**
-	 * Iterates over a NodeList and replaces each node with the result of the
-	 * visitation. If a visit() call returns <code>null</code>, the node that
-	 * was passed to the visit() method will be removed from the list. If the
-	 * visit() call returns another NodeList as result, the result's children
-	 * will replace the node that was being visited. The visitation will
-	 * continue after the embedded children. Otherwise, each visited node will
-	 * simply be replaced by the result of the visit() call.
-	 */
-	protected final void mapInPlace(NodeList list)
-	{
-		if (list == null)
-			return;
-		
-		ListIterator<AstNodeInterface> i = list.listIterator();
-		while (i.hasNext())
-		{
-			AstNodeInterface current = i.next();
-			
-			AstNodeInterface result = (AstNodeInterface) dispatch(current);
-			if (result == current)
-				continue;
-			
-			if (result == null)
-			{
-				i.remove();
-			}
-			else if (result.getNodeType() == AstNodeInterface.NT_NODE_LIST)
-			{
-				i.remove();
-				i.add(result);
-			}
-			else
-			{
-				i.set(result);
 			}
 		}
 	}

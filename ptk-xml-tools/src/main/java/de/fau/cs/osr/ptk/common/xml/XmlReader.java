@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.Iterator;
 
 import javax.xml.bind.JAXBException;
@@ -38,13 +37,13 @@ import org.apache.commons.codec.binary.Base64;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
+import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
+import de.fau.cs.osr.ptk.common.ast.GenericText;
 import de.fau.cs.osr.ptk.common.ast.Location;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
 
-public class XmlReader
+public class XmlReader<T extends AstNodeInterface<T>>
 {
 	private XMLEventReader reader;
 	
@@ -56,42 +55,68 @@ public class XmlReader
 	
 	private Base64 b64;
 	
-	// =========================================================================
+	private final Class<? extends T> nodeClass;
 	
-	public static AstNodeInterface read(String xml) throws DeserializationException
+	private final Class<? extends T> listClass;
+	
+	private final Class<? extends T> textClass;
+	
+	// =========================================================================
+	/*
+	
+	public static T read(String xml) throws DeserializationException
 	{
 		return new XmlReader().deserialize(new StringReader(xml));
 	}
 	
-	public static AstNodeInterface read(String xml, NameAbbrevService as) throws DeserializationException
+	public static T read(String xml, NameAbbrevService as) throws DeserializationException
 	{
 		return new XmlReader().deserialize(new StringReader(xml), as);
 	}
 	
-	public static AstNodeInterface read(Reader reader) throws DeserializationException
+	public static T read(Reader reader) throws DeserializationException
 	{
 		return new XmlReader().deserialize(reader);
 	}
 	
-	public static AstNodeInterface read(Reader reader, NameAbbrevService as) throws DeserializationException
+	public static T read(Reader reader, NameAbbrevService as) throws DeserializationException
 	{
 		return new XmlReader().deserialize(reader, as);
 	}
 	
+	*/
 	// =========================================================================
 	
-	public XmlReader()
+	public XmlReader(
+			Class<? extends T> nodeClass,
+			Class<? extends T> listClass,
+			Class<? extends T> textClass)
 	{
+		this.nodeClass = nodeClass;
+		this.listClass = listClass;
+		this.textClass = textClass;
+		
+		if (!nodeClass.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to nodeClass");
+		if (!nodeClass.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to nodeClass");
+		
+		if (!GenericNodeList.class.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + GenericNodeList.class.getName());
+		if (!GenericText.class.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + GenericText.class.getName());
 	}
 	
 	// =========================================================================
 	
-	public AstNodeInterface deserialize(Reader reader) throws DeserializationException
+	public T deserialize(Reader reader) throws DeserializationException
 	{
 		return deserialize(reader, new NameAbbrevService());
 	}
 	
-	public AstNodeInterface deserialize(Reader reader, NameAbbrevService abbrevService) throws DeserializationException
+	public T deserialize(
+			Reader reader,
+			NameAbbrevService abbrevService) throws DeserializationException
 	{
 		try
 		{
@@ -113,7 +138,7 @@ public class XmlReader
 	
 	// =========================================================================
 	
-	private AstNodeInterface readAst() throws XMLStreamException, DeserializationException
+	private T readAst() throws XMLStreamException, DeserializationException
 	{
 		XMLEvent event = null;
 		while (reader.hasNext())
@@ -129,7 +154,7 @@ public class XmlReader
 		skipWhitespace();
 		expectStartElement(XmlConstants.AST_QNAME);
 		
-		AstNodeInterface root = readNodeListOrTextOrNode();
+		T root = readNodeListOrTextOrNode();
 		
 		expectEndElement();
 		
@@ -147,7 +172,7 @@ public class XmlReader
 		return root;
 	}
 	
-	private AstNodeInterface readNodeListOrTextOrNode() throws XMLStreamException, DeserializationException
+	private T readNodeListOrTextOrNode() throws XMLStreamException, DeserializationException
 	{
 		XMLEvent event = null;
 		if (skipWhitespace())
@@ -155,7 +180,7 @@ public class XmlReader
 			event = reader.nextEvent();
 			if (event.isStartElement())
 			{
-				AstNodeInterface node;
+				T node;
 				
 				StartElement elem = event.asStartElement();
 				if (elem.getName().equals(XmlConstants.LIST_QNAME))
@@ -183,14 +208,16 @@ public class XmlReader
 		throw new DeserializationException(event, "Expected element");
 	}
 	
-	private AstNodeInterface readText(StartElement e) throws XMLStreamException
+	private T readText(StartElement elem) throws XMLStreamException, DeserializationException
 	{
-		return new Text(readChars());
+		T text = instantiateNode(elem, textClass);
+		((GenericText<T>) text).setContent(readChars());
+		return (T) text;
 	}
 	
-	private AstNodeInterface readNodeList(StartElement elem) throws XMLStreamException, DeserializationException
+	private T readNodeList(StartElement elem) throws XMLStreamException, DeserializationException
 	{
-		NodeList list = new NodeList();
+		T list = instantiateNode(elem, listClass);
 		
 		XMLEvent event = null;
 		while (skipWhitespace())
@@ -199,22 +226,24 @@ public class XmlReader
 			if (event.isEndElement())
 				break;
 			
-			list.add(readNodeListOrTextOrNode());
+			list.add(checkNodeType(readNodeListOrTextOrNode()));
 		}
 		
 		return list;
 	}
 	
-	private AstNodeInterface readNode(StartElement elem) throws XMLStreamException, DeserializationException
+	private T readNode(StartElement elem) throws XMLStreamException, DeserializationException
 	{
 		String name = elem.getName().getLocalPart();
+		
+		String className = XmlConstants.tagNameToClassName(name);
 		
 		Exception e;
 		try
 		{
-			Class<?> clazz = abbrevService.resolve(name);
+			Class<?> clazz = abbrevService.resolve(className);
 			
-			AstNodeInterface n = (AstNodeInterface) clazz.newInstance();
+			T n = instantiateNode(elem, clazz);
 			
 			readNodeAttributes(n);
 			
@@ -224,23 +253,11 @@ public class XmlReader
 			
 			return n;
 		}
-		catch (InstantiationException e_)
-		{
-			e = e_;
-		}
-		catch (IllegalAccessException e_)
-		{
-			e = e_;
-		}
-		catch (ClassCastException e_)
+		catch (IOException e_)
 		{
 			e = e_;
 		}
 		catch (ClassNotFoundException e_)
-		{
-			e = e_;
-		}
-		catch (IOException e_)
 		{
 			e = e_;
 		}
@@ -249,7 +266,7 @@ public class XmlReader
 		throw new DeserializationException(elem, msg, e);
 	}
 	
-	private void readNodeAttributes(AstNodeInterface n) throws XMLStreamException, DeserializationException, IOException
+	private void readNodeAttributes(T n) throws XMLStreamException, DeserializationException, IOException
 	{
 		XMLEvent event = null;
 		while (skipWhitespace())
@@ -268,7 +285,7 @@ public class XmlReader
 		}
 	}
 	
-	private void readNodeAttribute(StartElement elem, AstNodeInterface n) throws XMLStreamException, DeserializationException
+	private void readNodeAttribute(StartElement elem, T n) throws XMLStreamException, DeserializationException
 	{
 		String attrName = null;
 		boolean isNull = false;
@@ -343,7 +360,7 @@ public class XmlReader
 		}
 	}
 	
-	private void readNodeProperties(AstNodeInterface n) throws XMLStreamException, DeserializationException
+	private void readNodeProperties(T n) throws XMLStreamException, DeserializationException
 	{
 		AstNodePropertyIterator i = n.propertyIterator();
 		while (i.next())
@@ -398,17 +415,32 @@ public class XmlReader
 		}
 	}
 	
-	private void readNodeChildren(AstNodeInterface n) throws XMLStreamException, DeserializationException
+	private void readNodeChildren(T n) throws XMLStreamException, DeserializationException
 	{
-		for (int i = 0; i < n.getChildNames().length; ++i)
+		if (n.isList())
 		{
-			expectStartElement(new QName(n.getChildNames()[i]));
-			
-			AstNodeInterface child = readNodeListOrTextOrNode();
-			
-			n.set(i, child);
-			
-			expectEndElement();
+			XMLEvent event = null;
+			while (skipWhitespace())
+			{
+				event = reader.peek();
+				if (event.isEndElement())
+					break;
+				
+				n.add(checkNodeType(readNodeListOrTextOrNode()));
+			}
+		}
+		else
+		{
+			for (int i = 0; i < n.getChildNames().length; ++i)
+			{
+				expectStartElement(new QName(n.getChildNames()[i]));
+				
+				T child = readNodeListOrTextOrNode();
+				
+				n.set(i, child);
+				
+				expectEndElement();
+			}
 		}
 	}
 	
@@ -502,6 +534,39 @@ public class XmlReader
 		return clazz.getMethod(getterName).getReturnType();
 	}
 	
+	private T checkNodeType(Object o)
+	{
+		if (nodeClass.isInstance(o))
+		{
+			@SuppressWarnings("unchecked")
+			T node = (T) o;
+			return node;
+		}
+		else
+		{
+			throw new ClassCastException("Cannot cast " + o.getClass().getName() + " to " + nodeClass.getName());
+		}
+	}
+	
+	private T instantiateNode(XMLEvent event, Class<?> clazz) throws DeserializationException
+	{
+		Exception e = null;
+		try
+		{
+			return checkNodeType(clazz.newInstance());
+		}
+		catch (InstantiationException e_)
+		{
+			e = e_;
+		}
+		catch (IllegalAccessException e_)
+		{
+			e = e_;
+		}
+		
+		throw new DeserializationException(event, "Cannot create AST node `" + clazz.getName() + "'", e);
+	}
+	
 	// =========================================================================
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -527,10 +592,10 @@ public class XmlReader
 				
 				return Enum.valueOf((Class) clazz, chars);
 			}
-			else if (AstNodeInterface.class.isAssignableFrom(clazz))
+			else if (nodeClass.isAssignableFrom(clazz))
 			{
 				expectStartElement(null);
-				AstNodeInterface node = readNodeListOrTextOrNode();
+				T node = readNodeListOrTextOrNode();
 				expectEndElement();
 				return node;
 			}

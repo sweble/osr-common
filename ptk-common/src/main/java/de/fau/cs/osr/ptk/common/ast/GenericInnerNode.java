@@ -21,18 +21,18 @@ import java.io.IOException;
 
 import xtc.tree.Location;
 
-public abstract class InnerNode
+public abstract class GenericInnerNode<T extends AstNodeInterface<T>>
 		extends
-			AstNode
+			GenericAstNode<T>
 {
 	private static final long serialVersionUID = 3931233748530723300L;
 	
-	public InnerNode()
+	public GenericInnerNode()
 	{
 		super();
 	}
 	
-	public InnerNode(Location arg0)
+	public GenericInnerNode(Location arg0)
 	{
 		super(arg0);
 	}
@@ -56,7 +56,7 @@ public abstract class InnerNode
 			out.append('[');
 			out.append(String.valueOf(i));
 			out.append("] = ");
-			AstNodeInterface child = get(i);
+			T child = get(i);
 			if (child == null)
 				out.append("null");
 			else
@@ -67,31 +67,31 @@ public abstract class InnerNode
 	
 	// =========================================================================
 	
-	public static abstract class InnerNode1
+	public static abstract class GenericInnerNode1<T extends AstNodeInterface<T>>
 			extends
-				InnerNode
+				GenericInnerNode<T>
 	{
 		private static final long serialVersionUID = -8841086798545623538L;
 		
-		private AstNodeInterface n0;
+		private T n0;
 		
-		public InnerNode1()
+		public GenericInnerNode1()
 		{
 			super();
 		}
 		
-		public InnerNode1(Location arg0)
+		public GenericInnerNode1(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public InnerNode1(AstNodeInterface n0)
+		public GenericInnerNode1(T n0)
 		{
 			super();
 			set(0, n0);
 		}
 		
-		public InnerNode1(Location arg0, AstNodeInterface n0)
+		public GenericInnerNode1(Location arg0, T n0)
 		{
 			super(arg0);
 			set(0, n0);
@@ -104,7 +104,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface get(int index)
+		public T get(int index)
 		{
 			switch (index)
 			{
@@ -117,12 +117,12 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface set(int index, AstNodeInterface n)
+		public T set(int index, T n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNodeInterface o;
+			T o;
 			switch (index)
 			{
 				case 0:
@@ -138,7 +138,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface remove(int index)
+		public T remove(int index)
 		{
 			return set(index, null);
 		}
@@ -146,37 +146,37 @@ public abstract class InnerNode
 	
 	// =========================================================================
 	
-	public static abstract class InnerNode2
+	public static abstract class GenericInnerNode2<T extends AstNodeInterface<T>>
 			extends
-				InnerNode
+				GenericInnerNode<T>
 	{
 		private static final long serialVersionUID = 6501151075140985136L;
 		
-		private AstNodeInterface n0;
+		private T n0;
 		
-		private AstNodeInterface n1;
+		private T n1;
 		
-		public InnerNode2()
+		public GenericInnerNode2()
 		{
 			super();
 		}
 		
-		public InnerNode2(Location arg0)
+		public GenericInnerNode2(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public InnerNode2(AstNodeInterface n0, AstNodeInterface n1)
+		public GenericInnerNode2(T n0, T n1)
 		{
 			super();
 			set(0, n0);
 			set(1, n1);
 		}
 		
-		public InnerNode2(
+		public GenericInnerNode2(
 				Location arg0,
-				AstNodeInterface n0,
-				AstNodeInterface n1)
+				T n0,
+				T n1)
 		{
 			super(arg0);
 			set(0, n0);
@@ -190,7 +190,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface get(int index)
+		public T get(int index)
 		{
 			switch (index)
 			{
@@ -205,12 +205,12 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface set(int index, AstNodeInterface n)
+		public T set(int index, T n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNodeInterface o;
+			T o;
 			switch (index)
 			{
 				case 0:
@@ -230,7 +230,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface remove(int index)
+		public T remove(int index)
 		{
 			return set(index, null);
 		}
@@ -238,32 +238,32 @@ public abstract class InnerNode
 	
 	// =========================================================================
 	
-	public static abstract class InnerNode3
+	public static abstract class GenericInnerNode3<T extends AstNodeInterface<T>>
 			extends
-				InnerNode
+				GenericInnerNode<T>
 	{
 		private static final long serialVersionUID = 7450920544821225168L;
 		
-		private AstNodeInterface n0;
+		private T n0;
 		
-		private AstNodeInterface n1;
+		private T n1;
 		
-		private AstNodeInterface n2;
+		private T n2;
 		
-		public InnerNode3()
+		public GenericInnerNode3()
 		{
 			super();
 		}
 		
-		public InnerNode3(Location arg0)
+		public GenericInnerNode3(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public InnerNode3(
-				AstNodeInterface n0,
-				AstNodeInterface n1,
-				AstNodeInterface n2)
+		public GenericInnerNode3(
+				T n0,
+				T n1,
+				T n2)
 		{
 			super();
 			set(0, n0);
@@ -271,11 +271,11 @@ public abstract class InnerNode
 			set(2, n2);
 		}
 		
-		public InnerNode3(
+		public GenericInnerNode3(
 				Location arg0,
-				AstNodeInterface n0,
-				AstNodeInterface n1,
-				AstNodeInterface n2)
+				T n0,
+				T n1,
+				T n2)
 		{
 			super(arg0);
 			set(0, n0);
@@ -290,7 +290,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface get(int index)
+		public T get(int index)
 		{
 			switch (index)
 			{
@@ -307,12 +307,12 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface set(int index, AstNodeInterface n)
+		public T set(int index, T n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNodeInterface o;
+			T o;
 			switch (index)
 			{
 				case 0:
@@ -336,7 +336,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface remove(int index)
+		public T remove(int index)
 		{
 			return set(index, null);
 		}
@@ -344,35 +344,35 @@ public abstract class InnerNode
 	
 	// =========================================================================
 	
-	public static abstract class InnerNode4
+	public static abstract class GenericInnerNode4<T extends AstNodeInterface<T>>
 			extends
-				InnerNode
+				GenericInnerNode<T>
 	{
 		private static final long serialVersionUID = -6518009272746861741L;
 		
-		private AstNodeInterface n0;
+		private T n0;
 		
-		private AstNodeInterface n1;
+		private T n1;
 		
-		private AstNodeInterface n2;
+		private T n2;
 		
-		private AstNodeInterface n3;
+		private T n3;
 		
-		public InnerNode4()
+		public GenericInnerNode4()
 		{
 			super();
 		}
 		
-		public InnerNode4(Location arg0)
+		public GenericInnerNode4(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public InnerNode4(
-				AstNodeInterface n0,
-				AstNodeInterface n1,
-				AstNodeInterface n2,
-				AstNodeInterface n3)
+		public GenericInnerNode4(
+				T n0,
+				T n1,
+				T n2,
+				T n3)
 		{
 			super();
 			set(0, n0);
@@ -381,12 +381,12 @@ public abstract class InnerNode
 			set(3, n3);
 		}
 		
-		public InnerNode4(
+		public GenericInnerNode4(
 				Location arg0,
-				AstNodeInterface n0,
-				AstNodeInterface n1,
-				AstNodeInterface n2,
-				AstNodeInterface n3)
+				T n0,
+				T n1,
+				T n2,
+				T n3)
 		{
 			super(arg0);
 			set(0, n0);
@@ -402,7 +402,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface get(int index)
+		public T get(int index)
 		{
 			switch (index)
 			{
@@ -421,12 +421,12 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface set(int index, AstNodeInterface n)
+		public T set(int index, T n)
 		{
 			if (n == null)
 				; //throw new NullPointerException("node may not be null");
 				
-			AstNodeInterface o;
+			T o;
 			switch (index)
 			{
 				case 0:
@@ -454,7 +454,7 @@ public abstract class InnerNode
 		}
 		
 		@Override
-		public AstNodeInterface remove(int index)
+		public T remove(int index)
 		{
 			return set(index, null);
 		}

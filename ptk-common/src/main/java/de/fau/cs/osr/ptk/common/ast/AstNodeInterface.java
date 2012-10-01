@@ -24,14 +24,14 @@ import java.util.List;
 import xtc.tree.Locatable;
 import xtc.util.Pair;
 
-public interface AstNodeInterface
+public interface AstNodeInterface<T extends AstNodeInterface<T>>
 		extends
 			AstNodeAttributeInterface,
 			AstNodePropertyInterface,
 			Locatable,
 			Cloneable,
 			Serializable,
-			List<AstNodeInterface>
+			List<T>
 {
 	
 	public static final int NT_CUSTOM_BIT = 0x10000;
@@ -93,7 +93,7 @@ public interface AstNodeInterface
 	 * 
 	 * @return Returns <code>true</code> if the list of children has changed.
 	 */
-	public boolean addAll(Pair<? extends AstNodeInterface> p);
+	public boolean addAll(Pair<? extends T> p);
 	
 	/**
 	 * Determine whether this node can have a variable number of children and
@@ -118,14 +118,14 @@ public interface AstNodeInterface
 	
 	public Object clone() throws CloneNotSupportedException;
 	
-	public AstNodeInterface cloneWrapException();
+	public AstNodeInterface<T> cloneWrapException();
 	
 	/**
 	 * Only children and children's children are cloned by this method. Property
 	 * and attribute values are just copied.
 	 */
-	public Object deepClone() throws CloneNotSupportedException;
+	public AstNodeInterface<T> deepClone() throws CloneNotSupportedException;
 	
-	public AstNodeInterface deepCloneWrapException();
+	public AstNodeInterface<T> deepCloneWrapException();
 	
 }

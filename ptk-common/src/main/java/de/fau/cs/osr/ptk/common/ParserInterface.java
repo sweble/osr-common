@@ -23,6 +23,9 @@ import java.util.List;
 
 import xtc.parser.ParseException;
 
+/**
+ * @deprecated
+ */
 public interface ParserInterface
 {
 	public Object parseArticle(String src, String title) throws IOException, ParseException;

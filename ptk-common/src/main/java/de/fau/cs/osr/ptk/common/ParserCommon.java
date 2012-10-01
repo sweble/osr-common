@@ -23,9 +23,12 @@ import java.util.List;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
+/**
+ * @deprecated
+ */
 public abstract class ParserCommon
-        implements
-            ParserInterface
+		implements
+			ParserInterface
 {
 	private final List<AstVisitor> visitors = new LinkedList<AstVisitor>();
 	
@@ -51,14 +54,16 @@ public abstract class ParserCommon
 		return this;
 	}
 	
-	protected AstNodeInterface process(AstNodeInterface n)
+	@SuppressWarnings("unchecked")
+	protected <T extends AstNodeInterface<T>> AstNodeInterface<T> process(
+			AstNodeInterface<T> n)
 	{
-		AstNodeInterface result = n;
+		AstNodeInterface<T> result = n;
 		for (AstVisitor v : getVisitors())
 		{
 			Object o = v.go(result);
 			if (o instanceof AstNodeInterface)
-				result = (AstNodeInterface) o;
+				result = (AstNodeInterface<T>) o;
 		}
 		return result;
 	}

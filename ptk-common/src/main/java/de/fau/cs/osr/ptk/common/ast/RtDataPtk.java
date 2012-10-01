@@ -42,12 +42,12 @@ public class RtDataPtk
 	
 	/**
 	 * Instantiates an RtData object and initializes its size to match that of
-	 * the given AstNodeInterface.
+	 * the given AstNodeInterface<?>.
 	 * 
-	 * An AstNodeInterface with two children will need an RtData object with
+	 * An AstNodeInterface<?> with two children will need an RtData object with
 	 * size three.
 	 */
-	public RtDataPtk(AstNodeInterface node)
+	public RtDataPtk(AstNodeInterface<?> node)
 	{
 		this(node.size() + 1);
 	}
@@ -66,11 +66,11 @@ public class RtDataPtk
 	
 	/**
 	 * Instantiates an RtData object, initializes its size to match that of the
-	 * given AstNodeInterface and immediately fills it with glue information.
+	 * given AstNodeInterface<?> and immediately fills it with glue information.
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(AstNodeInterface node, Object... glue)
+	public RtDataPtk(AstNodeInterface<?> node, Object... glue)
 	{
 		this(node);
 		set(glue);
@@ -90,11 +90,11 @@ public class RtDataPtk
 	
 	/**
 	 * Instantiates an RtData object, initializes its size to match that of the
-	 * given AstNodeInterface and immediately fills it with glue information.
+	 * given AstNodeInterface<?> and immediately fills it with glue information.
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(AstNodeInterface node, String... glue)
+	public RtDataPtk(AstNodeInterface<?> node, String... glue)
 	{
 		this(node);
 		set(glue);
@@ -226,51 +226,24 @@ public class RtDataPtk
 		for (int i = from; i < to; ++i)
 		{
 			Object o = glue[i];
-			if (o instanceof AstNodeInterface)
+			if (o == null)
 			{
-				AstNodeInterface n = (AstNodeInterface) o;
-				switch (n.getNodeType())
-				{
-					case AstNodeInterface.NT_NODE_LIST:
-						for (AstNodeInterface c : (NodeList) n)
-						{
-							if (c.getNodeType() == AstNodeInterface.NT_TEXT)
-							{
-								rtAddString(result, ((Text) c).getContent());
-							}
-							else
-							{
-								result.add(c);
-							}
-						}
-						break;
-					
-					case AstNodeInterface.NT_TEXT:
-						rtAddString(result, ((Text) n).getContent());
-						break;
-					
-					default:
-						result.add(n);
-						break;
-				}
+			}
+			else if (o instanceof GenericText)
+			{
+				rtAddString(result, ((GenericText<?>) o).getContent());
+			}
+			else if (o instanceof Character)
+			{
+				rtAddString(result, String.valueOf((Character) o));
+			}
+			else if (o instanceof String)
+			{
+				rtAddString(result, o.toString());
 			}
 			else
 			{
-				if (o == null)
-				{
-				}
-				else if (o instanceof Character)
-				{
-					rtAddString(result, String.valueOf((Character) o));
-				}
-				else if (o instanceof String)
-				{
-					rtAddString(result, o.toString());
-				}
-				else
-				{
-					result.add(o);
-				}
+				result.add(o);
 			}
 		}
 		
@@ -374,19 +347,7 @@ public class RtDataPtk
 	
 	protected void stringRep(StringBuilder sb, Object o)
 	{
-		if (o instanceof StringContentNode)
-		{
-			sb.append(StringUtils.escJava(((StringContentNode) o).getContent()));
-		}
-		else if (o instanceof AstNodeInterface)
-		{
-			for (AstNodeInterface n : (AstNodeInterface) o)
-				stringRep(sb, n);
-		}
-		else
-		{
-			sb.append(StringUtils.escJava(o.toString()));
-		}
+		sb.append(StringUtils.escJava(o.toString()));
 	}
 	
 	@Override

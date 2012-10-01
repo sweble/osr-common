@@ -17,6 +17,8 @@
 
 package de.fau.cs.osr.ptk.common.jxpath;
 
+import static de.fau.cs.osr.ptk.common.test.TestAstBuilder.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,72 +31,62 @@ import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.ptk.common.jxpath.AstPropertyIterator.Property;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Section;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
 
 public class XPathTest
 {
 	private static final boolean QUIET = true;
 	
-	private static final AstNodeInterface AST1 =
-	        new Section(
-	                0,
-	                new NodeList(
-	                        new Text("1st")),
-	                new NodeList(
-	                        new Text("2nd"),
-	                        new Text("3rd"),
-	                        new Section(
-	                                1,
-	                                new NodeList(), // title
-	                                new NodeList(), // body
-	                                "EOL2")),
-	                "EOL1");
+	// =========================================================================
 	
-	private static final AstNodeInterface AST2 =
-	        new Document(
-	                new NodeList(
-	                        new Section(
-	                                1,
-	                                new NodeList(), // title
-	                                new NodeList(), // body
-	                                "EOL1"),
-	                        new Section(
-	                                2,
-	                                new NodeList(), // title
-	                                new NodeList(), // body
-	                                "EOL2")));
+	private static final Section AST1 =
+			astSection()
+					.withLevel(0)
+					.withTitle(astText("1st"))
+					.withBody(
+							new Text("2nd"),
+							new Text("3rd"),
+							astSection()
+									.withLevel(1)
+									.withTitle()
+									.withBody()
+									.build())
+					.build();
 	
-	@SuppressWarnings("unused")
-	private static final AstNodeInterface AST3 =
-	        new Document(
-	                new NodeList(
-	                        new Section(
-	                                1,
-	                                null, // title
-	                                null, // body
-	                                "EOL1"),
-	                        new Section(
-	                                2,
-	                                null, // title
-	                                null, // body
-	                                "EOL2")));
+	private static final TestAstNode AST2 =
+			astDoc(
+					astSection()
+							.withLevel(1)
+							.withTitle()
+							.withBody()
+							.build(),
+					astSection()
+							.withLevel(2)
+							.withTitle()
+							.withBody()
+							.build());
 	
-	private static final AstNodeInterface AST4 =
-	        new Document(
-	                new NodeList(
-	                        new Text("1"),
-	                        new Text("2")));
+	private static final TestAstNode AST4 =
+			astDoc(
+					astText("1"),
+					astText("2"));
+	
+	// =========================================================================
 	
 	private JXPathContext context;
+	
+	// =========================================================================
 	
 	public XPathTest()
 	{
 		JXPathContextReferenceImpl.addNodePointerFactory(
-		        new AstNodePointerFactory());
+				new AstNodePointerFactory());
 	}
+	
+	// =========================================================================
 	
 	@Test
 	public void XPathStandardTest()
@@ -114,81 +106,85 @@ public class XPathTest
 				System.out.format("  - %s\n", childName);
 		}
 		*/
-
+		
 		// ======== Working ========
 		
 		runTest("/body/*[2]",
-		        AST1.get(1).get(1));
+				AST1.getBody().get(1));
 		
 		runTest("/@*",
-		        AST1.getProperty("level"),
-		        AST1.getProperty("wsAtEol"));
+				AST1.getProperty("level"));
 		
 		runTest("/*/*[2]",
-		        AST1.get(1).get(1));
+				AST1.getBody().get(1));
 		
 		runTest("/body[last()]",
-		        AST1.get(1));
+				AST1.getBody());
 		
 		runTest("/body[last()-1]");
 		
 		runTest("/body/*[last()]",
-		        AST1.get(1).get(2));
+				AST1.getBody().get(2));
 		
 		runTest("/body/Text/@content",
-		        AST1.get(1).get(0).getProperty("content"),
-		        AST1.get(1).get(1).getProperty("content"));
+				AST1.getBody().get(0).getProperty("content"),
+				AST1.getBody().get(1).getProperty("content"));
 		
 		runTest("/body/body[last()-1]");
 		
 		runTest("//@level",
-		        AST1.getProperty("level"),
-		        AST1.get(1).get(2).getProperty("level"));
+				AST1.getProperty("level"),
+				AST1.getBody().get(2).getProperty("level"));
 		
 		runTest("/descendant-or-self::node()",
-		        AST1,
-		        AST1.get(0),
-		        AST1.get(0).get(0),
-		        AST1.get(1),
-		        AST1.get(1).get(0),
-		        AST1.get(1).get(1),
-		        AST1.get(1).get(2),
-		        AST1.get(1).get(2).get(0),
-		        AST1.get(1).get(2).get(1));
+				AST1,
+				AST1.getTitle(),
+				AST1.getTitle().get(0),
+				AST1.getBody(),
+				AST1.getBody().get(0),
+				AST1.getBody().get(1),
+				AST1.getBody().get(2),
+				AST1.getBody().get(2).get(0),
+				AST1.getBody().get(2).get(1));
 		
 		runTest("/descendant-or-self::node()[@level]",
-		        AST1,
-		        AST1.get(1).get(2));
+				AST1,
+				AST1.getBody().get(2));
 		
 		runTest("/descendant-or-self::node()/*",
-		        AST1.get(0),
-		        AST1.get(0).get(0),
-		        AST1.get(1),
-		        AST1.get(1).get(0),
-		        AST1.get(1).get(1),
-		        AST1.get(1).get(2),
-		        AST1.get(1).get(2).get(0),
-		        AST1.get(1).get(2).get(1));
+				AST1.getTitle(),
+				AST1.getTitle().get(0),
+				AST1.getBody(),
+				AST1.getBody().get(0),
+				AST1.getBody().get(1),
+				AST1.getBody().get(2),
+				AST1.getBody().get(2).get(0),
+				AST1.getBody().get(2).get(1));
 		
 		runTest("/descendant-or-self::node()/*[@level]",
-		        AST1.get(1).get(2));
+				AST1.getBody().get(2));
 		
 		runTest("//*[@level]",
-		        AST1.get(1).get(2));
+				AST1.getBody().get(2));
 	}
 	
 	@Test
 	public void XPathPredicateTest()
 	{
 		context = JXPathContext.newContext(AST2);
-		runTest("/*//*[@level]",
-		        AST2.get(0).get(0),
-		        AST2.get(0).get(1));
+		runTest("/*[@level]",
+				AST2.get(0),
+				AST2.get(1));
+		
+		context = JXPathContext.newContext(AST2);
+		runTest("/*/@level",
+				AST2.get(0).getProperty("level"),
+				AST2.get(1).getProperty("level"));
 		
 		context = JXPathContext.newContext(AST4);
-		runTest("/*//*[@content]",
-		        AST4.get(0).get(0),
-		        AST4.get(0).get(1));
+		runTest("//*[@content]",
+				AST4.get(0),
+				AST4.get(1));
 	}
 	
 	// =========================================================================
@@ -236,7 +232,9 @@ public class XPathTest
 		contains(a, e);
 	}
 	
-	private void contains(Map<Object, List<Object>> e, Map<Object, List<Object>> a)
+	private void contains(
+			Map<Object, List<Object>> e,
+			Map<Object, List<Object>> a)
 	{
 		for (Entry<Object, List<Object>> x : e.entrySet())
 		{

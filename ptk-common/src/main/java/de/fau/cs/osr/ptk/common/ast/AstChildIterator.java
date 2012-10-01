@@ -19,16 +19,16 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.util.ListIterator;
 
-interface AstChildIterator
-        extends
-            ListIterator<AstNodeInterface>
+interface AstChildIterator<T extends AstNodeInterface<T>>
+		extends
+			ListIterator<T>
 {
 	/**
 	 * Returns the child last returned by a call to previous() or next(). This
 	 * method can only be called after previous() or next() have been called and
 	 * must not be called after a call to remove() or add().
 	 */
-	public AstNodeInterface get();
+	public T get();
 	
 	/**
 	 * Resets the iterator.

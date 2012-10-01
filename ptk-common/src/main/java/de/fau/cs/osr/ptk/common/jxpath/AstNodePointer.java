@@ -35,19 +35,19 @@ public class AstNodePointer
 	private static final long serialVersionUID = 1L;
 	
 	/** The node this pointer points to. */
-	private AstNodeInterface node;
+	private AstNodeInterface<?> node;
 	
 	// =========================================================================
 	
-	public AstNodePointer(AstNodeInterface node)
+	public AstNodePointer(AstNodeInterface<?> node)
 	{
 		super(null);
 		this.node = node;
-		//debug("AstNodePointer(AstNodeInterface node)");
+		//debug("AstNodePointer(AstNodeInterface<?> node)");
 		
 	}
 	
-	public AstNodePointer(NodePointer parent, AstNodeInterface node)
+	public AstNodePointer(NodePointer parent, AstNodeInterface<?> node)
 	{
 		// Usually called by an AstNodeIterator. In this case, `parent' would
 		// point to the node that we iterated over and `node' would be the 
@@ -55,7 +55,7 @@ public class AstNodePointer
 		
 		super(parent);
 		this.node = node;
-		//debug("AstNodePointer(NodePointer parent, AstNodeInterface node)");
+		//debug("AstNodePointer(NodePointer parent, AstNodeInterface<?> node)");
 	}
 	
 	// =========================================================================
@@ -94,7 +94,7 @@ public class AstNodePointer
 		if (!isEmpty)
 		{
 			isEmpty = true;
-			for (AstNodeInterface child : node)
+			for (AstNodeInterface<?> child : node)
 				if (child != null)
 				{
 					isEmpty = false;
@@ -143,9 +143,9 @@ public class AstNodePointer
 	{
 		// Since we don't handle namespaces, we probably should return 
 		// `null' as namespace prefix in names.
-		return new QName(null, getName2());
+		return new QName(null, getSimpleName());
 		
-		//Class<? extends AstNodeInterface> clazz = node.getClass();
+		//Class<? extends AstNodeInterface<?>> clazz = node.getClass();
 		//return new QName(
 		//        clazz.getPackage().getName(),
 		//        clazz.getSimpleName());
@@ -200,10 +200,10 @@ public class AstNodePointer
 		}
 		else
 		{
-			AstNodeInterface node1 = (AstNodeInterface) pointer1.getBaseValue();
-			AstNodeInterface node2 = (AstNodeInterface) pointer2.getBaseValue();
+			AstNodeInterface<?> node1 = (AstNodeInterface<?>) pointer1.getBaseValue();
+			AstNodeInterface<?> node2 = (AstNodeInterface<?>) pointer2.getBaseValue();
 			
-			for (AstNodeInterface child : node)
+			for (AstNodeInterface<?> child : node)
 			{
 				if (child == node1)
 				{
@@ -236,7 +236,7 @@ public class AstNodePointer
 				if (buffer.length() == 0 || buffer.charAt(buffer.length() - 1) != '/')
 					buffer.append('/');
 				
-				buffer.append(getName2());
+				buffer.append(getSimpleName());
 				if (parent != null)
 				{
 					buffer.append('[');
@@ -261,10 +261,10 @@ public class AstNodePointer
 			{
 				NodePointer p = (NodePointer) parent;
 				
-				AstNodeInterface thisNode = (AstNodeInterface) getImmediateNode();
+				AstNodeInterface<?> thisNode = (AstNodeInterface<?>) getImmediateNode();
 				
 				int i = 1;
-				for (AstNodeInterface n : (AstNodeInterface) p.getImmediateNode())
+				for (AstNodeInterface<?> n : (AstNodeInterface<?>) p.getImmediateNode())
 				{
 					if (n == thisNode)
 						return i;
@@ -279,7 +279,7 @@ public class AstNodePointer
 				AstNodeFieldPointer p = (AstNodeFieldPointer) parent;
 				
 				int i = 1;
-				for (AstNodeInterface n : (AstNodeInterface) p.getImmediateNode())
+				for (AstNodeInterface<?> n : (AstNodeInterface<?>) p.getImmediateNode())
 				{
 					if (n == node)
 						return i;
@@ -346,7 +346,7 @@ public class AstNodePointer
 				return true;
 			
 			// Perform actual name check
-			String s1 = getName2();
+			String s1 = getSimpleName();
 			String s2 = testName.getName();
 			
 			// s1 cannot be `null'
@@ -370,7 +370,7 @@ public class AstNodePointer
 		else
 		{
 			// Unhandled: ProcessingInstructionTest
-			//   An AstNodeInterface can never be a PI.
+			//   An AstNodeInterface<?> can never be a PI.
 			
 			return false;
 		}
@@ -378,7 +378,7 @@ public class AstNodePointer
 	
 	// =========================================================================
 	
-	private String getName2()
+	private String getSimpleName()
 	{
 		return node.getClass().getSimpleName();
 	}

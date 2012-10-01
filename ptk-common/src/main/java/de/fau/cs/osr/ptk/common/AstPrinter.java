@@ -28,22 +28,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.NodeList;
+
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.ContentNode;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.StringContentNode;
+import de.fau.cs.osr.ptk.common.ast.RtDataPtk;
 import de.fau.cs.osr.utils.StringUtils;
 
 public class AstPrinter
 		extends
-			AstVisitor
+			AstVisitor<AstNodeInterface>
 {
+	private final HashMap<Memoize, Memoize> cache = new HashMap<Memoize, Memoize>();
+	
 	protected PrintWriter out;
 	
-	private String indentStr = new String();
+	protected String indentStr = new String();
 	
-	private boolean legacyIndentation;
+	protected boolean printNullProps;
+	
+	protected boolean legacyIndentation;
 	
 	// =========================================================================
 	
@@ -51,13 +55,18 @@ public class AstPrinter
 	{
 		this.out = new PrintWriter(writer);
 		this.legacyIndentation = false;
+		this.printNullProps = false;
 	}
 	
+	// =========================================================================
+	
 	@Override
-	protected Object after(AstNodeInterface node, Object result)
+	protected Object after(AstNodeInterface<?> node, Object result)
 	{
 		return super.after(node, result);
 	}
+	
+	// =========================================================================
 	
 	public void setLegacyIndentation(boolean legacyIndentation)
 	{
@@ -69,16 +78,26 @@ public class AstPrinter
 		return legacyIndentation;
 	}
 	
+	public void setPrintNullProps(boolean printNullProps)
+	{
+		this.printNullProps = printNullProps;
+	}
+	
+	public boolean isPrintNullProps()
+	{
+		return printNullProps;
+	}
+	
 	// =========================================================================
 	
-	public static String print(AstNodeInterface node)
+	public static String print(AstNodeInterface<?> node)
 	{
 		StringWriter writer = new StringWriter();
 		new AstPrinter(writer).go(node);
 		return writer.toString();
 	}
 	
-	public static Writer print(Writer writer, AstNodeInterface node)
+	public static Writer print(Writer writer, AstNodeInterface<?> node)
 	{
 		new AstPrinter(writer).go(node);
 		return writer;
@@ -86,13 +105,13 @@ public class AstPrinter
 	
 	// =========================================================================
 	
-	public void visit(AstNodeInterface n)
+	public void visit(AstNodeInterface<?> n)
 	{
 		if (!replay(n))
 		{
 			Memoize m = memoizeStart(n);
 			
-			if (n.isEmpty() && !n.hasAttributes() && !n.hasProperties())
+			if (n.isEmpty() && !hasVisibleProps(n))
 			{
 				indent();
 				out.println(n.getClass().getSimpleName() + "()");
@@ -114,15 +133,57 @@ public class AstPrinter
 		}
 	}
 	
+	private boolean hasVisibleProps(AstNodeInterface<?> n)
+	{
+		/*
+		if (!n.hasAttributes() && !n.hasProperties())
+		{
+			return false;
+		}
+		else if (printNullProps)
+		{
+			return true;
+		}
+		else
+		{
+			AstNodePropertyIterator i = n.propertyIterator();
+			while (i.next())
+			{
+				if (i.getValue() != null && i.getName().equals("rtd"))
+					return true;
+			}
+			
+			for (Object value : n.getAttributes().values())
+			{
+				if (value != null)
+					return true;
+			}
+			
+			return false;
+		}
+		*/
+		
+		if (!n.hasAttributes() && !n.hasProperties())
+		{
+			return false;
+		}
+		else
+		{
+			return n.hasAttributes()
+					|| n.getPropertyCount() != 1
+					|| n.getProperty("rtd", null) != null;
+		}
+	}
+	
 	public void visit(NodeList n)
 	{
 		if (!replay(n))
 		{
 			Memoize m = memoizeStart(n);
 			
-			if (n.hasAttributes() || n.hasProperties())
+			if (hasVisibleProps(n))
 			{
-				visit((AstNodeInterface) n);
+				visit((AstNodeInterface<?>) n);
 			}
 			else if (n.isEmpty())
 			{
@@ -164,9 +225,9 @@ public class AstPrinter
 		{
 			Memoize m = memoizeStart(n);
 			
-			if (n.hasAttributes() || n.hasProperties())
+			if (hasVisibleProps(n))
 			{
-				visit((AstNodeInterface) n);
+				visit((AstNodeInterface<?>) n);
 			}
 			else if (n.getContent() == null)
 			{
@@ -213,9 +274,29 @@ public class AstPrinter
 		{
 			Memoize m = memoizeStart(n);
 			
-			if (n.hasAttributes()/* || n.hasProperties()*/)
+			if (n.hasAttributes())
 			{
-				visit((AstNodeInterface) n);
+				visit((AstNodeInterface<?>) n);
+			}
+			else if (n.getPropertyCount() != 1)
+			{
+				if (n.getPropertyCount() == 2)
+				{
+					RtDataPtk rtd = (RtDataPtk) n.getProperty("rtd", null);
+					if (rtd != null && !rtd.toString(0).equals(n.getContent()))
+					{
+						visit((AstNodeInterface<?>) n);
+					}
+					else
+					{
+						indent();
+						out.println(n.getClass().getSimpleName() + "(" + mkStr(n.getContent()) + ")");
+					}
+				}
+				else
+				{
+					visit((AstNodeInterface<?>) n);
+				}
 			}
 			else
 			{
@@ -231,7 +312,7 @@ public class AstPrinter
 	
 	protected static final class Memoize
 	{
-		private final AstNodeInterface node;
+		private final AstNodeInterface<?> node;
 		
 		private final int indent;
 		
@@ -239,7 +320,7 @@ public class AstPrinter
 		
 		private final StringWriter writer;
 		
-		public Memoize(int indent, AstNodeInterface node)
+		public Memoize(int indent, AstNodeInterface<?> node)
 		{
 			this.indent = indent;
 			this.node = node;
@@ -249,7 +330,7 @@ public class AstPrinter
 		
 		public Memoize(
 				int indent,
-				AstNodeInterface node,
+				AstNodeInterface<?> node,
 				PrintWriter oldOut,
 				StringWriter writer)
 		{
@@ -297,9 +378,7 @@ public class AstPrinter
 		}
 	}
 	
-	private final HashMap<Memoize, Memoize> cache = new HashMap<Memoize, Memoize>();
-	
-	protected boolean replay(AstNodeInterface n)
+	protected boolean replay(AstNodeInterface<?> n)
 	{
 		Memoize m = cache.get(new Memoize(indentStr.length(), n));
 		if (m == null)
@@ -309,7 +388,7 @@ public class AstPrinter
 		return true;
 	}
 	
-	protected Memoize memoizeStart(AstNodeInterface n)
+	protected Memoize memoizeStart(AstNodeInterface<?> n)
 	{
 		StringWriter w = new StringWriter();
 		Memoize m = new Memoize(indentStr.length(), n, out, w);
@@ -333,7 +412,7 @@ public class AstPrinter
 	
 	// =========================================================================
 	
-	protected void printNodeContent(AstNodeInterface n)
+	protected void printNodeContent(AstNodeInterface<?> n)
 	{
 		Map<String, Object> attrs = n.getAttributes();
 		
@@ -341,11 +420,23 @@ public class AstPrinter
 		props.putAll(attrs);
 		
 		if (n instanceof StringContentNode)
-			props.put("content", ((StringContentNode) n).getContent());
+		{
+			String content = ((StringContentNode) n).getContent();
+			if (content != null || printNullProps)
+				props.put("content", content);
+		}
 		
 		AstNodePropertyIterator i = n.propertyIterator();
 		while (i.next())
-			props.put(i.getName(), i.getValue());
+		{
+			Object value = i.getValue();
+			/*
+			if (value != null || printNullProps)
+				props.put(i.getName(), value);
+			*/
+			if (value != null || !i.getName().equals("rtd"))
+				props.put(i.getName(), value);
+		}
 		
 		if (!props.isEmpty())
 		{
@@ -378,11 +469,11 @@ public class AstPrinter
 			{
 				out.println(mkStr((String) value));
 			}
-			else if (value instanceof AstNodeInterface)
+			else if (value instanceof AstNodeInterface<?>)
 			{
 				out.println();
 				incIndent();
-				dispatch((AstNodeInterface) value);
+				dispatch((AstNodeInterface<?>) value);
 				decIndent();
 			}
 			else if (value instanceof Collection)
@@ -426,11 +517,11 @@ public class AstPrinter
 		if (!props.isEmpty() && !n.isEmpty())
 			out.println();
 		
-		for (AstNodeInterface c : n)
+		for (AstNodeInterface<?> c : n)
 			dispatch(c);
 	}
 	
-	protected String printNodeContentToString(AstNodeInterface n)
+	protected String printNodeContentToString(AstNodeInterface<?> n)
 	{
 		String singleLine = null;
 		

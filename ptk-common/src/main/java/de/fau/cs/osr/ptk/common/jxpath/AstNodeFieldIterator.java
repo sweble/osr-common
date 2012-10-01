@@ -35,13 +35,13 @@ public class AstNodeFieldIterator
 	private NodePointer parent;
 	
 	/** The actual node over whose children we are iterating. */
-	private AstNodeInterface node;
+	private AstNodeInterface<?> node;
 	
 	/** The node test to apply to children. */
 	private NodeTest test;
 	
 	/** The child we are currently pointing to. */
-	private AstNodeInterface child = null;
+	private AstNodeInterface<?> child = null;
 	
 	/** Iteration direction. */
 	private boolean reverse;
@@ -79,7 +79,7 @@ public class AstNodeFieldIterator
 	        NodePointer startWith)
 	{
 		this.parent = parent;
-		this.node = (AstNodeInterface) parent.getImmediateNode();
+		this.node = (AstNodeInterface<?>) parent.getImmediateNode();
 		this.test = nodeTest;
 		this.reverse = reverse;
 		this.size = node.size();
@@ -264,7 +264,7 @@ public class AstNodeFieldIterator
 			else
 			{
 				// Unhandled: ProcessingInstructionTest
-				//   An AstNodeInterface can never be a PI.
+				//   An AstNodeInterface<?> can never be a PI.
 				
 				return false;
 			}

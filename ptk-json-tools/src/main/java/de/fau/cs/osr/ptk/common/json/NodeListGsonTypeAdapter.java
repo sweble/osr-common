@@ -26,25 +26,25 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import de.fau.cs.osr.ptk.common.ast.NodeList;
+import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
-public final class NodeListGsonTypeAdapter
+public final class NodeListGsonTypeAdapter<T extends AstNodeInterface<T>>
 		implements
-			JsonSerializer<NodeList>,
-			JsonDeserializer<NodeList>
+			JsonSerializer<T>,
+			JsonDeserializer<T>
 {
-	private final JsonConverterImpl config;
+	private final JsonConverterImpl<T> config;
 	
 	// =========================================================================
 	
-	public NodeListGsonTypeAdapter(JsonConverterImpl config)
+	public NodeListGsonTypeAdapter(JsonConverterImpl<T> config)
 	{
 		this.config = config;
 	}
 	
 	@Override
 	public JsonElement serialize(
-			NodeList src,
+			T src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
@@ -52,7 +52,7 @@ public final class NodeListGsonTypeAdapter
 	}
 	
 	@Override
-	public NodeList deserialize(
+	public T deserialize(
 			JsonElement json,
 			Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException

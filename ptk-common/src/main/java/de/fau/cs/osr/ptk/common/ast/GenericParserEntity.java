@@ -15,65 +15,49 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.ptk.common.test;
+package de.fau.cs.osr.ptk.common.ast;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.InnerNode;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
+import java.io.IOException;
 
-public class TestNodeSection
+public class GenericParserEntity<T extends AstNodeInterface<T>>
 		extends
-			InnerNode.InnerNode2
-
+			GenericLeafNode<T>
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3182955812498375838L;
 	
-	// =========================================================================
-	
-	public TestNodeSection()
+	public GenericParserEntity()
 	{
-		super(new NodeList(), new NodeList());
-		
 	}
 	
-	public TestNodeSection(int level, NodeList title, NodeList body)
+	public GenericParserEntity(int id)
 	{
-		super(title, body);
-		setLevel(level);
-		
-	}
-	
-	@Override
-	public int getNodeType()
-	{
-		return TestNodes.NT_SECTION;
+		setId(id);
 	}
 	
 	// =========================================================================
-	// Properties
 	
-	private int level;
+	private int id;
 	
-	public final int getLevel()
+	public int getId()
 	{
-		return this.level;
+		return id;
 	}
 	
-	public final int setLevel(int level)
+	public int setId(int id)
 	{
-		int old = this.level;
-		this.level = level;
+		int old = this.id;
+		this.id = id;
 		return old;
 	}
 	
 	@Override
-	public final int getPropertyCount()
+	public int getPropertyCount()
 	{
 		return 1;
 	}
 	
 	@Override
-	public final AstNodePropertyIterator propertyIterator()
+	public AstNodePropertyIterator propertyIterator()
 	{
 		return new AstNodePropertyIterator()
 		{
@@ -89,7 +73,7 @@ public class TestNodeSection
 				switch (index)
 				{
 					case 0:
-						return "level";
+						return "id";
 						
 					default:
 						throw new IndexOutOfBoundsException();
@@ -102,7 +86,7 @@ public class TestNodeSection
 				switch (index)
 				{
 					case 0:
-						return TestNodeSection.this.getLevel();
+						return GenericParserEntity.this.getId();
 						
 					default:
 						throw new IndexOutOfBoundsException();
@@ -115,7 +99,7 @@ public class TestNodeSection
 				switch (index)
 				{
 					case 0:
-						return TestNodeSection.this.setLevel((Integer) value);
+						return GenericParserEntity.this.setId((Integer) value);
 						
 					default:
 						throw new IndexOutOfBoundsException();
@@ -125,32 +109,20 @@ public class TestNodeSection
 	}
 	
 	// =========================================================================
-	// Children
 	
-	public final void setTitle(NodeList title)
+	@Override
+	public int getNodeType()
 	{
-		set(0, title);
+		return NT_PARSER_ENTITY;
 	}
 	
-	public final NodeList getTitle()
-	{
-		return (NodeList) get(0);
-	}
+	// =========================================================================
 	
-	public final void setBody(NodeList body)
+	@Override
+	public void toString(Appendable out) throws IOException
 	{
-		set(1, body);
-	}
-	
-	public final NodeList getBody()
-	{
-		return (NodeList) get(1);
-	}
-	
-	private static final String[] CHILD_NAMES = new String[] { "title", "body" };
-	
-	public final String[] getChildNames()
-	{
-		return CHILD_NAMES;
+		out.append("GenericParserEntity(");
+		out.append(String.valueOf(getId()));
+		out.append(')');
 	}
 }

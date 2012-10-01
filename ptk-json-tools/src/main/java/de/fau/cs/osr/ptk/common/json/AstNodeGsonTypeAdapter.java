@@ -28,16 +28,16 @@ import com.google.gson.JsonSerializer;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
-public final class AstNodeGsonTypeAdapter
+public final class AstNodeGsonTypeAdapter<T extends AstNodeInterface<T>>
 		implements
-			JsonSerializer<AstNodeInterface>,
-			JsonDeserializer<AstNodeInterface>
+			JsonSerializer<T>,
+			JsonDeserializer<T>
 {
-	private final JsonConverterImpl impl;
+	private final JsonConverterImpl<T> impl;
 	
 	// =========================================================================
 	
-	public AstNodeGsonTypeAdapter(JsonConverterImpl impl)
+	public AstNodeGsonTypeAdapter(JsonConverterImpl<T> impl)
 	{
 		this.impl = impl;
 	}
@@ -46,7 +46,7 @@ public final class AstNodeGsonTypeAdapter
 	
 	@Override
 	public JsonElement serialize(
-			AstNodeInterface src,
+			T src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
@@ -54,7 +54,7 @@ public final class AstNodeGsonTypeAdapter
 	}
 	
 	@Override
-	public AstNodeInterface deserialize(
+	public T deserialize(
 			JsonElement json,
 			Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException

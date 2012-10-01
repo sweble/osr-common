@@ -33,12 +33,12 @@ import com.google.gson.JsonSerializationContext;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
+import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
+import de.fau.cs.osr.ptk.common.ast.GenericText;
 import de.fau.cs.osr.ptk.common.ast.Location;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.Text;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
-public class JsonConverterImpl
+public class JsonConverterImpl<T extends AstNodeInterface<T>>
 {
 	private static final int MAX_ENTRIES = 128;
 	
@@ -50,11 +50,35 @@ public class JsonConverterImpl
 	
 	private final boolean saveLocation;
 	
+	private final Class<? extends T> nodeClass;
+	
+	private final Class<? extends T> listClass;
+	
+	private final Class<? extends T> textClass;
+	
 	// =========================================================================
 	
-	JsonConverterImpl(NameAbbrevService abbrev, boolean saveLocation)
+	JsonConverterImpl(
+			NameAbbrevService abbrev,
+			boolean saveLocation,
+			Class<? extends T> nodeClass,
+			Class<? extends T> listClass,
+			Class<? extends T> textClass)
 	{
 		this.saveLocation = saveLocation;
+		this.nodeClass = nodeClass;
+		this.listClass = listClass;
+		this.textClass = textClass;
+		
+		if (!nodeClass.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to nodeClass");
+		if (!nodeClass.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to nodeClass");
+		
+		if (!GenericNodeList.class.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + GenericNodeList.class.getName());
+		if (!GenericText.class.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + GenericText.class.getName());
 		
 		if (abbrev == null)
 			abbrev = new NameAbbrevService(false);
@@ -75,7 +99,7 @@ public class JsonConverterImpl
 	// =========================================================================
 	
 	public JsonElement serializeAstNode(
-			AstNodeInterface src,
+			T src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
@@ -127,7 +151,7 @@ public class JsonConverterImpl
 				JsonArray list = new JsonArray();
 				node.add("!list", list);
 				
-				for (AstNodeInterface child : src)
+				for (Object child : src)
 					list.add(context.serialize(child));
 			}
 			else
@@ -141,7 +165,7 @@ public class JsonConverterImpl
 		return node;
 	}
 	
-	public AstNodeInterface deserializeAstNode(
+	public T deserializeAstNode(
 			JsonElement json,
 			Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException
@@ -158,7 +182,7 @@ public class JsonConverterImpl
 		{
 			JsonObject jo = json.getAsJsonObject();
 			
-			AstNodeInterface n = instantiateNode(jo);
+			T n = instantiateNode(jo);
 			
 			JsonElement location = jo.get("!location");
 			if (location != null)
@@ -170,7 +194,7 @@ public class JsonConverterImpl
 				if (list != null)
 				{
 					for (JsonElement i : list.getAsJsonArray())
-						n.add((AstNodeInterface) context.deserialize(i, AstNodeInterface.class));
+						n.add(checkNodeType(context.<Object> deserialize(i, nodeClass)));
 				}
 			}
 			
@@ -210,7 +234,7 @@ public class JsonConverterImpl
 		}
 	}
 	
-	private String locationToStr(AstNodeInterface src)
+	private String locationToStr(T src)
 	{
 		return src.getNativeLocation().toString();
 	}
@@ -223,7 +247,7 @@ public class JsonConverterImpl
 		return Location.valueOf(s);
 	}
 	
-	private AstNodeInterface instantiateNode(JsonObject jo)
+	private T instantiateNode(JsonObject jo)
 	{
 		JsonElement typeElem = jo.get("!type");
 		if (typeElem == null)
@@ -231,14 +255,25 @@ public class JsonConverterImpl
 		
 		String typeSuffix = typeElem.getAsString();
 		
-		Exception e;
+		Class<?> clazz;
 		try
 		{
-			return (AstNodeInterface) resolve(typeSuffix).newInstance();
+			clazz = resolve(typeSuffix);
 		}
-		catch (ClassNotFoundException e_)
+		catch (ClassNotFoundException e)
 		{
-			e = e_;
+			throw new JsonParseException("Cannot create AST node for name `" + typeSuffix + "'", e);
+		}
+		
+		return instantiateNode(clazz);
+	}
+	
+	private T instantiateNode(Class<?> clazz)
+	{
+		Exception e = null;
+		try
+		{
+			return checkNodeType(clazz.newInstance());
 		}
 		catch (InstantiationException e_)
 		{
@@ -249,13 +284,13 @@ public class JsonConverterImpl
 			e = e_;
 		}
 		
-		throw new JsonParseException("Cannot create AST node for name `" + typeSuffix + "'", e);
+		throw new JsonParseException("Cannot create AST node `" + clazz.getName() + "'", e);
 	}
 	
 	private void loadAttribute(
 			JsonDeserializationContext context,
 			Entry<String, JsonElement> field,
-			AstNodeInterface n)
+			T n)
 	{
 		String name = field.getKey().substring(1);
 		
@@ -292,7 +327,7 @@ public class JsonConverterImpl
 	private void loadProperty(
 			JsonDeserializationContext context,
 			Entry<String, JsonElement> field,
-			AstNodeInterface n)
+			T n)
 	{
 		PropSetter setter = getPropertyType(
 				n.getClass(),
@@ -308,13 +343,13 @@ public class JsonConverterImpl
 	private void loadChild(
 			JsonDeserializationContext context,
 			Entry<String, JsonElement> field,
-			AstNodeInterface n,
+			T n,
 			int i)
 	{
-		AstNodeInterface value =
+		T value =
 				context.deserialize(
 						field.getValue(),
-						AstNodeInterface.class);
+						nodeClass);
 		
 		n.set(i, value);
 	}
@@ -322,7 +357,7 @@ public class JsonConverterImpl
 	// =========================================================================
 	
 	JsonElement serializeNodeList(
-			NodeList src,
+			T src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
@@ -330,47 +365,49 @@ public class JsonConverterImpl
 			return serializeAstNode(src, typeOfSrc, context);
 		
 		JsonArray array = new JsonArray();
-		for (AstNodeInterface c : (NodeList) src)
+		for (AstNodeInterface<T> c : src)
 			array.add(context.serialize(c));
 		return array;
 	}
 	
-	NodeList deserializeNodeList(
+	T deserializeNodeList(
 			JsonElement json,
 			Type typeOfT,
 			JsonDeserializationContext context)
 	{
 		if (json.isJsonObject())
-			return (NodeList) deserializeAstNode(json, typeOfT, context);
+			return (T) deserializeAstNode(json, typeOfT, context);
 		
-		NodeList l = new NodeList();
+		T l = instantiateNode(listClass);
 		for (JsonElement i : json.getAsJsonArray())
-			l.add((AstNodeInterface) context.deserialize(i, AstNodeInterface.class));
+			l.add(checkNodeType(context.deserialize(i, nodeClass)));
 		return l;
 	}
 	
 	// =========================================================================
 	
 	JsonElement serializeText(
-			Text src,
+			T src,
 			Type typeOfSrc,
 			JsonSerializationContext context)
 	{
 		if (saveLocation && src.getNativeLocation() != null)
 			return serializeAstNode(src, typeOfSrc, context);
 		
-		return new JsonPrimitive(((Text) src).getContent());
+		return new JsonPrimitive(((GenericText<T>) src).getContent());
 	}
 	
-	Text deserializeText(
+	T deserializeText(
 			JsonElement json,
 			Type typeOfT,
 			JsonDeserializationContext context)
 	{
 		if (json.isJsonObject())
-			return (Text) deserializeAstNode(json, typeOfT, context);
+			return (T) deserializeAstNode(json, typeOfT, context);
 		
-		return new Text(json.getAsString());
+		T t = instantiateNode(textClass);
+		((GenericText<T>) t).setContent(json.getAsString());
+		return (T) t;
 	}
 	
 	// =========================================================================
@@ -385,10 +422,24 @@ public class JsonConverterImpl
 		return this.abbrev.resolve(typeSuffix);
 	}
 	
+	private T checkNodeType(Object o)
+	{
+		if (nodeClass.isInstance(o))
+		{
+			@SuppressWarnings("unchecked")
+			T node = (T) o;
+			return node;
+		}
+		else
+		{
+			throw new ClassCastException("Cannot cast " + o.getClass().getName() + " to " + nodeClass.getName());
+		}
+	}
+	
 	// =========================================================================
 	
 	private PropSetter getPropertyType(
-			Class<? extends AstNodeInterface> nodeClass,
+			Class<?> nodeClass,
 			String propertyName)
 	{
 		PropKey key = new PropKey(nodeClass, propertyName);
@@ -443,14 +494,14 @@ public class JsonConverterImpl
 	
 	private static final class PropKey
 	{
-		public final Class<? extends AstNodeInterface> nodeClazz;
+		public final Class<?> nodeClazz;
 		
 		public final String propName;
 		
 		// =====================================================================
 		
 		public PropKey(
-				Class<? extends AstNodeInterface> nodeClazz,
+				Class<?> nodeClazz,
 				String propName)
 		{
 			this.nodeClazz = nodeClazz;
@@ -515,7 +566,7 @@ public class JsonConverterImpl
 		
 		// =====================================================================
 		
-		public void set(AstNodeInterface n, Object value)
+		public void set(Object n, Object value)
 		{
 			try
 			{

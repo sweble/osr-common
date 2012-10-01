@@ -21,17 +21,17 @@ import java.io.IOException;
 
 import de.fau.cs.osr.utils.StringUtils;
 
-public abstract class StringContentNode
+public abstract class GenericStringContentNode<T extends AstNodeInterface<T>>
 		extends
-			LeafNode
+			GenericLeafNode<T>
 {
 	private static final long serialVersionUID = -3995972757553601033L;
 	
-	public StringContentNode()
+	public GenericStringContentNode()
 	{
 	}
 	
-	public StringContentNode(String content)
+	public GenericStringContentNode(String content)
 	{
 		setContent(content);
 	}
@@ -93,7 +93,7 @@ public abstract class StringContentNode
 			switch (index)
 			{
 				case 0:
-					return StringContentNode.this.getContent();
+					return GenericStringContentNode.this.getContent();
 					
 				default:
 					throw new IndexOutOfBoundsException();
@@ -106,7 +106,7 @@ public abstract class StringContentNode
 			switch (index)
 			{
 				case 0:
-					return StringContentNode.this.setContent((String) value);
+					return GenericStringContentNode.this.setContent((String) value);
 					
 				default:
 					throw new IndexOutOfBoundsException();
