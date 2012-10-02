@@ -18,6 +18,7 @@
 package de.fau.cs.osr.ptk.common;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,37 +26,37 @@ import java.util.Set;
 
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 
-public class EntityMap
+public class GenericEntityMap<T extends AstNodeInterface<T>>
 		implements
 			Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	private HashMap<Integer, AstNodeInterface<?>> entityMap =
-			new HashMap<Integer, AstNodeInterface<?>>();
+	private HashMap<Integer, T> entityMap =
+			new HashMap<Integer, T>();
 	
 	// =========================================================================
 	
-	public int registerEntity(AstNodeInterface<?> entity)
+	public int registerEntity(T entity)
 	{
 		int id = entityMap.size();
 		entityMap.put(id, entity);
 		return id;
 	}
 	
-	public AstNodeInterface<?> getEntity(int id)
+	public T getEntity(int id)
 	{
 		return entityMap.get(id);
 	}
 	
-	public Set<Entry<Integer, AstNodeInterface<?>>> getEntities()
+	public Set<Entry<Integer, T>> getEntities()
 	{
-		return entityMap.entrySet();
+		return Collections.unmodifiableSet(entityMap.entrySet());
 	}
 	
-	public Map<Integer, AstNodeInterface<?>> getMap()
+	public Map<Integer, T> getMap()
 	{
-		return entityMap;
+		return Collections.unmodifiableMap(entityMap);
 	}
 	
 	// =========================================================================
