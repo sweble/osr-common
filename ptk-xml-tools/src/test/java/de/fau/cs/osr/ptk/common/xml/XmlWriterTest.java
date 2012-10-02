@@ -88,8 +88,6 @@ public class XmlWriterTest
 		
 		String xml = serialize(in, as);
 		
-		System.out.println(xml);
-		
 		TestAstNode out = deserialize(xml, as);
 		
 		//System.out.println(serialize(out, as));

@@ -33,6 +33,8 @@ public class XmlConstants
 	
 	static final QName ATTR_QNAME = new QName(PTK_NS, "a");
 	
+	static final QName NULL_QNAME = new QName(PTK_NS, "null");
+	
 	// =========================================================================
 	
 	static final QName TYPE_BYTE = new QName(PTK_NS, "byte");

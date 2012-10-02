@@ -17,7 +17,17 @@
 
 package de.fau.cs.osr.ptk.common.xml;
 
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.*;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.AST_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_ARRAY_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_LOCATION_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_NAME_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_NULL_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.LIST_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.NULL_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.PTK_NS;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.TEXT_QNAME;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.typeNameToTagName;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -258,6 +268,11 @@ public class XmlWriter<T extends AstNodeInterface<T>>
 		else if (textClass.isInstance(n))
 		{
 			visit((GenericText<T>) n);
+		}
+		else if (n == null)
+		{
+			startElement(NULL_QNAME);
+			endElement(NULL_QNAME);
 		}
 		else
 		{

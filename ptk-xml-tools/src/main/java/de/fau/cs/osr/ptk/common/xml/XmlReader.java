@@ -191,14 +191,21 @@ public class XmlReader<T extends AstNodeInterface<T>>
 				{
 					node = readText(elem);
 				}
+				else if (elem.getName().equals(XmlConstants.NULL_QNAME))
+				{
+					node = null;
+				}
 				else
 				{
 					node = readNode(elem);
 				}
 				
-				Attribute l = elem.getAttributeByName(XmlConstants.ATTR_LOCATION_QNAME);
-				if (l != null)
-					node.setNativeLocation(Location.valueOf(l.getValue()));
+				if (node != null)
+				{
+					Attribute l = elem.getAttributeByName(XmlConstants.ATTR_LOCATION_QNAME);
+					if (l != null)
+						node.setNativeLocation(Location.valueOf(l.getValue()));
+				}
 				
 				expectEndElement();
 				return node;
@@ -536,7 +543,7 @@ public class XmlReader<T extends AstNodeInterface<T>>
 	
 	private T checkNodeType(Object o)
 	{
-		if (nodeClass.isInstance(o))
+		if (o == null || nodeClass.isInstance(o))
 		{
 			@SuppressWarnings("unchecked")
 			T node = (T) o;
