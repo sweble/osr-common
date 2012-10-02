@@ -28,16 +28,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.NodeList;
-
 import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
+import de.fau.cs.osr.ptk.common.ast.GenericContentNode;
+import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
+import de.fau.cs.osr.ptk.common.ast.GenericStringContentNode;
 import de.fau.cs.osr.ptk.common.ast.RtDataPtk;
 import de.fau.cs.osr.utils.StringUtils;
 
-public class AstPrinter
+public class AstPrinter<T extends AstNodeInterface<T>>
 		extends
-			AstVisitor<AstNodeInterface>
+			AstVisitor<T>
 {
 	private final HashMap<Memoize, Memoize> cache = new HashMap<Memoize, Memoize>();
 	
@@ -61,7 +62,7 @@ public class AstPrinter
 	// =========================================================================
 	
 	@Override
-	protected Object after(AstNodeInterface<?> node, Object result)
+	protected Object after(T node, Object result)
 	{
 		return super.after(node, result);
 	}
@@ -105,7 +106,7 @@ public class AstPrinter
 	
 	// =========================================================================
 	
-	public void visit(AstNodeInterface<?> n)
+	public void visit(T n)
 	{
 		if (!replay(n))
 		{
@@ -175,7 +176,7 @@ public class AstPrinter
 		}
 	}
 	
-	public void visit(NodeList n)
+	public void visit(GenericNodeList<T> n)
 	{
 		if (!replay(n))
 		{
@@ -183,7 +184,7 @@ public class AstPrinter
 			
 			if (hasVisibleProps(n))
 			{
-				visit((AstNodeInterface<?>) n);
+				visit((T) n);
 			}
 			else if (n.isEmpty())
 			{
@@ -219,7 +220,7 @@ public class AstPrinter
 		}
 	}
 	
-	public void visit(ContentNode n)
+	public void visit(GenericContentNode<T, GenericNodeList<T>> n)
 	{
 		if (!replay(n))
 		{
@@ -227,7 +228,7 @@ public class AstPrinter
 			
 			if (hasVisibleProps(n))
 			{
-				visit((AstNodeInterface<?>) n);
+				visit((T) n);
 			}
 			else if (n.getContent() == null)
 			{
@@ -268,7 +269,7 @@ public class AstPrinter
 		}
 	}
 	
-	public void visit(StringContentNode n)
+	public void visit(GenericStringContentNode<T> n)
 	{
 		if (!replay(n))
 		{
@@ -276,7 +277,7 @@ public class AstPrinter
 			
 			if (n.hasAttributes())
 			{
-				visit((AstNodeInterface<?>) n);
+				visit((T) n);
 			}
 			else if (n.getPropertyCount() != 1)
 			{
@@ -285,7 +286,7 @@ public class AstPrinter
 					RtDataPtk rtd = (RtDataPtk) n.getProperty("rtd", null);
 					if (rtd != null && !rtd.toString(0).equals(n.getContent()))
 					{
-						visit((AstNodeInterface<?>) n);
+						visit((T) n);
 					}
 					else
 					{
@@ -295,7 +296,7 @@ public class AstPrinter
 				}
 				else
 				{
-					visit((AstNodeInterface<?>) n);
+					visit((T) n);
 				}
 			}
 			else
@@ -419,9 +420,9 @@ public class AstPrinter
 		Map<String, Object> props = new HashMap<String, Object>();
 		props.putAll(attrs);
 		
-		if (n instanceof StringContentNode)
+		if (n instanceof GenericStringContentNode)
 		{
-			String content = ((StringContentNode) n).getContent();
+			String content = ((GenericStringContentNode<T>) n).getContent();
 			if (content != null || printNullProps)
 				props.put("content", content);
 		}
@@ -469,11 +470,11 @@ public class AstPrinter
 			{
 				out.println(mkStr((String) value));
 			}
-			else if (value instanceof AstNodeInterface<?>)
+			else if (value instanceof AstNodeInterface)
 			{
 				out.println();
 				incIndent();
-				dispatch((AstNodeInterface<?>) value);
+				dispatch((T) value);
 				decIndent();
 			}
 			else if (value instanceof Collection)
@@ -517,8 +518,8 @@ public class AstPrinter
 		if (!props.isEmpty() && !n.isEmpty())
 			out.println();
 		
-		for (AstNodeInterface<?> c : n)
-			dispatch(c);
+		for (Object c : n)
+			dispatch((T) c);
 	}
 	
 	protected String printNodeContentToString(AstNodeInterface<?> n)
