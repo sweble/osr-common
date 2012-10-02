@@ -229,21 +229,14 @@ public class RtDataPtk
 			if (o == null)
 			{
 			}
-			else if (o instanceof GenericText)
+			else if (o instanceof Object[])
 			{
-				rtAddString(result, ((GenericText<?>) o).getContent());
-			}
-			else if (o instanceof Character)
-			{
-				rtAddString(result, String.valueOf((Character) o));
-			}
-			else if (o instanceof String)
-			{
-				rtAddString(result, o.toString());
+				for (Object o2 : (Object[]) o)
+					addObject(result, o2);
 			}
 			else
 			{
-				result.add(o);
+				addObject(result, o);
 			}
 		}
 		
@@ -254,6 +247,45 @@ public class RtDataPtk
 		else
 		{
 			this.fields[field] = result.toArray();
+		}
+	}
+	
+	private void addObject(ArrayList<Object> result, Object o)
+	{
+		if (o instanceof Character)
+		{
+			rtAddString(result, String.valueOf((Character) o));
+		}
+		else if (o instanceof String)
+		{
+			rtAddString(result, o.toString());
+		}
+		else
+		{
+			addNodeOrObject(result, o);
+		}
+	}
+	
+	private void addNodeOrObject(ArrayList<Object> result, Object o)
+	{
+		if (o instanceof GenericNodeList)
+		{
+			for (AstNodeInterface<?> n : (GenericNodeList<?>) o)
+				addNodeOrObject(result, n);
+		}
+		// FIXME: REMOVE THIS CASE!
+		else if (o instanceof GenericContentNode)
+		{
+			for (AstNodeInterface<?> n : (GenericContentNode<?, ?>) o)
+				addNodeOrObject(result, n);
+		}
+		else if (o instanceof GenericText)
+		{
+			rtAddString(result, ((GenericText<?>) o).getContent());
+		}
+		else
+		{
+			result.add(o);
 		}
 	}
 	
@@ -341,13 +373,33 @@ public class RtDataPtk
 	private void toString(int index, StringBuilder sb)
 	{
 		Object[] field = fields[index];
-		for (Object o : field)
-			stringRep(sb, o);
+		for (int i = 0; i < field.length; ++i)
+		{
+			if (i != 0)
+				sb.append(" + ");
+			
+			Object o = field[i];
+			if (o instanceof String)
+			{
+				stringRep(sb, (String) o);
+			}
+			else
+			{
+				stringRep(sb, o);
+			}
+		}
 	}
 	
 	protected void stringRep(StringBuilder sb, Object o)
 	{
-		sb.append(StringUtils.escJava(o.toString()));
+		sb.append(o.toString());
+	}
+	
+	private void stringRep(StringBuilder sb, String str)
+	{
+		sb.append('"');
+		sb.append(StringUtils.escJava(str));
+		sb.append('"');
 	}
 	
 	@Override
@@ -359,9 +411,15 @@ public class RtDataPtk
 		{
 			if (i > 0)
 				sb.append(" <o> ");
-			sb.append('"');
-			toString(i, sb);
-			sb.append('"');
+			
+			if (getField(i) == EMPTY_FIELD)
+			{
+				sb.append("\"\"");
+			}
+			else
+			{
+				toString(i, sb);
+			}
 		}
 		sb.append(" ]");
 		return sb.toString();
