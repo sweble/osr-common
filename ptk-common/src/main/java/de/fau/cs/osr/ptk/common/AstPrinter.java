@@ -28,15 +28,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.GenericContentNode;
 import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
 import de.fau.cs.osr.ptk.common.ast.GenericStringContentNode;
-import de.fau.cs.osr.ptk.common.ast.RtDataPtk;
+import de.fau.cs.osr.ptk.common.ast.RtData;
 import de.fau.cs.osr.utils.StringUtils;
 
-public class AstPrinter<T extends AstNodeInterface<T>>
+public class AstPrinter<T extends AstNode<T>>
 		extends
 			AstVisitor<T>
 {
@@ -91,14 +91,14 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 	
 	// =========================================================================
 	
-	public static String print(AstNodeInterface<?> node)
+	public static String print(AstNode<?> node)
 	{
 		StringWriter writer = new StringWriter();
 		new AstPrinter(writer).go(node);
 		return writer.toString();
 	}
 	
-	public static Writer print(Writer writer, AstNodeInterface<?> node)
+	public static Writer print(Writer writer, AstNode<?> node)
 	{
 		new AstPrinter(writer).go(node);
 		return writer;
@@ -134,7 +134,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 		}
 	}
 	
-	private boolean hasVisibleProps(AstNodeInterface<?> n)
+	private boolean hasVisibleProps(AstNode<?> n)
 	{
 		/*
 		if (!n.hasAttributes() && !n.hasProperties())
@@ -283,7 +283,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 			{
 				if (n.getPropertyCount() == 2)
 				{
-					RtDataPtk rtd = (RtDataPtk) n.getProperty("rtd", null);
+					RtData rtd = (RtData) n.getProperty("rtd", null);
 					if (rtd != null && !rtd.toString(0).equals(n.getContent()))
 					{
 						visit((T) n);
@@ -313,7 +313,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 	
 	protected static final class Memoize
 	{
-		private final AstNodeInterface<?> node;
+		private final AstNode<?> node;
 		
 		private final int indent;
 		
@@ -321,7 +321,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 		
 		private final StringWriter writer;
 		
-		public Memoize(int indent, AstNodeInterface<?> node)
+		public Memoize(int indent, AstNode<?> node)
 		{
 			this.indent = indent;
 			this.node = node;
@@ -331,7 +331,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 		
 		public Memoize(
 				int indent,
-				AstNodeInterface<?> node,
+				AstNode<?> node,
 				PrintWriter oldOut,
 				StringWriter writer)
 		{
@@ -379,7 +379,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 		}
 	}
 	
-	protected boolean replay(AstNodeInterface<?> n)
+	protected boolean replay(AstNode<?> n)
 	{
 		Memoize m = cache.get(new Memoize(indentStr.length(), n));
 		if (m == null)
@@ -389,7 +389,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 		return true;
 	}
 	
-	protected Memoize memoizeStart(AstNodeInterface<?> n)
+	protected Memoize memoizeStart(AstNode<?> n)
 	{
 		StringWriter w = new StringWriter();
 		Memoize m = new Memoize(indentStr.length(), n, out, w);
@@ -413,7 +413,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 	
 	// =========================================================================
 	
-	protected void printNodeContent(AstNodeInterface<?> n)
+	protected void printNodeContent(AstNode<?> n)
 	{
 		Map<String, Object> attrs = n.getAttributes();
 		
@@ -470,7 +470,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 			{
 				out.println(mkStr((String) value));
 			}
-			else if (value instanceof AstNodeInterface)
+			else if (value instanceof AstNode)
 			{
 				out.println();
 				incIndent();
@@ -522,7 +522,7 @@ public class AstPrinter<T extends AstNodeInterface<T>>
 			dispatch((T) c);
 	}
 	
-	protected String printNodeContentToString(AstNodeInterface<?> n)
+	protected String printNodeContentToString(AstNode<?> n)
 	{
 		String singleLine = null;
 		

@@ -20,7 +20,7 @@ package de.fau.cs.osr.ptk.common.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
 public class JsonConverter
@@ -112,7 +112,7 @@ public class JsonConverter
 	
 	// =========================================================================
 	
-	public static <T extends AstNodeInterface<T>> Gson createGsonConverter(
+	public static <T extends AstNode<T>> Gson createGsonConverter(
 			boolean prettyPrinting,
 			NameAbbrevService as,
 			boolean saveLocation,

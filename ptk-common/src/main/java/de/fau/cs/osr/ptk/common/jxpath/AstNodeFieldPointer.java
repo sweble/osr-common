@@ -25,7 +25,7 @@ import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.FmtInternalLogicError;
 
 public class AstNodeFieldPointer
@@ -35,7 +35,7 @@ public class AstNodeFieldPointer
 	private static final long serialVersionUID = 1L;
 	
 	/** This pointer points to a field of this node. */
-	private AstNodeInterface<?> node;
+	private AstNode<?> node;
 	
 	/** The index of the field in `node' this pointer points to. */
 	private int fieldIndex;
@@ -44,7 +44,7 @@ public class AstNodeFieldPointer
 	
 	public AstNodeFieldPointer(
 			NodePointer parent,
-			AstNodeInterface<?> node,
+			AstNode<?> node,
 			int index)
 	{
 		// Only called by an AstNodeFieldIterator.
@@ -81,7 +81,7 @@ public class AstNodeFieldPointer
 	{
 		//debug("childIterator");
 		
-		AstNodeInterface<?> pointee = (AstNodeInterface<?>) getImmediateNode();
+		AstNode<?> pointee = (AstNode<?>) getImmediateNode();
 		
 		// Shortcut ...
 		if (isLeaf())
@@ -91,7 +91,7 @@ public class AstNodeFieldPointer
 			return null;
 		}
 		
-		if (pointee.isNodeType(AstNodeInterface.NT_NODE_LIST))
+		if (pointee.isNodeType(AstNode.NT_NODE_LIST))
 		{
 			return new AstNodeFieldIterator(
 					this,
@@ -112,7 +112,7 @@ public class AstNodeFieldPointer
 	@Override
 	public boolean isLeaf()
 	{
-		AstNodeInterface<?> pointee = (AstNodeInterface<?>) getImmediateNode();
+		AstNode<?> pointee = (AstNode<?>) getImmediateNode();
 		return pointee == null || pointee.isEmpty();
 	}
 	
@@ -193,10 +193,10 @@ public class AstNodeFieldPointer
 		}
 		else
 		{
-			AstNodeInterface<?> node1 = (AstNodeInterface<?>) pointer1.getBaseValue();
-			AstNodeInterface<?> node2 = (AstNodeInterface<?>) pointer2.getBaseValue();
+			AstNode<?> node1 = (AstNode<?>) pointer1.getBaseValue();
+			AstNode<?> node2 = (AstNode<?>) pointer2.getBaseValue();
 			
-			for (AstNodeInterface<?> child : (AstNodeInterface<?>) getImmediateNode())
+			for (AstNode<?> child : (AstNode<?>) getImmediateNode())
 			{
 				if (child == node1)
 				{
@@ -271,10 +271,10 @@ public class AstNodeFieldPointer
 			{
 				NodePointer p = (NodePointer) parent;
 				
-				AstNodeInterface<?> thisNode = (AstNodeInterface<?>) getImmediateNode();
+				AstNode<?> thisNode = (AstNode<?>) getImmediateNode();
 				
 				int i = 1;
-				for (AstNodeInterface<?> n : (AstNodeInterface<?>) p.getImmediateNode())
+				for (AstNode<?> n : (AstNode<?>) p.getImmediateNode())
 				{
 					if (n == thisNode)
 						return i;

@@ -17,7 +17,7 @@
 
 package de.fau.cs.osr.ptk.common.ast;
 
-import static de.fau.cs.osr.ptk.common.ast.RtDataPtk.*;
+import static de.fau.cs.osr.ptk.common.ast.RtData.*;
 import static de.fau.cs.osr.ptk.common.test.TestAstBuilder.*;
 import static org.junit.Assert.*;
 
@@ -37,19 +37,19 @@ public class RtDataTest
 	@Test
 	public void testRtdObjectHasRightSize() throws Exception
 	{
-		assertEquals(2, new RtDataPtk(2).size());
+		assertEquals(2, new RtData(2).size());
 		
 		Text text = astText();
-		assertEquals(text.size() + 1, new RtDataPtk(text).size());
+		assertEquals(text.size() + 1, new RtData(text).size());
 		
 		Section section = astSection().build();
-		assertEquals(section.size() + 1, new RtDataPtk(section).size());
+		assertEquals(section.size() + 1, new RtData(section).size());
 	}
 	
 	@Test
 	public void testNewRtdObjectIsMadeUpOfEmptyFields() throws Exception
 	{
-		RtDataPtk rtd = new RtDataPtk(2);
+		RtData rtd = new RtData(2);
 		for (int i = 0; i < rtd.size(); ++i)
 		{
 			assertNotNull(rtd.getField(i));
@@ -61,7 +61,7 @@ public class RtDataTest
 	public void testComplexCtorsHaveRightSize() throws Exception
 	{
 		Section section = astSection().build();
-		RtDataPtk rtd = new RtDataPtk(section, "1");
+		RtData rtd = new RtData(section, "1");
 		assertEquals(3, rtd.size());
 	}
 	
@@ -69,7 +69,7 @@ public class RtDataTest
 	public void testNullInCtorDoesNotMeanNullInRtd() throws Exception
 	{
 		Section section = astSection().build();
-		RtDataPtk rtd = new RtDataPtk(section, "1", SEP, null, SEP, "3");
+		RtData rtd = new RtData(section, "1", SEP, null, SEP, "3");
 		for (int i = 0; i < rtd.size(); ++i)
 			assertNotNull(rtd.getField(i));
 	}
@@ -79,7 +79,7 @@ public class RtDataTest
 	{
 		assertEquals(
 				"RTD[ \"1\" <o> \"2.1, 2.2\" <o> \"\" ]",
-				new RtDataPtk(3, "1", SEP, "2.1", ", ", "2.2", SEP, null).toString());
+				new RtData(3, "1", SEP, "2.1", ", ", "2.2", SEP, null).toString());
 	}
 	
 	@Test
@@ -87,19 +87,19 @@ public class RtDataTest
 	{
 		thrown.expect(IndexOutOfBoundsException.class);
 		thrown.expectMessage("too many");
-		new RtDataPtk(2, SEP, SEP, SEP);
+		new RtData(2, SEP, SEP, SEP);
 	}
 	
 	@Test
 	public void testEmptyStringResultsInEmptyField() throws Exception
 	{
-		assertEquals(0, new RtDataPtk(1, "").getField(0).length);
+		assertEquals(0, new RtData(1, "").getField(0).length);
 	}
 	
 	@Test
 	public void testJoiningTextWorks() throws Exception
 	{
-		Object[] field0 = new RtDataPtk(1, "1", "2", "3").getField(0);
+		Object[] field0 = new RtData(1, "1", "2", "3").getField(0);
 		assertEquals(1, field0.length);
 		assertEquals("123", field0[0]);
 	}
@@ -107,7 +107,7 @@ public class RtDataTest
 	@Test
 	public void testPrependToEmptyRtData() throws Exception
 	{
-		RtDataPtk rtd = new RtDataPtk(2);
+		RtData rtd = new RtData(2);
 		rtd.prepend("1");
 		assertEquals("RTD[ \"1\" <o> \"\" ]", rtd.toString());
 	}
@@ -115,7 +115,7 @@ public class RtDataTest
 	@Test
 	public void testPrependToRtData() throws Exception
 	{
-		RtDataPtk rtd = new RtDataPtk(2, "1");
+		RtData rtd = new RtData(2, "1");
 		rtd.prepend("2");
 		assertEquals("RTD[ \"21\" <o> \"\" ]", rtd.toString());
 	}
@@ -123,7 +123,7 @@ public class RtDataTest
 	@Test
 	public void testPrependToRtDataWithObjects() throws Exception
 	{
-		RtDataPtk rtd = new RtDataPtk(2, astText("<Some Node>"));
+		RtData rtd = new RtData(2, astText("<Some Node>"));
 		rtd.prepend("1");
 		assertEquals("RTD[ \"1<Some Node>\" <o> \"\" ]", rtd.toString());
 	}

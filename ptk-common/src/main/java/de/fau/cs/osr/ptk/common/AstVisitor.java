@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.visitor.VisitorBase;
 import de.fau.cs.osr.utils.visitor.VisitorLogic;
 
-public class AstVisitor<T extends AstNodeInterface<T>>
+public class AstVisitor<T extends AstNode<T>>
 		extends
 			VisitorBase<T>
 {
@@ -97,7 +97,7 @@ public class AstVisitor<T extends AstNodeInterface<T>>
 //		if (node == null)
 //			throw new NullPointerException();
 		
-		if (node.getNodeType() == AstNodeInterface.NT_NODE_LIST)
+		if (node.getNodeType() == AstNode.NT_NODE_LIST)
 		{
 			ListIterator<T> i = node.listIterator();
 			while (i.hasNext())
@@ -121,7 +121,7 @@ public class AstVisitor<T extends AstNodeInterface<T>>
 					@SuppressWarnings("unchecked")
 					T resultNode = (T) result;
 					
-					if (resultNode.getNodeType() == AstNodeInterface.NT_NODE_LIST)
+					if (resultNode.getNodeType() == AstNode.NT_NODE_LIST)
 					{
 						i.remove();
 						i.add(resultNode);

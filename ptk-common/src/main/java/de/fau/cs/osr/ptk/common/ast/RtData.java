@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 import de.fau.cs.osr.utils.StringUtils;
 
-public class RtDataPtk
+public class RtData
 		implements
 			Serializable,
 			Cloneable
@@ -47,7 +47,7 @@ public class RtDataPtk
 	 * An AstNodeInterface<?> with two children will need an RtData object with
 	 * size three.
 	 */
-	public RtDataPtk(AstNodeInterface<?> node)
+	public RtData(AstNode<?> node)
 	{
 		this(node.size() + 1);
 	}
@@ -55,7 +55,7 @@ public class RtDataPtk
 	/**
 	 * Instantiates an empty RtData object with the given size.
 	 */
-	public RtDataPtk(int size)
+	public RtData(int size)
 	{
 		if (size <= 0)
 			throw new IllegalArgumentException("RtData must have a size of at least 1");
@@ -70,7 +70,7 @@ public class RtDataPtk
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(AstNodeInterface<?> node, Object... glue)
+	public RtData(AstNode<?> node, Object... glue)
 	{
 		this(node);
 		set(glue);
@@ -82,7 +82,7 @@ public class RtDataPtk
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(int size, Object... glue)
+	public RtData(int size, Object... glue)
 	{
 		this(size);
 		set(glue);
@@ -94,7 +94,7 @@ public class RtDataPtk
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(AstNodeInterface<?> node, String... glue)
+	public RtData(AstNode<?> node, String... glue)
 	{
 		this(node);
 		set(glue);
@@ -106,13 +106,13 @@ public class RtDataPtk
 	 * 
 	 * To move on to the next glue field insert a SEP object.
 	 */
-	public RtDataPtk(int size, String... glue)
+	public RtData(int size, String... glue)
 	{
 		this(size);
 		set(glue);
 	}
 	
-	protected RtDataPtk(RtDataPtk rtDataPtk)
+	protected RtData(RtData rtDataPtk)
 	{
 		Object[][] other = rtDataPtk.fields;
 		
@@ -270,13 +270,13 @@ public class RtDataPtk
 	{
 		if (o instanceof GenericNodeList)
 		{
-			for (AstNodeInterface<?> n : (GenericNodeList<?>) o)
+			for (AstNode<?> n : (GenericNodeList<?>) o)
 				addNodeOrObject(result, n);
 		}
 		// FIXME: REMOVE THIS CASE!
 		else if (o instanceof GenericContentNode)
 		{
-			for (AstNodeInterface<?> n : (GenericContentNode<?, ?>) o)
+			for (AstNode<?> n : (GenericContentNode<?, ?>) o)
 				addNodeOrObject(result, n);
 		}
 		else if (o instanceof GenericText)
@@ -474,7 +474,7 @@ public class RtDataPtk
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RtDataPtk other = (RtDataPtk) obj;
+		RtData other = (RtData) obj;
 		if (!Arrays.deepEquals(fields, other.fields))
 			return false;
 		return true;
@@ -485,6 +485,6 @@ public class RtDataPtk
 	@Override
 	public Object clone() throws CloneNotSupportedException
 	{
-		return new RtDataPtk(this);
+		return new RtData(this);
 	}
 }

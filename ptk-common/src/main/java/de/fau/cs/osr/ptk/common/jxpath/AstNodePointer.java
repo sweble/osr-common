@@ -25,7 +25,7 @@ import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.FmtInternalLogicError;
 
 public class AstNodePointer
@@ -35,11 +35,11 @@ public class AstNodePointer
 	private static final long serialVersionUID = 1L;
 	
 	/** The node this pointer points to. */
-	private AstNodeInterface<?> node;
+	private AstNode<?> node;
 	
 	// =========================================================================
 	
-	public AstNodePointer(AstNodeInterface<?> node)
+	public AstNodePointer(AstNode<?> node)
 	{
 		super(null);
 		this.node = node;
@@ -47,7 +47,7 @@ public class AstNodePointer
 		
 	}
 	
-	public AstNodePointer(NodePointer parent, AstNodeInterface<?> node)
+	public AstNodePointer(NodePointer parent, AstNode<?> node)
 	{
 		// Usually called by an AstNodeIterator. In this case, `parent' would
 		// point to the node that we iterated over and `node' would be the 
@@ -200,10 +200,10 @@ public class AstNodePointer
 		}
 		else
 		{
-			AstNodeInterface<?> node1 = (AstNodeInterface<?>) pointer1.getBaseValue();
-			AstNodeInterface<?> node2 = (AstNodeInterface<?>) pointer2.getBaseValue();
+			AstNode<?> node1 = (AstNode<?>) pointer1.getBaseValue();
+			AstNode<?> node2 = (AstNode<?>) pointer2.getBaseValue();
 			
-			for (AstNodeInterface<?> child : node)
+			for (AstNode<?> child : node)
 			{
 				if (child == node1)
 				{
@@ -261,10 +261,10 @@ public class AstNodePointer
 			{
 				NodePointer p = (NodePointer) parent;
 				
-				AstNodeInterface<?> thisNode = (AstNodeInterface<?>) getImmediateNode();
+				AstNode<?> thisNode = (AstNode<?>) getImmediateNode();
 				
 				int i = 1;
-				for (AstNodeInterface<?> n : (AstNodeInterface<?>) p.getImmediateNode())
+				for (AstNode<?> n : (AstNode<?>) p.getImmediateNode())
 				{
 					if (n == thisNode)
 						return i;

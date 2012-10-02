@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 /**
  * @deprecated
@@ -55,15 +55,15 @@ public abstract class ParserCommon
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T extends AstNodeInterface<T>> AstNodeInterface<T> process(
-			AstNodeInterface<T> n)
+	protected <T extends AstNode<T>> AstNode<T> process(
+			AstNode<T> n)
 	{
-		AstNodeInterface<T> result = n;
+		AstNode<T> result = n;
 		for (AstVisitor v : getVisitors())
 		{
 			Object o = v.go(result);
-			if (o instanceof AstNodeInterface)
-				result = (AstNodeInterface<T>) o;
+			if (o instanceof AstNode)
+				result = (AstNode<T>) o;
 		}
 		return result;
 	}

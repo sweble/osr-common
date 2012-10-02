@@ -26,9 +26,9 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 
-public final class AstNodeGsonTypeAdapter<T extends AstNodeInterface<T>>
+public final class AstNodeGsonTypeAdapter<T extends AstNode<T>>
 		implements
 			JsonSerializer<T>,
 			JsonDeserializer<T>

@@ -22,7 +22,7 @@ import java.io.IOException;
 import xtc.tree.Location;
 import de.fau.cs.osr.ptk.common.ast.GenericInnerNode.GenericInnerNode1;
 
-public abstract class GenericContentNode<T extends AstNodeInterface<T>, L extends GenericNodeList<T>>
+public abstract class GenericContentNode<T extends AstNode<T>, L extends GenericNodeList<T>>
 		extends
 			GenericInnerNode1<T>
 {

@@ -23,7 +23,7 @@ import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public class AstNodePointerFactory
 		implements
@@ -44,7 +44,7 @@ public class AstNodePointerFactory
 			Object bean,
 			Locale locale)
 	{
-		return bean instanceof AstNodeInterface ? new AstNodePointer((AstNodeInterface<?>) bean) : null;
+		return bean instanceof AstNode ? new AstNodePointer((AstNode<?>) bean) : null;
 	}
 	
 	@Override
@@ -53,6 +53,6 @@ public class AstNodePointerFactory
 			QName name,
 			Object bean)
 	{
-		return bean instanceof AstNodeInterface ? new AstNodePointer(parent, (AstNodeInterface<?>) bean) : null;
+		return bean instanceof AstNode ? new AstNodePointer(parent, (AstNode<?>) bean) : null;
 	}
 }

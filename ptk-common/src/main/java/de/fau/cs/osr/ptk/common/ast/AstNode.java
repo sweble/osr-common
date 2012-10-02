@@ -24,7 +24,7 @@ import java.util.List;
 import xtc.tree.Locatable;
 import xtc.util.Pair;
 
-public interface AstNodeInterface<T extends AstNodeInterface<T>>
+public interface AstNode<T extends AstNode<T>>
 		extends
 			AstNodeAttributeInterface,
 			AstNodePropertyInterface,
@@ -118,14 +118,14 @@ public interface AstNodeInterface<T extends AstNodeInterface<T>>
 	
 	public Object clone() throws CloneNotSupportedException;
 	
-	public AstNodeInterface<T> cloneWrapException();
+	public AstNode<T> cloneWrapException();
 	
 	/**
 	 * Only children and children's children are cloned by this method. Property
 	 * and attribute values are just copied.
 	 */
-	public AstNodeInterface<T> deepClone() throws CloneNotSupportedException;
+	public AstNode<T> deepClone() throws CloneNotSupportedException;
 	
-	public AstNodeInterface<T> deepCloneWrapException();
+	public AstNode<T> deepCloneWrapException();
 	
 }

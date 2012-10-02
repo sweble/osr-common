@@ -49,7 +49,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
 import de.fau.cs.osr.ptk.common.ast.GenericText;
@@ -57,7 +57,7 @@ import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
 import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
 
-public class XmlWriter<T extends AstNodeInterface<T>>
+public class XmlWriter<T extends AstNode<T>>
 {
 	/*
 	private static final int MAX_ENTRIES = 128;

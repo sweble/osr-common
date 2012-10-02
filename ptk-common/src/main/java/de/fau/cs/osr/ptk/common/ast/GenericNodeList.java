@@ -39,7 +39,7 @@ import xtc.util.Pair;
  * will discard null references and will recursively flatten any
  * {@link GenericNodeList}.
  */
-public class GenericNodeList<T extends AstNodeInterface<T>>
+public class GenericNodeList<T extends AstNode<T>>
 		extends
 			GenericInnerNode<T>
 {

@@ -38,11 +38,11 @@ import de.fau.cs.osr.utils.WrappedException;
  * @see NodeList
  * @see LeafNode
  */
-public abstract class GenericAstNode<T extends AstNodeInterface<T>>
+public abstract class GenericAstNode<T extends AstNode<T>>
 		extends
 			AbstractList<T>
 		implements
-			AstNodeInterface<T>
+			AstNode<T>
 {
 	private static final long serialVersionUID = 3333532331617925714L;
 	

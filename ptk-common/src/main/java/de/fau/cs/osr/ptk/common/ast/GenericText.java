@@ -17,7 +17,7 @@
 
 package de.fau.cs.osr.ptk.common.ast;
 
-public class GenericText<T extends AstNodeInterface<T>>
+public class GenericText<T extends AstNode<T>>
 		extends
 			GenericStringContentNode<T>
 {

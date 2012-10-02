@@ -19,7 +19,7 @@ package de.fau.cs.osr.ptk.common;
 
 import java.util.Iterator;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 
 public class AstComparer
@@ -53,8 +53,8 @@ public class AstComparer
 	 * @return True if both subtrees are equal, false otherwise.
 	 */
 	public static boolean compare(
-			AstNodeInterface<?> rootA,
-			AstNodeInterface<?> rootB,
+			AstNode<?> rootA,
+			AstNode<?> rootB,
 			boolean compareAttributes,
 			boolean compareLocation)
 	{
@@ -63,7 +63,7 @@ public class AstComparer
 	
 	// =========================================================================
 	
-	private boolean compareIntern(AstNodeInterface<?> a, AstNodeInterface<?> b)
+	private boolean compareIntern(AstNode<?> a, AstNode<?> b)
 	{
 		if (a == b)
 			return true;
@@ -125,10 +125,10 @@ public class AstComparer
 				return false;
 			
 			@SuppressWarnings("unchecked")
-			Iterator<AstNodeInterface<?>> i = (Iterator<AstNodeInterface<?>>) a.iterator();
+			Iterator<AstNode<?>> i = (Iterator<AstNode<?>>) a.iterator();
 			
 			@SuppressWarnings("unchecked")
-			Iterator<AstNodeInterface<?>> j = (Iterator<AstNodeInterface<?>>) b.iterator();
+			Iterator<AstNode<?>> j = (Iterator<AstNode<?>>) b.iterator();
 			
 			while (i.hasNext() & j.hasNext())
 			{

@@ -20,7 +20,7 @@ package de.fau.cs.osr.ptk.common.test;
 import java.util.Collection;
 
 import xtc.util.Pair;
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.GenericInnerNode.GenericInnerNode2;
 import de.fau.cs.osr.ptk.common.ast.GenericLeafNode;
@@ -151,7 +151,7 @@ public class TestAstBuilder
 	
 	// =========================================================================
 	
-	public static final int AST_TEST_NODE = AstNodeInterface.NT_CUSTOM_BIT;
+	public static final int AST_TEST_NODE = AstNode.NT_CUSTOM_BIT;
 	
 	public static final int NT_TEST_TEXT = AST_TEST_NODE + 1;
 	
@@ -171,7 +171,7 @@ public class TestAstBuilder
 	
 	public static interface TestAstNode
 			extends
-				AstNodeInterface<TestAstNode>
+				AstNode<TestAstNode>
 	{
 	}
 	

@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import de.fau.cs.osr.utils.StringUtils;
 
-public abstract class GenericStringContentNode<T extends AstNodeInterface<T>>
+public abstract class GenericStringContentNode<T extends AstNode<T>>
 		extends
 			GenericLeafNode<T>
 {

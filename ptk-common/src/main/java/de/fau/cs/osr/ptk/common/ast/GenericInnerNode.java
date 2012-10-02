@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import xtc.tree.Location;
 
-public abstract class GenericInnerNode<T extends AstNodeInterface<T>>
+public abstract class GenericInnerNode<T extends AstNode<T>>
 		extends
 			GenericAstNode<T>
 {
@@ -67,7 +67,7 @@ public abstract class GenericInnerNode<T extends AstNodeInterface<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode1<T extends AstNodeInterface<T>>
+	public static abstract class GenericInnerNode1<T extends AstNode<T>>
 			extends
 				GenericInnerNode<T>
 	{
@@ -146,7 +146,7 @@ public abstract class GenericInnerNode<T extends AstNodeInterface<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode2<T extends AstNodeInterface<T>>
+	public static abstract class GenericInnerNode2<T extends AstNode<T>>
 			extends
 				GenericInnerNode<T>
 	{
@@ -238,7 +238,7 @@ public abstract class GenericInnerNode<T extends AstNodeInterface<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode3<T extends AstNodeInterface<T>>
+	public static abstract class GenericInnerNode3<T extends AstNode<T>>
 			extends
 				GenericInnerNode<T>
 	{
@@ -344,7 +344,7 @@ public abstract class GenericInnerNode<T extends AstNodeInterface<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode4<T extends AstNodeInterface<T>>
+	public static abstract class GenericInnerNode4<T extends AstNode<T>>
 			extends
 				GenericInnerNode<T>
 	{

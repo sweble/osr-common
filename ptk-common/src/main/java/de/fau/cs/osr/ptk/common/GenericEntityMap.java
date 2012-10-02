@@ -24,9 +24,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 
-public class GenericEntityMap<T extends AstNodeInterface<T>>
+public class GenericEntityMap<T extends AstNode<T>>
 		implements
 			Serializable
 {

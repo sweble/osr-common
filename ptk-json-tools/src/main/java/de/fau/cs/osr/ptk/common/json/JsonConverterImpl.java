@@ -31,14 +31,14 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
 import de.fau.cs.osr.ptk.common.ast.GenericText;
 import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
-public class JsonConverterImpl<T extends AstNodeInterface<T>>
+public class JsonConverterImpl<T extends AstNode<T>>
 {
 	private static final int MAX_ENTRIES = 128;
 	
@@ -365,7 +365,7 @@ public class JsonConverterImpl<T extends AstNodeInterface<T>>
 			return serializeAstNode(src, typeOfSrc, context);
 		
 		JsonArray array = new JsonArray();
-		for (AstNodeInterface<T> c : src)
+		for (AstNode<T> c : src)
 			array.add(context.serialize(c));
 		return array;
 	}

@@ -19,7 +19,7 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.util.ListIterator;
 
-interface AstChildIterator<T extends AstNodeInterface<T>>
+interface AstChildIterator<T extends AstNode<T>>
 		extends
 			ListIterator<T>
 {

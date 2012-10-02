@@ -35,7 +35,7 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.codec.binary.Base64;
 
-import de.fau.cs.osr.ptk.common.ast.AstNodeInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
 import de.fau.cs.osr.ptk.common.ast.GenericText;
@@ -43,7 +43,7 @@ import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
 
-public class XmlReader<T extends AstNodeInterface<T>>
+public class XmlReader<T extends AstNode<T>>
 {
 	private XMLEventReader reader;
 	

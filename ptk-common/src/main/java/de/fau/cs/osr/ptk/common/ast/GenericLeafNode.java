@@ -19,7 +19,7 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 
-public abstract class GenericLeafNode<T extends AstNodeInterface<T>>
+public abstract class GenericLeafNode<T extends AstNode<T>>
 		extends
 			GenericAstNode<T>
 {

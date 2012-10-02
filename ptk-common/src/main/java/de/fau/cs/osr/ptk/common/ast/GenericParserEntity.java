@@ -19,7 +19,7 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 
-public class GenericParserEntity<T extends AstNodeInterface<T>>
+public class GenericParserEntity<T extends AstNode<T>>
 		extends
 			GenericLeafNode<T>
 {
