@@ -17,554 +17,392 @@
 
 package de.fau.cs.osr.ptk.common;
 
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.GenericContentNode;
 import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
 import de.fau.cs.osr.ptk.common.ast.GenericStringContentNode;
-import de.fau.cs.osr.ptk.common.ast.RtData;
+import de.fau.cs.osr.ptk.common.ast.GenericText;
+import de.fau.cs.osr.utils.PrinterBase;
+import de.fau.cs.osr.utils.PrinterBase.Memoize;
+import de.fau.cs.osr.utils.PrinterBase.OutputBuffer;
 import de.fau.cs.osr.utils.StringUtils;
 
 public class AstPrinter<T extends AstNode<T>>
 		extends
 			AstVisitor<T>
 {
-	private final HashMap<Memoize, Memoize> cache = new HashMap<Memoize, Memoize>();
-	
-	protected PrintWriter out;
-	
-	protected String indentStr = new String();
-	
-	protected boolean printNullProps;
-	
-	protected boolean legacyIndentation;
-	
-	// =========================================================================
-	
-	public AstPrinter(Writer writer)
+	public void visit(AstNode<T> n)
 	{
-		this.out = new PrintWriter(writer);
-		this.legacyIndentation = false;
-		this.printNullProps = false;
-	}
-	
-	// =========================================================================
-	
-	@Override
-	protected Object after(T node, Object result)
-	{
-		return super.after(node, result);
-	}
-	
-	// =========================================================================
-	
-	public void setLegacyIndentation(boolean legacyIndentation)
-	{
-		this.legacyIndentation = legacyIndentation;
-	}
-	
-	public boolean isLegacyIndentation()
-	{
-		return legacyIndentation;
-	}
-	
-	public void setPrintNullProps(boolean printNullProps)
-	{
-		this.printNullProps = printNullProps;
-	}
-	
-	public boolean isPrintNullProps()
-	{
-		return printNullProps;
-	}
-	
-	// =========================================================================
-	
-	public static String print(AstNode<?> node)
-	{
-		StringWriter writer = new StringWriter();
-		new AstPrinter(writer).go(node);
-		return writer.toString();
-	}
-	
-	public static Writer print(Writer writer, AstNode<?> node)
-	{
-		new AstPrinter(writer).go(node);
-		return writer;
-	}
-	
-	// =========================================================================
-	
-	public void visit(T n)
-	{
-		if (!replay(n))
+		Memoize m = p.memoizeStart(n);
+		if (m != null)
 		{
-			Memoize m = memoizeStart(n);
-			
-			if (n.isEmpty() && !hasVisibleProps(n))
+			if (n.isEmpty() && !hasVisibleProperties(n))
 			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "()");
+				p.indent(n.getNodeName());
+				p.println("()");
 			}
 			else
 			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "(");
-				
-				incIndent();
-				printNodeContent(n);
-				decIndent();
-				
-				indent();
-				out.println(")");
+				printNode(n);
 			}
-			
-			memoizeStop(m);
+			p.memoizeStop(m);
 		}
 	}
 	
-	private boolean hasVisibleProps(AstNode<?> n)
+	public void visit(GenericText<T> n)
 	{
-		/*
-		if (!n.hasAttributes() && !n.hasProperties())
+		Memoize m = p.memoizeStart(n);
+		if (m != null)
 		{
-			return false;
-		}
-		else if (printNullProps)
-		{
-			return true;
-		}
-		else
-		{
-			AstNodePropertyIterator i = n.propertyIterator();
-			while (i.next())
+			if (!hasVisibleProperties(n))
 			{
-				if (i.getValue() != null && i.getName().equals("rtd"))
-					return true;
-			}
-			
-			for (Object value : n.getAttributes().values())
-			{
-				if (value != null)
-					return true;
-			}
-			
-			return false;
-		}
-		*/
-		
-		if (!n.hasAttributes() && !n.hasProperties())
-		{
-			return false;
-		}
-		else
-		{
-			return n.hasAttributes()
-					|| n.getPropertyCount() != 1
-					|| n.getProperty("rtd", null) != null;
-		}
-	}
-	
-	public void visit(GenericNodeList<T> n)
-	{
-		if (!replay(n))
-		{
-			Memoize m = memoizeStart(n);
-			
-			if (hasVisibleProps(n))
-			{
-				visit((T) n);
-			}
-			else if (n.isEmpty())
-			{
-				indent();
-				out.println("[ ]");
+				p.indent(n.getNodeName());
+				p.print("(\"");
+				p.print(StringUtils.escJava(n.getContent()));
+				p.println("\")");
 			}
 			else
 			{
-				incIndent();
-				String singleLine = printNodeContentToString(n);
-				decIndent();
-				
-				if (singleLine != null)
-				{
-					indent();
-					out.println("[ " + singleLine + " ]");
-				}
-				else
-				{
-					indent();
-					out.println("[");
-					
-					incIndent();
-					printNodeContent(n);
-					decIndent();
-					
-					indent();
-					out.println("]");
-				}
+				printNode(n);
 			}
-			
-			memoizeStop(m);
-		}
-	}
-	
-	public void visit(GenericContentNode<T, GenericNodeList<T>> n)
-	{
-		if (!replay(n))
-		{
-			Memoize m = memoizeStart(n);
-			
-			if (hasVisibleProps(n))
-			{
-				visit((T) n);
-			}
-			else if (n.getContent() == null)
-			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "([NULL])");
-			}
-			else if (n.getContent().isEmpty())
-			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "([ ])");
-			}
-			else
-			{
-				incIndent();
-				String singleLine = printNodeContentToString(n.getContent());
-				decIndent();
-				
-				if (singleLine != null)
-				{
-					indent();
-					out.println(n.getClass().getSimpleName() + "([ " + singleLine + " ])");
-				}
-				else
-				{
-					indent();
-					out.println(n.getClass().getSimpleName() + "([");
-					
-					incIndent();
-					printNodeContent(n.getContent());
-					decIndent();
-					
-					indent();
-					out.println("])");
-				}
-			}
-			
-			memoizeStop(m);
+			p.memoizeStop(m);
 		}
 	}
 	
 	public void visit(GenericStringContentNode<T> n)
 	{
-		if (!replay(n))
+		Memoize m = p.memoizeStart(n);
+		if (m != null)
 		{
-			Memoize m = memoizeStart(n);
-			
-			if (n.hasAttributes())
+			if (!hasVisibleProperties(n))
 			{
-				visit((T) n);
-			}
-			else if (n.getPropertyCount() != 1)
-			{
-				if (n.getPropertyCount() == 2)
-				{
-					RtData rtd = (RtData) n.getProperty("rtd", null);
-					if (rtd != null && !rtd.toString(0).equals(n.getContent()))
-					{
-						visit((T) n);
-					}
-					else
-					{
-						indent();
-						out.println(n.getClass().getSimpleName() + "(" + mkStr(n.getContent()) + ")");
-					}
-				}
-				else
-				{
-					visit((T) n);
-				}
+				p.indent(n.getNodeName());
+				p.print("(\"");
+				p.print(StringUtils.escJava(n.getContent()));
+				p.println("\")");
 			}
 			else
 			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "(" + mkStr(n.getContent()) + ")");
+				printNode(n);
 			}
-			
-			memoizeStop(m);
+			p.memoizeStop(m);
+		}
+	}
+	
+	public void visit(GenericNodeList<T> n)
+	{
+		Memoize m = p.memoizeStart(n);
+		if (m != null)
+		{
+			if (hasVisibleProperties(n))
+			{
+				printNode(n);
+			}
+			else if (n.isEmpty())
+			{
+				p.indentln("[ ]");
+			}
+			else
+			{
+				OutputBuffer b = p.outputBufferStart();
+				printListOfNodes(n);
+				b.stop();
+				
+				String output = b.getBuffer().trim();
+				if (isSingleLine(output))
+				{
+					p.indent("[ ");
+					p.print(output);
+					p.println(" ]");
+				}
+				else
+				{
+					p.indentln("[");
+					
+					p.incIndent();
+					printListOfNodes(n);
+					p.decIndent();
+					
+					p.indentln(']');
+				}
+			}
+			p.memoizeStop(m);
+		}
+	}
+	
+	public void visit(GenericContentNode<T, GenericNodeList<T>> n)
+	{
+		Memoize m = p.memoizeStart(n);
+		if (m != null)
+		{
+			if (hasVisibleProperties(n))
+			{
+				printNode(n);
+			}
+			else if (n.isEmpty())
+			{
+				p.indent(n.getNodeName());
+				p.println("[]");
+			}
+			else
+			{
+				OutputBuffer b = p.outputBufferStart();
+				printListOfNodes(n);
+				b.stop();
+				
+				String output = b.getBuffer().trim();
+				if (isSingleLine(output))
+				{
+					p.indent(n.getNodeName());
+					p.print('(');
+					p.print(output);
+					p.println(')');
+				}
+				else
+				{
+					p.indent(n.getNodeName());
+					p.println("([");
+					
+					p.incIndent();
+					printListOfNodes(n.getContent());
+					p.decIndent();
+					
+					p.indentln("])");
+				}
+			}
+			p.memoizeStop(m);
 		}
 	}
 	
 	// =========================================================================
 	
-	protected static final class Memoize
+	protected boolean hasVisibleProperties(AstNode<T> n)
 	{
-		private final AstNode<?> node;
-		
-		private final int indent;
-		
-		private final PrintWriter oldOut;
-		
-		private final StringWriter writer;
-		
-		public Memoize(int indent, AstNode<?> node)
+		if (n.hasAttributes())
 		{
-			this.indent = indent;
-			this.node = node;
-			this.oldOut = null;
-			this.writer = null;
-		}
-		
-		public Memoize(
-				int indent,
-				AstNode<?> node,
-				PrintWriter oldOut,
-				StringWriter writer)
-		{
-			this.indent = indent;
-			this.node = node;
-			this.oldOut = oldOut;
-			this.writer = writer;
-		}
-		
-		public PrintWriter getOldOut()
-		{
-			return oldOut;
-		}
-		
-		public String getText()
-		{
-			return writer.toString();
-		}
-		
-		@Override
-		public int hashCode()
-		{
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + indent;
-			result = prime * result + System.identityHashCode(node);
-			return result;
-		}
-		
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Memoize other = (Memoize) obj;
-			if (indent != other.indent)
-				return false;
-			if (node != other.node)
-				return false;
 			return true;
 		}
-	}
-	
-	protected boolean replay(AstNode<?> n)
-	{
-		Memoize m = cache.get(new Memoize(indentStr.length(), n));
-		if (m == null)
-			return false;
-		
-		play(m);
-		return true;
-	}
-	
-	protected Memoize memoizeStart(AstNode<?> n)
-	{
-		StringWriter w = new StringWriter();
-		Memoize m = new Memoize(indentStr.length(), n, out, w);
-		
-		out = new PrintWriter(w);
-		
-		return m;
-	}
-	
-	protected void memoizeStop(Memoize m)
-	{
-		out = m.getOldOut();
-		cache.put(m, m);
-		play(m);
-	}
-	
-	private void play(Memoize m)
-	{
-		out.write(m.getText());
-	}
-	
-	// =========================================================================
-	
-	protected void printNodeContent(AstNode<?> n)
-	{
-		Map<String, Object> attrs = n.getAttributes();
-		
-		Map<String, Object> props = new HashMap<String, Object>();
-		props.putAll(attrs);
-		
-		if (n instanceof GenericStringContentNode)
+		else
 		{
-			String content = ((GenericStringContentNode<T>) n).getContent();
-			if (content != null || printNullProps)
-				props.put("content", content);
+			// Shortcuts
+			int count = n.getPropertyCount();
+			if (count > 2)
+				return true;
+			if (count == 0)
+				return false;
+			
+			AstNodePropertyIterator i = n.propertyIterator();
+			while (i.next())
+			{
+				if (i.getName().equals("rtd"))
+				{
+					if (i.getValue() != null)
+						return true;
+				}
+				else if (!i.getName().equals("content") || !(n instanceof GenericStringContentNode))
+				{
+					return true;
+				}
+			}
+			
+			return false;
 		}
+	}
+	
+	protected void printNode(AstNode<T> n)
+	{
+		p.indent(n.getNodeName());
+		p.println('(');
+		
+		p.incIndent();
+		printNodeContent(n);
+		p.decIndent();
+		
+		p.indentln(')');
+	}
+	
+	protected void printNodeContent(AstNode<T> n)
+	{
+		if (hasVisibleProperties(n))
+		{
+			printProperties(n);
+			if (!n.isEmpty())
+				p.needNewlines(2);
+		}
+		
+		printListOfNodes(n);
+	}
+	
+	protected void printProperties(AstNode<T> n)
+	{
+		Map<String, Object> props = new TreeMap<String, Object>();
+		
+		for (Entry<String, Object> entry : n.getAttributes().entrySet())
+			props.put(entry.getKey(), entry.getValue());
 		
 		AstNodePropertyIterator i = n.propertyIterator();
 		while (i.next())
 		{
-			Object value = i.getValue();
-			/*
-			if (value != null || printNullProps)
-				props.put(i.getName(), value);
-			*/
-			if (value != null || !i.getName().equals("rtd"))
-				props.put(i.getName(), value);
+			if (i.getValue() != null || !i.getName().equals("rtd"))
+				props.put(i.getName(), i.getValue());
 		}
 		
-		if (!props.isEmpty())
+		p.indentln("Properties:");
+		
+		p.incIndent();
+		for (Entry<String, Object> entry : props.entrySet())
 		{
-			indent();
-			out.println("Properties:");
+			p.indent(n.hasAttribute(entry.getKey()) ? "" : "{N} ");
+			p.print(entry.getKey());
+			p.print(" = ");
+			printPropertyValue(entry.getValue());
 		}
-		
-		List<String> keys = new ArrayList<String>(props.keySet());
-		Collections.sort(keys);
-		
-		incIndent();
-		for (String name : keys)
+		p.decIndent();
+	}
+	
+	protected void printPropertyValue(Object value)
+	{
+		if (value == null)
 		{
-			Object value = props.get(name);
-			
-			if (attrs.containsKey(name))
-			{
-				indent();
-				if (!legacyIndentation)
-					out.print("    ");
-				out.print(name + " = ");
-			}
-			else
-			{
-				indent();
-				out.print("{N} " + name + " = ");
-			}
-			
-			if (value instanceof String)
-			{
-				out.println(mkStr((String) value));
-			}
-			else if (value instanceof AstNode)
-			{
-				out.println();
-				incIndent();
-				dispatch((T) value);
-				decIndent();
-			}
-			else if (value instanceof Collection)
-			{
-				Collection<?> c = (Collection<?>) value;
-				if (c.isEmpty())
-				{
-					out.println("[]");
-				}
-				else
-				{
-					out.println();
-					indent();
-					out.println('[');
-					incIndent();
-					{
-						Iterator<?> k = c.iterator();
-						int last = c.size() - 1;
-						for (int j = 0; k.hasNext(); ++j)
-						{
-							Object o = k.next();
-							indent();
-							String s = "null";
-							if (o != null)
-								s = o.toString();
-							out.println((j != last) ? s + ',' : s);
-						}
-					}
-					decIndent();
-					indent();
-					out.println(']');
-				}
-			}
-			else
-			{
-				out.println(value);
-			}
+			p.println("null");
 		}
-		decIndent();
-		
-		if (!props.isEmpty() && !n.isEmpty())
-			out.println();
-		
-		for (Object c : n)
-			dispatch((T) c);
-	}
-	
-	protected String printNodeContentToString(AstNode<?> n)
-	{
-		String singleLine = null;
-		
-		if (n.size() == 1)
+		else if (value instanceof String)
 		{
-			PrintWriter oldOut = out;
-			StringWriter w = new StringWriter();
-			out = new PrintWriter(w);
-			
-			printNodeContent(n);
-			
-			out = oldOut;
-			singleLine = w.toString().trim();
-			if (singleLine.indexOf('\n') != -1 ||
-					singleLine.indexOf('\r') != -1)
-				singleLine = null;
+			p.print('"');
+			p.print(StringUtils.escJava((String) value));
+			p.println('"');
 		}
-		
-		return singleLine;
-	}
-	
-	protected void incIndent()
-	{
-		this.indentStr += "  ";
-	}
-	
-	protected void decIndent()
-	{
-		this.indentStr =
-				this.indentStr.substring(0, this.indentStr.length() - 2);
-	}
-	
-	protected void indent()
-	{
-		out.print(this.indentStr);
-	}
-	
-	private String mkStr(String str)
-	{
-		if (str == null)
-			return "null";
+		else if (value instanceof AstNode)
+		{
+			p.incIndent();
+			@SuppressWarnings("unchecked")
+			T node = (T) value;
+			dispatch(node);
+			p.decIndent();
+		}
+		/*
+		else if (value instanceof GenericEntityMap)
+		{
+			@SuppressWarnings("unchecked")
+			GenericEntityMap<T> map = (GenericEntityMap<T>) value;
+			printEntityMap(map);
+		}
+		*/
+		else if (value instanceof Collection)
+		{
+			printCollection((Collection<?>) value);
+		}
 		else
-			return '"' + StringUtils.escJava(str) + '"';
+		{
+			p.println(value);
+		}
+	}
+	
+	/*
+	private void printEntityMap(GenericEntityMap<T> entityMap)
+	{
+		if (entityMap.getMap().isEmpty())
+		{
+			p.println("[]");
+		}
+		else
+		{
+			Map<Integer, T> map = new TreeMap<Integer, T>(entityMap.getMap());
+			
+			p.println("[");
+			
+			p.incIndent();
+			for (Iterator<Entry<Integer, T>> k = map.entrySet().iterator(); k.hasNext();)
+			{
+				p.indent();
+				Entry<Integer, T> entry = k.next();
+				p.print(entry.getKey().toString());
+				p.print(" = ");
+				printPropertyValue(entry.getValue());
+				p.ignoreNewlines();
+				p.println(k.hasNext() ? "," : "");
+			}
+			p.decIndent();
+			
+			p.indentln(']');
+		}
+	}
+	*/
+	
+	private void printCollection(Collection<?> c)
+	{
+		if (c.isEmpty())
+		{
+			p.println("[]");
+		}
+		else
+		{
+			// TODO: Also include single line case!
+			
+			p.indentln("[");
+			
+			p.incIndent();
+			for (Iterator<?> k = c.iterator(); k.hasNext();)
+			{
+				p.indent();
+				printPropertyValue(k.next());
+				p.ignoreNewlines();
+				p.println(k.hasNext() ? "," : "");
+			}
+			p.decIndent();
+			
+			p.indentln(']');
+		}
+	}
+	
+	protected void printListOfNodes(AstNode<T> n)
+	{
+		for (Iterator<T> i = n.iterator(); i.hasNext();)
+			dispatch(i.next());
+	}
+	
+	// =========================================================================
+	
+	protected boolean isSingleLine(String text)
+	{
+		return (text.indexOf('\n') == -1) && (text.indexOf('\r') == -1);
+	}
+	
+	// =========================================================================
+	
+	public static <T extends AstNode<T>> String print(T node)
+	{
+		return print(new StringWriter(), node).toString();
+	}
+	
+	public static <T extends AstNode<T>> Writer print(Writer writer, T node)
+	{
+		new AstPrinter<T>(writer).go(node);
+		return writer;
+	}
+	
+	// =========================================================================
+	
+	protected final PrinterBase p;
+	
+	public AstPrinter(Writer writer)
+	{
+		this.p = new PrinterBase(writer);
+	}
+	
+	protected Object after(T node, Object result)
+	{
+		p.flush();
+		return result;
+		
 	}
 }
