@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.GenericContentNode;
+import de.fau.cs.osr.ptk.common.ast.GenericLeafNode;
 import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
 import de.fau.cs.osr.ptk.common.ast.GenericStringContentNode;
 import de.fau.cs.osr.ptk.common.ast.GenericText;
@@ -58,43 +59,46 @@ public class AstPrinter<T extends AstNode<T>>
 		}
 	}
 	
+	public void visit(GenericLeafNode<T> n)
+	{
+		if (n.isEmpty() && !hasVisibleProperties(n))
+		{
+			p.indent(n.getNodeName());
+			p.println("()");
+		}
+		else
+		{
+			printNode(n);
+		}
+	}
+	
 	public void visit(GenericText<T> n)
 	{
-		Memoize m = p.memoizeStart(n);
-		if (m != null)
+		if (!hasVisibleProperties(n))
 		{
-			if (!hasVisibleProperties(n))
-			{
-				p.indent(n.getNodeName());
-				p.print("(\"");
-				p.print(StringUtils.escJava(n.getContent()));
-				p.println("\")");
-			}
-			else
-			{
-				printNode(n);
-			}
-			p.memoizeStop(m);
+			p.indent(n.getNodeName());
+			p.print("(\"");
+			p.print(StringUtils.escJava(n.getContent()));
+			p.println("\")");
+		}
+		else
+		{
+			printNode(n);
 		}
 	}
 	
 	public void visit(GenericStringContentNode<T> n)
 	{
-		Memoize m = p.memoizeStart(n);
-		if (m != null)
+		if (!hasVisibleProperties(n))
 		{
-			if (!hasVisibleProperties(n))
-			{
-				p.indent(n.getNodeName());
-				p.print("(\"");
-				p.print(StringUtils.escJava(n.getContent()));
-				p.println("\")");
-			}
-			else
-			{
-				printNode(n);
-			}
-			p.memoizeStop(m);
+			p.indent(n.getNodeName());
+			p.print("(\"");
+			p.print(StringUtils.escJava(n.getContent()));
+			p.println("\")");
+		}
+		else
+		{
+			printNode(n);
 		}
 	}
 	
@@ -113,18 +117,24 @@ public class AstPrinter<T extends AstNode<T>>
 			}
 			else
 			{
-				OutputBuffer b = p.outputBufferStart();
-				printListOfNodes(n);
-				b.stop();
-				
-				String output = b.getBuffer().trim();
-				if (isSingleLine(output))
+				boolean singleLine = false;
+				if (isCompact() && n.size() <= 1)
 				{
-					p.indent("[ ");
-					p.print(output);
-					p.println(" ]");
+					OutputBuffer b = p.outputBufferStart();
+					printListOfNodes(n);
+					b.stop();
+					
+					String output = b.getBuffer().trim();
+					if (isSingleLine(output))
+					{
+						p.indent("[ ");
+						p.print(output);
+						p.println(" ]");
+						singleLine = true;
+					}
 				}
-				else
+				
+				if (!singleLine)
 				{
 					p.indentln("[");
 					
@@ -155,19 +165,25 @@ public class AstPrinter<T extends AstNode<T>>
 			}
 			else
 			{
-				OutputBuffer b = p.outputBufferStart();
-				printListOfNodes(n);
-				b.stop();
-				
-				String output = b.getBuffer().trim();
-				if (isSingleLine(output))
+				boolean singleLine = false;
+				if (isCompact() && n.size() <= 1)
 				{
-					p.indent(n.getNodeName());
-					p.print('(');
-					p.print(output);
-					p.println(')');
+					OutputBuffer b = p.outputBufferStart();
+					printListOfNodes(n);
+					b.stop();
+					
+					String output = b.getBuffer().trim();
+					if (isSingleLine(output))
+					{
+						p.indent(n.getNodeName());
+						p.print('(');
+						p.print(output);
+						p.println(')');
+						singleLine = true;
+					}
 				}
-				else
+				
+				if (!singleLine)
 				{
 					p.indent(n.getNodeName());
 					p.println("([");
@@ -397,6 +413,8 @@ public class AstPrinter<T extends AstNode<T>>
 	public AstPrinter(Writer writer)
 	{
 		this.p = new PrinterBase(writer);
+		this.p.setMemoize(true);
+		this.setCompact(true);
 	}
 	
 	protected Object after(T node, Object result)
@@ -404,5 +422,19 @@ public class AstPrinter<T extends AstNode<T>>
 		p.flush();
 		return result;
 		
+	}
+	
+	// =========================================================================
+	
+	private boolean compact = true;
+	
+	public void setCompact(boolean compact)
+	{
+		this.compact = compact;
+	}
+	
+	public boolean isCompact()
+	{
+		return compact;
 	}
 }
