@@ -367,7 +367,7 @@ public class PrinterBase
 	
 	public static final class Memoize
 	{
-		private final Object node;
+		private final Object o;
 		
 		private final State state;
 		
@@ -375,14 +375,14 @@ public class PrinterBase
 		
 		public Memoize(Object node, State state)
 		{
-			this.node = node;
+			this.o = node;
 			this.state = state;
 			this.outputBuffer = null;
 		}
 		
 		public Memoize(Object node, OutputBuffer outputBuffer)
 		{
-			this.node = node;
+			this.o = node;
 			this.state = outputBuffer.getStateOnStart();
 			this.outputBuffer = outputBuffer;
 		}
@@ -397,7 +397,7 @@ public class PrinterBase
 		{
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((node == null) ? 0 : node.hashCode());
+			result = prime * result + ((o == null) ? 0 : o.hashCode());
 			result = prime * result + ((state == null) ? 0 : state.hashCode());
 			return result;
 		}
@@ -412,12 +412,12 @@ public class PrinterBase
 			if (getClass() != obj.getClass())
 				return false;
 			Memoize other = (Memoize) obj;
-			if (node == null)
+			if (o == null)
 			{
-				if (other.node != null)
+				if (other.o != null)
 					return false;
 			}
-			else if (!node.equals(other.node))
+			else if (o != other.o)
 				return false;
 			if (state == null)
 			{

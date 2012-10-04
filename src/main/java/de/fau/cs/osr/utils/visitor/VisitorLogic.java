@@ -18,8 +18,14 @@ package de.fau.cs.osr.utils.visitor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class VisitorLogic<T>
@@ -129,24 +135,66 @@ public class VisitorLogic<T>
 		
 		Class<?> vClass = key.getVClass();
 		Class<?> nClass = key.getNClass();
-		do
+		
+		List<Class<?>> candidates = new ArrayList<Class<?>>();
+		
+		// Do a breadth first search in the hierarchy
+		Queue<Class<?>> work = new ArrayDeque<Class<?>>();
+		work.add(nClass);
+		while (!work.isEmpty())
 		{
+			Class<?> workItem = work.remove();
 			try
 			{
-				method = vClass.getMethod("visit", nClass);
-				break;
+				method = vClass.getMethod("visit", workItem);
+				candidates.add(workItem);
 			}
 			catch (NoSuchMethodException e)
 			{
-				// Try the interfaces
-				method = tryInterfaces(nClass.getInterfaces(), vClass);
-				if (method != null)
-					break;
-				
-				// Try to find visit() method for a superclass of node class
-				nClass = nClass.getSuperclass();
+				// Consider non-interface classes first
+				Class<?> superclass = workItem.getSuperclass();
+				if (superclass != null)
+					work.add(superclass);
+				for (Class<?> i : workItem.getInterfaces())
+					work.add(i);
 			}
-		} while (nClass != null);
+		}
+		
+		if (!candidates.isEmpty())
+		{
+			Collections.sort(candidates, new Comparator<Class<?>>()
+			{
+				@Override
+				public int compare(Class<?> arg0, Class<?> arg1)
+				{
+					if (arg0 == arg1)
+					{
+						return 0;
+					}
+					else if (arg0.isAssignableFrom(arg1))
+					{
+						return +1;
+					}
+					else if (arg1.isAssignableFrom(arg0))
+					{
+						return -1;
+					}
+					else
+					{
+						throw new MultipleVisitMethodsMatchException(arg0, arg1);
+					}
+				}
+			});
+			
+			try
+			{
+				method = vClass.getMethod("visit", candidates.get(0));
+			}
+			catch (NoSuchMethodException e)
+			{
+				throw new InternalError("This cannot happen");
+			}
+		}
 		
 		Target target = new Target(key, method);
 		Target cached = CACHE.putIfAbsent(target, target);
@@ -163,27 +211,6 @@ public class VisitorLogic<T>
 			
 			return target;
 		}
-	}
-	
-	private static Method tryInterfaces(Class<?>[] interfaces, Class<?> vClass)
-	{
-		Method method = null;
-		for (Class<?> nClass : interfaces)
-		{
-			try
-			{
-				method = vClass.getMethod("visit", nClass);
-				break;
-			}
-			catch (NoSuchMethodException e)
-			{
-				// Try the interfaces
-				method = tryInterfaces(nClass.getInterfaces(), nClass);
-				if (method != null)
-					break;
-			}
-		}
-		return method;
 	}
 	
 	private static synchronized void sweepCache()
