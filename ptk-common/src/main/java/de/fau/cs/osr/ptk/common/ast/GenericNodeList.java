@@ -167,7 +167,7 @@ public class GenericNodeList<T extends AstNode<T>>
 		{
 			return false;
 		}
-		else if (e.getClass() == this.getClass())
+		else if (e.getNodeType() == AstNode.NT_NODE_LIST)
 		{
 			return children.addAll(((GenericNodeList<T>) e).children);
 		}
@@ -210,7 +210,7 @@ public class GenericNodeList<T extends AstNode<T>>
 			{
 				continue;
 			}
-			else if (n.getClass() == this.getClass())
+			else if (n.getNodeType() == AstNode.NT_NODE_LIST)
 			{
 				insert.addAll(((GenericNodeList<T>) n).children);
 			}
@@ -256,7 +256,7 @@ public class GenericNodeList<T extends AstNode<T>>
 			throw new NullPointerException(
 					"A NodeList must not contain a null element!");
 		}
-		else if (value.getClass() == this.getClass())
+		else if (value.getNodeType() == AstNode.NT_NODE_LIST)
 		{
 			throw new IllegalArgumentException(
 					"Must not set a single element to a NodeList");
@@ -273,7 +273,7 @@ public class GenericNodeList<T extends AstNode<T>>
 		if (element == null)
 			return;
 		
-		else if (element.getClass() == this.getClass())
+		else if (element.getNodeType() == AstNode.NT_NODE_LIST)
 		{
 			addAll(index, element);
 		}
@@ -464,7 +464,7 @@ public class GenericNodeList<T extends AstNode<T>>
 				throw new NullPointerException(
 						"A NodeList must not contain a null element!");
 			}
-			else if (e.getClass() == GenericNodeList.this.getClass())
+			else if (e.getNodeType() == AstNode.NT_NODE_LIST)
 			{
 				throw new IllegalArgumentException(
 						"Must not set a single element to a NodeList");
@@ -482,7 +482,7 @@ public class GenericNodeList<T extends AstNode<T>>
 			if (e == null)
 				return;
 			
-			if (e.getClass() == GenericNodeList.this.getClass())
+			if (e.getNodeType() == AstNode.NT_NODE_LIST)
 			{
 				for (T n : (GenericNodeList<T>) e)
 					i.add(n);
