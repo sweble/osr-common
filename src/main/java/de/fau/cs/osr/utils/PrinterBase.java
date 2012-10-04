@@ -305,27 +305,62 @@ public class PrinterBase
 	
 	private final HashMap<Memoize, Memoize> cache = new HashMap<Memoize, Memoize>();
 	
+	private int reuse = 0;
+	
+	private boolean memoize = true;
+	
+	// =========================================================================
+	
+	public void setMemoize(boolean memoize)
+	{
+		this.memoize = memoize;
+	}
+	
+	public boolean isMemoize()
+	{
+		return memoize;
+	}
+	
 	// =========================================================================
 	
 	public Memoize memoizeStart(Object node)
 	{
-		//return new Memoize((Object) null, (State) null);
-		Memoize m = cache.get(new Memoize(node, getState()));
-		if (m == null)
+		if (!memoize)
 		{
-			return new Memoize(node, outputBufferStart());
+			return new Memoize((Object) null, (State) null);
 		}
 		else
 		{
-			m.getOutputBuffer().flush();
-			return null;
+			Memoize m = cache.get(new Memoize(node, getState()));
+			if (m == null)
+			{
+				return new Memoize(node, outputBufferStart());
+			}
+			else
+			{
+				++reuse;
+				m.getOutputBuffer().flush();
+				return null;
+			}
 		}
 	}
 	
 	public void memoizeStop(Memoize m)
 	{
-		m.getOutputBuffer().flush();
-		cache.put(m, m);
+		if (memoize)
+		{
+			m.getOutputBuffer().flush();
+			cache.put(m, m);
+		}
+	}
+	
+	public void printMemoizationStats()
+	{
+		System.out.format(
+				"% 6d / % 6d / %2.2f\n",
+				cache.size(),
+				reuse,
+				(float) reuse / (float) cache.size());
 	}
 	
 	// =========================================================================
