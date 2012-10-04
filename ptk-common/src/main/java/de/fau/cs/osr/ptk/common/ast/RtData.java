@@ -268,20 +268,28 @@ public class RtData
 	
 	private void addNodeOrObject(ArrayList<Object> result, Object o)
 	{
-		if (o instanceof GenericNodeList)
+		if (o instanceof AstNode)
 		{
-			for (AstNode<?> n : (GenericNodeList<?>) o)
-				addNodeOrObject(result, n);
-		}
-		// FIXME: REMOVE THIS CASE!
-		else if (o instanceof GenericContentNode)
-		{
-			for (AstNode<?> n : (GenericContentNode<?, ?>) o)
-				addNodeOrObject(result, n);
-		}
-		else if (o instanceof GenericText)
-		{
-			rtAddString(result, ((GenericText<?>) o).getContent());
+			AstNode<?> node = (AstNode<?>) o;
+			if (node.getNodeType() == AstNode.NT_NODE_LIST)
+			{
+				for (AstNode<?> c : (GenericNodeList<?>) o)
+					addNodeOrObject(result, c);
+			}
+			// FIXME: REMOVE THIS CASE!
+			else if (o instanceof GenericContentNode)
+			{
+				for (AstNode<?> c : (GenericContentNode<?, ?>) o)
+					addNodeOrObject(result, c);
+			}
+			else if (node.getNodeType() == AstNode.NT_TEXT)
+			{
+				rtAddString(result, ((GenericText<?>) o).getContent());
+			}
+			else
+			{
+				result.add(o);
+			}
 		}
 		else
 		{
