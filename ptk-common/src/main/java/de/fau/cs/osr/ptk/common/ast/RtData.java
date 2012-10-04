@@ -112,9 +112,9 @@ public class RtData
 		set(glue);
 	}
 	
-	protected RtData(RtData rtDataPtk)
+	protected RtData(RtData rtData)
 	{
-		Object[][] other = rtDataPtk.fields;
+		Object[][] other = rtData.fields;
 		
 		this.fields = new Object[other.length][];
 		for (int i = 0; i < fields.length; ++i)
@@ -250,7 +250,7 @@ public class RtData
 		}
 	}
 	
-	private void addObject(ArrayList<Object> result, Object o)
+	protected void addObject(ArrayList<Object> result, Object o)
 	{
 		if (o instanceof Character)
 		{
@@ -266,7 +266,7 @@ public class RtData
 		}
 	}
 	
-	private void addNodeOrObject(ArrayList<Object> result, Object o)
+	protected void addNodeOrObject(ArrayList<Object> result, Object o)
 	{
 		if (o instanceof AstNode)
 		{
@@ -297,7 +297,7 @@ public class RtData
 		}
 	}
 	
-	private static void rtAddString(ArrayList<Object> result, String text)
+	protected static void rtAddString(ArrayList<Object> result, String text)
 	{
 		if (text.isEmpty())
 			return;
@@ -378,7 +378,7 @@ public class RtData
 		}
 	}
 	
-	private void toString(int index, StringBuilder sb)
+	protected void toString(int index, StringBuilder sb)
 	{
 		Object[] field = fields[index];
 		for (int i = 0; i < field.length; ++i)
@@ -403,7 +403,7 @@ public class RtData
 		sb.append(o.toString());
 	}
 	
-	private void stringRep(StringBuilder sb, String str)
+	protected void stringRep(StringBuilder sb, String str)
 	{
 		sb.append('"');
 		sb.append(StringUtils.escJava(str));
