@@ -389,6 +389,15 @@ public class GenericNodeList<T extends AstNode<T>>
 	
 	// =========================================================================
 	
+	public void exchange(GenericNodeList<T> other)
+	{
+		LinkedList<T> tmp = this.children;
+		this.children = other.children;
+		other.children = tmp;
+	}
+	
+	// =========================================================================
+	
 	private final class ChildListIterator
 			implements
 				AstChildIterator<T>
