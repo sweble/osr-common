@@ -51,8 +51,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
-import de.fau.cs.osr.ptk.common.ast.GenericText;
+import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
+import de.fau.cs.osr.ptk.common.ast.AstText;
 import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
 import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
@@ -150,10 +150,10 @@ public class XmlWriter<T extends AstNode<T>>
 		if (!nodeClass.isAssignableFrom(textClass))
 			throw new IllegalArgumentException("An instance of textClass must be assignable to nodeClass");
 		
-		if (!GenericNodeList.class.isAssignableFrom(listClass))
-			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + GenericNodeList.class.getName());
-		if (!GenericText.class.isAssignableFrom(textClass))
-			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + GenericText.class.getName());
+		if (!AstNodeListImpl.class.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + AstNodeListImpl.class.getName());
+		if (!AstText.class.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + AstText.class.getName());
 	}
 	
 	// =========================================================================
@@ -263,11 +263,11 @@ public class XmlWriter<T extends AstNode<T>>
 	{
 		if (listClass.isInstance(n))
 		{
-			visit((GenericNodeList<T>) n);
+			visit((AstNodeListImpl<T>) n);
 		}
 		else if (textClass.isInstance(n))
 		{
-			visit((GenericText<T>) n);
+			visit((AstText<T>) n);
 		}
 		else if (n == null)
 		{
@@ -322,7 +322,7 @@ public class XmlWriter<T extends AstNode<T>>
 		endElement(tagName);
 	}
 	
-	private void visit(GenericText<T> n) throws SAXException
+	private void visit(AstText<T> n) throws SAXException
 	{
 		if (n.getNativeLocation() != null)
 			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
@@ -335,7 +335,7 @@ public class XmlWriter<T extends AstNode<T>>
 		endElement(TEXT_QNAME);
 	}
 	
-	private void visit(GenericNodeList<T> n) throws SAXException, JAXBException, IOException
+	private void visit(AstNodeListImpl<T> n) throws SAXException, JAXBException, IOException
 	{
 		if (n.getNativeLocation() != null)
 			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());

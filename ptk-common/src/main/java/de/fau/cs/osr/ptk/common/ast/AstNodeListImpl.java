@@ -32,16 +32,18 @@ import xtc.util.Pair;
  * Invariants: <br />
  * <ul>
  * <li>This list never contains {@code null} as node.</li>
- * <li>This list never contains another {@link GenericNodeList} as node.</li>
+ * <li>This list never contains another {@link AstNodeListImpl} as node.</li>
  * </ul>
  * 
  * In order to assure these invariants, all functions adding nodes to this list
  * will discard null references and will recursively flatten any
- * {@link GenericNodeList}.
+ * {@link AstNodeListImpl}.
  */
-public class GenericNodeList<T extends AstNode<T>>
+public class AstNodeListImpl<T extends AstNode<T>>
 		extends
-			GenericInnerNode<T>
+			AstAbstractInnerNode<T>
+		implements
+			AstNodeList<T>
 {
 	private static final long serialVersionUID = -3855416846550776026L;
 	
@@ -51,16 +53,16 @@ public class GenericNodeList<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public GenericNodeList()
+	public AstNodeListImpl()
 	{
 	}
 	
-	public GenericNodeList(T child)
+	public AstNodeListImpl(T child)
 	{
 		add(child);
 	}
 	
-	public GenericNodeList(
+	public AstNodeListImpl(
 			T car,
 			Pair<? extends T> cdr)
 	{
@@ -68,13 +70,13 @@ public class GenericNodeList<T extends AstNode<T>>
 		addAll(cdr);
 	}
 	
-	public GenericNodeList(T a, T b)
+	public AstNodeListImpl(T a, T b)
 	{
 		add(a);
 		add(b);
 	}
 	
-	public GenericNodeList(
+	public AstNodeListImpl(
 			T a,
 			T b,
 			T c)
@@ -84,7 +86,7 @@ public class GenericNodeList<T extends AstNode<T>>
 		add(c);
 	}
 	
-	public GenericNodeList(
+	public AstNodeListImpl(
 			T a,
 			T b,
 			T c,
@@ -96,17 +98,17 @@ public class GenericNodeList<T extends AstNode<T>>
 		add(d);
 	}
 	
-	public GenericNodeList(Pair<? extends T> list)
+	public AstNodeListImpl(Pair<? extends T> list)
 	{
 		addAll(list);
 	}
 	
-	public GenericNodeList(Collection<? extends T> list)
+	public AstNodeListImpl(Collection<? extends T> list)
 	{
 		addAll(list);
 	}
 	
-	public GenericNodeList(T... children)
+	public AstNodeListImpl(T... children)
 	{
 		for (T x : children)
 			add(x);
@@ -169,7 +171,7 @@ public class GenericNodeList<T extends AstNode<T>>
 		}
 		else if (e.getNodeType() == AstNode.NT_NODE_LIST)
 		{
-			return children.addAll(((GenericNodeList<T>) e).children);
+			return children.addAll(((AstNodeListImpl<T>) e).children);
 		}
 		else
 		{
@@ -212,7 +214,7 @@ public class GenericNodeList<T extends AstNode<T>>
 			}
 			else if (n.getNodeType() == AstNode.NT_NODE_LIST)
 			{
-				insert.addAll(((GenericNodeList<T>) n).children);
+				insert.addAll(((AstNodeListImpl<T>) n).children);
 			}
 			else
 			{
@@ -389,11 +391,21 @@ public class GenericNodeList<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public void exchange(GenericNodeList<T> other)
+	@Override
+	public void exchange(AstNodeList<T> other)
 	{
-		LinkedList<T> tmp = this.children;
-		this.children = other.children;
-		other.children = tmp;
+		if (other instanceof AstNodeListImpl)
+		{
+			AstNodeListImpl<T> other2 = (AstNodeListImpl<T>) other;
+			LinkedList<T> tmp = this.children;
+			this.children = other2.children;
+			other2.children = tmp;
+		}
+		else
+		{
+			AstNodeListImpl<T> tmp = new AstNodeListImpl<T>(other);
+			this.exchange(tmp);
+		}
 	}
 	
 	// =========================================================================
@@ -493,7 +505,7 @@ public class GenericNodeList<T extends AstNode<T>>
 			
 			if (e.getNodeType() == AstNode.NT_NODE_LIST)
 			{
-				for (T n : (GenericNodeList<T>) e)
+				for (T n : (AstNodeList<T>) e)
 					i.add(n);
 				current = null;
 			}
@@ -515,7 +527,7 @@ public class GenericNodeList<T extends AstNode<T>>
 		@Override
 		public void reset()
 		{
-			i = GenericNodeList.this.children.listIterator(start);
+			i = AstNodeListImpl.this.children.listIterator(start);
 		}
 	}
 }

@@ -38,7 +38,7 @@ import de.fau.cs.osr.utils.WrappedException;
  * @see NodeList
  * @see LeafNode
  */
-public abstract class GenericAstNode<T extends AstNode<T>>
+public abstract class AstNodeImpl<T extends AstNode<T>>
 		extends
 			AbstractList<T>
 		implements
@@ -58,16 +58,16 @@ public abstract class GenericAstNode<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public GenericAstNode()
+	public AstNodeImpl()
 	{
 	}
 	
-	public GenericAstNode(Location location)
+	public AstNodeImpl(Location location)
 	{
 		setNativeLocation(location);
 	}
 	
-	public GenericAstNode(xtc.tree.Location location)
+	public AstNodeImpl(xtc.tree.Location location)
 	{
 		setLocation(location);
 	}
@@ -491,7 +491,7 @@ public abstract class GenericAstNode<T extends AstNode<T>>
 	public Object clone() throws CloneNotSupportedException
 	{
 		@SuppressWarnings("unchecked")
-		GenericAstNode<T> n = (GenericAstNode<T>) super.clone();
+		AstNodeImpl<T> n = (AstNodeImpl<T>) super.clone();
 		
 		// not necessary, Location is immutable
 		//n.location = new Location(n.location);
@@ -512,11 +512,11 @@ public abstract class GenericAstNode<T extends AstNode<T>>
 	}
 	
 	@SuppressWarnings("unchecked")
-	public GenericAstNode<T> cloneWrapException()
+	public AstNodeImpl<T> cloneWrapException()
 	{
 		try
 		{
-			return (GenericAstNode<T>) this.clone();
+			return (AstNodeImpl<T>) this.clone();
 		}
 		catch (CloneNotSupportedException e)
 		{
@@ -526,9 +526,9 @@ public abstract class GenericAstNode<T extends AstNode<T>>
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public GenericAstNode<T> deepClone() throws CloneNotSupportedException
+	public AstNodeImpl<T> deepClone() throws CloneNotSupportedException
 	{
-		GenericAstNode<T> n = (GenericAstNode<T>) clone();
+		AstNodeImpl<T> n = (AstNodeImpl<T>) clone();
 		
 		if (isList())
 		{
@@ -545,7 +545,7 @@ public abstract class GenericAstNode<T extends AstNode<T>>
 		return n;
 	}
 	
-	public GenericAstNode<T> deepCloneWrapException()
+	public AstNodeImpl<T> deepCloneWrapException()
 	{
 		try
 		{
@@ -576,7 +576,7 @@ public abstract class GenericAstNode<T extends AstNode<T>>
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		GenericAstNode<T> other = (GenericAstNode<T>) obj;
+		AstNodeImpl<T> other = (AstNodeImpl<T>) obj;
 		
 		// Check location
 		if (location == null)

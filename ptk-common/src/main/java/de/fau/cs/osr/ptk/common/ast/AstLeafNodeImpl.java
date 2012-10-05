@@ -19,59 +19,27 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 
-import xtc.tree.Location;
-import de.fau.cs.osr.ptk.common.ast.GenericInnerNode.GenericInnerNode1;
-
-public abstract class GenericContentNode<T extends AstNode<T>, L extends GenericNodeList<T>>
+public abstract class AstLeafNodeImpl<T extends AstNode<T>>
 		extends
-			GenericInnerNode1<T>
+			AstNodeImpl<T>
+		implements
+			AstLeafNode<T>
 {
-	private static final long serialVersionUID = -1222289289745315685L;
+	private static final long serialVersionUID = 3078845253977311630L;
 	
 	// =========================================================================
 	
-	public GenericContentNode()
+	@Override
+	public int size()
 	{
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	public GenericContentNode(Location arg0, T n0)
-	{
-		super(arg0, n0);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public GenericContentNode(Location arg0)
-	{
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public GenericContentNode(T n0)
-	{
-		super(n0);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public L getContent()
-	{
-		return (L) get(0);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public L setContent(L value)
-	{
-		return (L) set(0, (T) value);
+		return 0;
 	}
 	
 	// =========================================================================
-	
-	private static final String[] CHILD_NAMES = new String[] { "content" };
 	
 	public final String[] getChildNames()
 	{
-		return CHILD_NAMES;
+		return EMPTY_CHILD_NAMES;
 	}
 	
 	// =========================================================================
@@ -80,6 +48,6 @@ public abstract class GenericContentNode<T extends AstNode<T>, L extends Generic
 	public void toString(Appendable out) throws IOException
 	{
 		out.append(getClass().getSimpleName());
-		out.append(getContent().toString());
+		out.append("()");
 	}
 }

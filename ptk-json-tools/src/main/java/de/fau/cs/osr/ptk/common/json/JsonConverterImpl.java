@@ -33,8 +33,8 @@ import com.google.gson.JsonSerializationContext;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
-import de.fau.cs.osr.ptk.common.ast.GenericText;
+import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
+import de.fau.cs.osr.ptk.common.ast.AstText;
 import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
@@ -75,10 +75,10 @@ public class JsonConverterImpl<T extends AstNode<T>>
 		if (!nodeClass.isAssignableFrom(textClass))
 			throw new IllegalArgumentException("An instance of textClass must be assignable to nodeClass");
 		
-		if (!GenericNodeList.class.isAssignableFrom(listClass))
-			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + GenericNodeList.class.getName());
-		if (!GenericText.class.isAssignableFrom(textClass))
-			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + GenericText.class.getName());
+		if (!AstNodeListImpl.class.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + AstNodeListImpl.class.getName());
+		if (!AstText.class.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + AstText.class.getName());
 		
 		if (abbrev == null)
 			abbrev = new NameAbbrevService(false);
@@ -394,7 +394,7 @@ public class JsonConverterImpl<T extends AstNode<T>>
 		if (saveLocation && src.getNativeLocation() != null)
 			return serializeAstNode(src, typeOfSrc, context);
 		
-		return new JsonPrimitive(((GenericText<T>) src).getContent());
+		return new JsonPrimitive(((AstText<T>) src).getContent());
 	}
 	
 	T deserializeText(
@@ -406,7 +406,7 @@ public class JsonConverterImpl<T extends AstNode<T>>
 			return (T) deserializeAstNode(json, typeOfT, context);
 		
 		T t = instantiateNode(textClass);
-		((GenericText<T>) t).setContent(json.getAsString());
+		((AstText<T>) t).setContent(json.getAsString());
 		return (T) t;
 	}
 	

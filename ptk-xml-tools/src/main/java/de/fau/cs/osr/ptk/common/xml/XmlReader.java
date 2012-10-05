@@ -37,8 +37,8 @@ import org.apache.commons.codec.binary.Base64;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
-import de.fau.cs.osr.ptk.common.ast.GenericText;
+import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
+import de.fau.cs.osr.ptk.common.ast.AstText;
 import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
@@ -101,10 +101,10 @@ public class XmlReader<T extends AstNode<T>>
 		if (!nodeClass.isAssignableFrom(textClass))
 			throw new IllegalArgumentException("An instance of textClass must be assignable to nodeClass");
 		
-		if (!GenericNodeList.class.isAssignableFrom(listClass))
-			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + GenericNodeList.class.getName());
-		if (!GenericText.class.isAssignableFrom(textClass))
-			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + GenericText.class.getName());
+		if (!AstNodeListImpl.class.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + AstNodeListImpl.class.getName());
+		if (!AstText.class.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + AstText.class.getName());
 	}
 	
 	// =========================================================================
@@ -218,7 +218,7 @@ public class XmlReader<T extends AstNode<T>>
 	private T readText(StartElement elem) throws XMLStreamException, DeserializationException
 	{
 		T text = instantiateNode(elem, textClass);
-		((GenericText<T>) text).setContent(readChars());
+		((AstText<T>) text).setContent(readChars());
 		return (T) text;
 	}
 	

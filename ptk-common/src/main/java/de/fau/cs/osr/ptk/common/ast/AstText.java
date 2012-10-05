@@ -15,20 +15,28 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.ptk.common;
+package de.fau.cs.osr.ptk.common.ast;
 
-import java.io.IOException;
-import java.io.Writer;
-
-public interface GenericPrinterInterface
+public class AstText<T extends AstNode<T>>
+		extends
+			AstStringNodeImpl<T>
 {
-	public void print(Object ast, Writer out) throws IOException;
+	private static final long serialVersionUID = 7614892787867816308L;
 	
-	/**
-	 * Return a name describing the type of text which the printer produces. For
-	 * a pretty printer this could be "wikitext", while for a printer which
-	 * dumps an AST this could be "ast". The extension should be suitable as
-	 * file extension!
-	 */
-	public String getPrintoutType();
+	public AstText()
+	{
+	}
+	
+	public AstText(String content)
+	{
+		super(content);
+	}
+	
+	// =========================================================================
+	
+	@Override
+	public int getNodeType()
+	{
+		return NT_TEXT;
+	}
 }

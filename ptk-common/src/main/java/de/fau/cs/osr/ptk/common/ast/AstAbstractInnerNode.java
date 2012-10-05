@@ -21,18 +21,20 @@ import java.io.IOException;
 
 import xtc.tree.Location;
 
-public abstract class GenericInnerNode<T extends AstNode<T>>
+public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		extends
-			GenericAstNode<T>
+			AstNodeImpl<T>
+		implements
+			AstInnerNode<T>
 {
 	private static final long serialVersionUID = 3931233748530723300L;
 	
-	public GenericInnerNode()
+	public AstAbstractInnerNode()
 	{
 		super();
 	}
 	
-	public GenericInnerNode(Location arg0)
+	public AstAbstractInnerNode(Location arg0)
 	{
 		super(arg0);
 	}
@@ -67,31 +69,31 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode1<T extends AstNode<T>>
+	public static abstract class AstInnerNode1<T extends AstNode<T>>
 			extends
-				GenericInnerNode<T>
+				AstAbstractInnerNode<T>
 	{
 		private static final long serialVersionUID = -8841086798545623538L;
 		
 		private T n0;
 		
-		public GenericInnerNode1()
+		public AstInnerNode1()
 		{
 			super();
 		}
 		
-		public GenericInnerNode1(Location arg0)
+		public AstInnerNode1(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public GenericInnerNode1(T n0)
+		public AstInnerNode1(T n0)
 		{
 			super();
 			set(0, n0);
 		}
 		
-		public GenericInnerNode1(Location arg0, T n0)
+		public AstInnerNode1(Location arg0, T n0)
 		{
 			super(arg0);
 			set(0, n0);
@@ -146,9 +148,9 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode2<T extends AstNode<T>>
+	public static abstract class AstInnerNode2<T extends AstNode<T>>
 			extends
-				GenericInnerNode<T>
+				AstAbstractInnerNode<T>
 	{
 		private static final long serialVersionUID = 6501151075140985136L;
 		
@@ -156,24 +158,24 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 		
 		private T n1;
 		
-		public GenericInnerNode2()
+		public AstInnerNode2()
 		{
 			super();
 		}
 		
-		public GenericInnerNode2(Location arg0)
+		public AstInnerNode2(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public GenericInnerNode2(T n0, T n1)
+		public AstInnerNode2(T n0, T n1)
 		{
 			super();
 			set(0, n0);
 			set(1, n1);
 		}
 		
-		public GenericInnerNode2(
+		public AstInnerNode2(
 				Location arg0,
 				T n0,
 				T n1)
@@ -238,9 +240,9 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode3<T extends AstNode<T>>
+	public static abstract class AstInnerNode3<T extends AstNode<T>>
 			extends
-				GenericInnerNode<T>
+				AstAbstractInnerNode<T>
 	{
 		private static final long serialVersionUID = 7450920544821225168L;
 		
@@ -250,17 +252,17 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 		
 		private T n2;
 		
-		public GenericInnerNode3()
+		public AstInnerNode3()
 		{
 			super();
 		}
 		
-		public GenericInnerNode3(Location arg0)
+		public AstInnerNode3(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public GenericInnerNode3(
+		public AstInnerNode3(
 				T n0,
 				T n1,
 				T n2)
@@ -271,7 +273,7 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 			set(2, n2);
 		}
 		
-		public GenericInnerNode3(
+		public AstInnerNode3(
 				Location arg0,
 				T n0,
 				T n1,
@@ -344,9 +346,9 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public static abstract class GenericInnerNode4<T extends AstNode<T>>
+	public static abstract class AstInnerNode4<T extends AstNode<T>>
 			extends
-				GenericInnerNode<T>
+				AstAbstractInnerNode<T>
 	{
 		private static final long serialVersionUID = -6518009272746861741L;
 		
@@ -358,17 +360,17 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 		
 		private T n3;
 		
-		public GenericInnerNode4()
+		public AstInnerNode4()
 		{
 			super();
 		}
 		
-		public GenericInnerNode4(Location arg0)
+		public AstInnerNode4(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public GenericInnerNode4(
+		public AstInnerNode4(
 				T n0,
 				T n1,
 				T n2,
@@ -381,7 +383,7 @@ public abstract class GenericInnerNode<T extends AstNode<T>>
 			set(3, n3);
 		}
 		
-		public GenericInnerNode4(
+		public AstInnerNode4(
 				Location arg0,
 				T n0,
 				T n1,

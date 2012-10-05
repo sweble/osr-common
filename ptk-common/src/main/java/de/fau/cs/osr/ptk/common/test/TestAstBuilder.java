@@ -20,12 +20,12 @@ package de.fau.cs.osr.ptk.common.test;
 import java.util.Collection;
 
 import xtc.util.Pair;
+import de.fau.cs.osr.ptk.common.ast.AstAbstractInnerNode.AstInnerNode2;
+import de.fau.cs.osr.ptk.common.ast.AstLeafNodeImpl;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.GenericInnerNode.GenericInnerNode2;
-import de.fau.cs.osr.ptk.common.ast.GenericLeafNode;
-import de.fau.cs.osr.ptk.common.ast.GenericNodeList;
-import de.fau.cs.osr.ptk.common.ast.GenericText;
+import de.fau.cs.osr.ptk.common.ast.AstText;
 
 public class TestAstBuilder
 {
@@ -153,10 +153,6 @@ public class TestAstBuilder
 	
 	public static final int AST_TEST_NODE = AstNode.NT_CUSTOM_BIT;
 	
-	public static final int NT_TEST_TEXT = AST_TEST_NODE + 1;
-	
-	public static final int NT_TEST_LIST = AST_TEST_NODE + 2;
-	
 	public static final int NT_TEST_SECTION = AST_TEST_NODE + 3;
 	
 	public static final int NT_TEST_TITLE = AST_TEST_NODE + 4;
@@ -177,7 +173,7 @@ public class TestAstBuilder
 	
 	public static final class Text
 			extends
-				GenericText<TestAstNode>
+				AstText<TestAstNode>
 			implements
 				TestAstNode
 	{
@@ -191,17 +187,11 @@ public class TestAstBuilder
 		{
 			super(text);
 		}
-		
-		@Override
-		public int getNodeType()
-		{
-			return NT_TEST_TEXT;
-		}
 	}
 	
 	public static final class List
 			extends
-				GenericNodeList<TestAstNode>
+				AstNodeListImpl<TestAstNode>
 			implements
 				TestAstNode
 	{
@@ -251,17 +241,11 @@ public class TestAstBuilder
 		{
 			super(child);
 		}
-		
-		@Override
-		public int getNodeType()
-		{
-			return NT_TEST_LIST;
-		}
 	}
 	
 	public static final class Section
 			extends
-				GenericInnerNode2<TestAstNode>
+				AstInnerNode2<TestAstNode>
 			implements
 				TestAstNode
 	{
@@ -394,7 +378,7 @@ public class TestAstBuilder
 	
 	public static final class Title
 			extends
-				GenericNodeList<TestAstNode>
+				AstNodeListImpl<TestAstNode>
 			implements
 				TestAstNode
 	{
@@ -454,7 +438,7 @@ public class TestAstBuilder
 	
 	public static final class Body
 			extends
-				GenericNodeList<TestAstNode>
+				AstNodeListImpl<TestAstNode>
 			implements
 				TestAstNode
 	{
@@ -509,7 +493,7 @@ public class TestAstBuilder
 	
 	public static final class Document
 			extends
-				GenericNodeList<TestAstNode>
+				AstNodeListImpl<TestAstNode>
 			implements
 				TestAstNode
 	{
@@ -564,7 +548,7 @@ public class TestAstBuilder
 	
 	public static final class IdNode
 			extends
-				GenericLeafNode<TestAstNode>
+				AstLeafNodeImpl<TestAstNode>
 			implements
 				TestAstNode
 	{
@@ -610,7 +594,7 @@ public class TestAstBuilder
 	
 	public static final class Url
 			extends
-				GenericLeafNode<TestAstNode>
+				AstLeafNodeImpl<TestAstNode>
 			implements
 				TestAstNode
 	{

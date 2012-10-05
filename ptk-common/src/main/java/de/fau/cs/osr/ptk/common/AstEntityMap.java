@@ -26,7 +26,7 @@ import java.util.Set;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
-public class GenericEntityMap<T extends AstNode<T>>
+public class AstEntityMap<T extends AstNode<T>>
 		implements
 			Serializable
 {

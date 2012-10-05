@@ -21,17 +21,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import xtc.parser.ParseException;
 import de.fau.cs.osr.ptk.common.AstVisitor;
-import de.fau.cs.osr.ptk.common.GenericPrinterInterface;
 import de.fau.cs.osr.ptk.common.ParserInterface;
+import de.fau.cs.osr.ptk.common.PrinterInterface;
+import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.WrappedException;
 
-public abstract class IntegrationTestBase
+public abstract class IntegrationTestBase<T extends AstNode<T>>
 {
 	private static TestResourcesFixture resources;
 	
@@ -105,10 +105,10 @@ public abstract class IntegrationTestBase
 	 */
 	protected void parsePrintAndCompare(
 			File inputFile,
-			AstVisitor[] visitors,
+			AstVisitor<T>[] visitors,
 			String inputSubDir,
 			String expectedSubDir,
-			GenericPrinterInterface printer) throws IOException, ParseException
+			PrinterInterface printer) throws IOException, ParseException
 	{
 		Object ast = parse(inputFile, visitors);
 		
@@ -128,16 +128,18 @@ public abstract class IntegrationTestBase
 	/**
 	 * Override and return parser to use in tests.
 	 */
-	protected abstract ParserInterface instantiateParser();
+	protected abstract ParserInterface<T> instantiateParser();
 	
 	// =========================================================================
 	
-	private Object parse(File inputFile, AstVisitor[] visitors) throws IOException, ParseException
+	private Object parse(File inputFile, AstVisitor<T>... visitors) throws IOException, ParseException
 	{
-		ParserInterface parser = instantiateParser();
+		ParserInterface<T> parser = instantiateParser();
 		
-		if (visitors != null)
-			parser.addVisitors(Arrays.asList(visitors));
+		for (AstVisitor<T> visitor : visitors)
+		{
+			parser.addVisitor(visitor);
+		}
 		
 		FileContent inputFileContent = new FileContent(inputFile);
 		
@@ -146,7 +148,7 @@ public abstract class IntegrationTestBase
 				inputFile.getAbsolutePath());
 	}
 	
-	public String printToString(Object ast, GenericPrinterInterface printer) throws IOException
+	public String printToString(Object ast, PrinterInterface printer) throws IOException
 	{
 		StringWriter writer = new StringWriter();
 		

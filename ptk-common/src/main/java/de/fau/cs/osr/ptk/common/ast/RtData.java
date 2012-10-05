@@ -273,18 +273,12 @@ public class RtData
 			AstNode<?> node = (AstNode<?>) o;
 			if (node.getNodeType() == AstNode.NT_NODE_LIST)
 			{
-				for (AstNode<?> c : (GenericNodeList<?>) o)
-					addNodeOrObject(result, c);
-			}
-			// FIXME: REMOVE THIS CASE!
-			else if (o instanceof GenericContentNode)
-			{
-				for (AstNode<?> c : (GenericContentNode<?, ?>) o)
+				for (AstNode<?> c : (AstNodeList<?>) o)
 					addNodeOrObject(result, c);
 			}
 			else if (node.getNodeType() == AstNode.NT_TEXT)
 			{
-				rtAddString(result, ((GenericText<?>) o).getContent());
+				rtAddString(result, ((AstText<?>) o).getContent());
 			}
 			else
 			{

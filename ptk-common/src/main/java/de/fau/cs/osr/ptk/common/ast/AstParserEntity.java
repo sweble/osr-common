@@ -19,17 +19,17 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 
-public class GenericParserEntity<T extends AstNode<T>>
+public class AstParserEntity<T extends AstNode<T>>
 		extends
-			GenericLeafNode<T>
+			AstLeafNodeImpl<T>
 {
 	private static final long serialVersionUID = 3182955812498375838L;
 	
-	public GenericParserEntity()
+	public AstParserEntity()
 	{
 	}
 	
-	public GenericParserEntity(int id)
+	public AstParserEntity(int id)
 	{
 		setId(id);
 	}
@@ -86,7 +86,7 @@ public class GenericParserEntity<T extends AstNode<T>>
 				switch (index)
 				{
 					case 0:
-						return GenericParserEntity.this.getId();
+						return AstParserEntity.this.getId();
 						
 					default:
 						throw new IndexOutOfBoundsException();
@@ -99,7 +99,7 @@ public class GenericParserEntity<T extends AstNode<T>>
 				switch (index)
 				{
 					case 0:
-						return GenericParserEntity.this.setId((Integer) value);
+						return AstParserEntity.this.setId((Integer) value);
 						
 					default:
 						throw new IndexOutOfBoundsException();
