@@ -54,8 +54,8 @@ public class AstVisitor<T extends AstNode<T>>
 		// FIXME!
 		if (node == null)
 			return null;
-//		if (node == null)
-//			throw new NullPointerException();
+		//		if (node == null)
+		//			throw new NullPointerException();
 		return resolveAndVisit(node);
 	}
 	
@@ -66,8 +66,8 @@ public class AstVisitor<T extends AstNode<T>>
 		// FIXME!
 		if (node == null)
 			return;
-//		if (node == null)
-//			throw new NullPointerException();
+		//		if (node == null)
+		//			throw new NullPointerException();
 		for (T n : node)
 			dispatch(n);
 	}
@@ -94,10 +94,10 @@ public class AstVisitor<T extends AstNode<T>>
 		// FIXME!
 		if (node == null)
 			return;
-//		if (node == null)
-//			throw new NullPointerException();
+		//		if (node == null)
+		//			throw new NullPointerException();
 		
-		if (node.getNodeType() == AstNode.NT_NODE_LIST)
+		if (node.isList())
 		{
 			ListIterator<T> i = node.listIterator();
 			while (i.hasNext())
@@ -107,10 +107,10 @@ public class AstVisitor<T extends AstNode<T>>
 				if (result == null)
 				{
 					// FIXME!
-//					throw new NullPointerException();
-//				}
-//				else if (result == REMOVE)
-//				{	
+					//					throw new NullPointerException();
+					//				}
+					//				else if (result == REMOVE)
+					//				{	
 					i.remove();
 				}
 				else
