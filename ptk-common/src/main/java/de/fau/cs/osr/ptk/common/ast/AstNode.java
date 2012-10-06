@@ -56,6 +56,10 @@ public interface AstNode<T extends AstNode<T>>
 	
 	// =========================================================================
 	
+	public static final String[] EMPTY_CHILD_NAMES = new String[0];
+	
+	// =========================================================================
+	
 	/**
 	 * Returns an integer value that identifies the node type. It's the
 	 * programmers responsibility to make sure these values are unique.

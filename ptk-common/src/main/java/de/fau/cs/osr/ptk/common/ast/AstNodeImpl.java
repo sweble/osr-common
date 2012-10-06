@@ -33,10 +33,6 @@ import de.fau.cs.osr.utils.WrappedException;
  * The parent node of all AST (abstract/attributed syntax tree) nodes.
  * 
  * FIXME: Get rid of Locatable interface somehow ...
- * 
- * @see InnerNode
- * @see NodeList
- * @see LeafNode
  */
 public abstract class AstNodeImpl<T extends AstNode<T>>
 		extends
@@ -45,10 +41,6 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 			AstNode<T>
 {
 	private static final long serialVersionUID = 3333532331617925714L;
-	
-	// =========================================================================
-	
-	protected static final String[] EMPTY_CHILD_NAMES = new String[0];
 	
 	// =========================================================================
 	
@@ -108,7 +100,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	 * class.
 	 */
 	@Override
-	public final String getNodeName()
+	public String getNodeName()
 	{
 		return getClass().getSimpleName();
 	}
