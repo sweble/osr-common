@@ -23,10 +23,6 @@ public class AstText<T extends AstNode<T>>
 {
 	private static final long serialVersionUID = 7614892787867816308L;
 	
-	public AstText()
-	{
-	}
-	
 	public AstText(String content)
 	{
 		super(content);

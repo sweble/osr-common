@@ -29,10 +29,6 @@ public abstract class AstStringNodeImpl<T extends AstNode<T>>
 {
 	private static final long serialVersionUID = -3995972757553601033L;
 	
-	public AstStringNodeImpl()
-	{
-	}
-	
 	public AstStringNodeImpl(String content)
 	{
 		setContent(content);
@@ -51,6 +47,8 @@ public abstract class AstStringNodeImpl<T extends AstNode<T>>
 	@Override
 	public String setContent(String content)
 	{
+		if (content == null)
+			throw new NullPointerException();
 		String old = this.content;
 		this.content = content;
 		return old;

@@ -179,10 +179,6 @@ public class TestAstBuilder
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public Text()
-		{
-		}
-		
 		public Text(String text)
 		{
 			super(text);
