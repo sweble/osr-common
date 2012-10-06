@@ -133,8 +133,8 @@ public class VisitorLogic<T>
 	{
 		Method method = null;
 		
-		Class<?> vClass = key.getVClass();
-		Class<?> nClass = key.getNClass();
+		final Class<?> vClass = key.getVClass();
+		final Class<?> nClass = key.getNClass();
 		
 		List<Class<?>> candidates = new ArrayList<Class<?>>();
 		
@@ -181,7 +181,7 @@ public class VisitorLogic<T>
 					}
 					else
 					{
-						throw new MultipleVisitMethodsMatchException(arg0, arg1);
+						throw new MultipleVisitMethodsMatchException(vClass, nClass, arg0, arg1);
 					}
 				}
 			});
