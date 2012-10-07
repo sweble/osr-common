@@ -17,27 +17,7 @@
 
 package de.fau.cs.osr.ptk.common.ast;
 
-public class AstText<T extends AstNode<T>>
-		extends
-			AstStringNodeImpl<T>
+public enum Uninitialized
 {
-	private static final long serialVersionUID = 7614892787867816308L;
-	
-	protected AstText(Uninitialized u)
-	{
-		super(u);
-	}
-	
-	public AstText(String content)
-	{
-		super(content);
-	}
-	
-	// =========================================================================
-	
-	@Override
-	public int getNodeType()
-	{
-		return NT_TEXT;
-	}
+	X
 }

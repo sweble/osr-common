@@ -50,16 +50,16 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public AstNodeImpl()
+	protected AstNodeImpl()
 	{
 	}
 	
-	public AstNodeImpl(Location location)
+	protected AstNodeImpl(Location location)
 	{
 		setNativeLocation(location);
 	}
 	
-	public AstNodeImpl(xtc.tree.Location location)
+	protected AstNodeImpl(xtc.tree.Location location)
 	{
 		setLocation(location);
 	}

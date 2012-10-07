@@ -26,6 +26,7 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.AstText;
+import de.fau.cs.osr.ptk.common.ast.Uninitialized;
 
 public class TestAstBuilder
 {
@@ -179,6 +180,11 @@ public class TestAstBuilder
 	{
 		private static final long serialVersionUID = 1L;
 		
+		protected Text()
+		{
+			super(Uninitialized.X);
+		}
+		
 		public Text(String text)
 		{
 			super(text);
@@ -195,7 +201,6 @@ public class TestAstBuilder
 		
 		public List()
 		{
-			super();
 		}
 		
 		public List(Collection<? extends TestAstNode> list)
@@ -247,16 +252,15 @@ public class TestAstBuilder
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public Section()
+		protected Section()
 		{
+			super(Uninitialized.X);
 		}
 		
 		public Section(int level, Title title, Body body)
 		{
-			super();
-			this.level = level;
-			setTitle(title);
-			setBody(body);
+			super(title, body);
+			setLevel(level);
 		}
 		
 		@Override
@@ -382,7 +386,6 @@ public class TestAstBuilder
 		
 		public Title()
 		{
-			super();
 		}
 		
 		public Title(Collection<? extends TestAstNode> list)
@@ -442,7 +445,6 @@ public class TestAstBuilder
 		
 		public Body()
 		{
-			super();
 		}
 		
 		public Body(Collection<? extends TestAstNode> list)
@@ -497,7 +499,6 @@ public class TestAstBuilder
 		
 		public Document()
 		{
-			super();
 		}
 		
 		public Document(Collection<? extends TestAstNode> list)
@@ -596,7 +597,7 @@ public class TestAstBuilder
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public Url()
+		protected Url()
 		{
 		}
 		

@@ -25,7 +25,7 @@ public class AstParserEntity<T extends AstNode<T>>
 {
 	private static final long serialVersionUID = 3182955812498375838L;
 	
-	public AstParserEntity()
+	protected AstParserEntity(Uninitialized u)
 	{
 	}
 	

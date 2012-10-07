@@ -29,12 +29,11 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 {
 	private static final long serialVersionUID = 3931233748530723300L;
 	
-	public AstAbstractInnerNode()
+	protected AstAbstractInnerNode()
 	{
-		super();
 	}
 	
-	public AstAbstractInnerNode(Location arg0)
+	protected AstAbstractInnerNode(Location arg0)
 	{
 		super(arg0);
 	}
@@ -85,23 +84,22 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		
 		private T n0;
 		
-		public AstInnerNode1()
+		protected AstInnerNode1(Uninitialized u)
 		{
-			super();
 		}
 		
-		public AstInnerNode1(Location arg0)
+		protected AstInnerNode1(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public AstInnerNode1(T n0)
+		protected AstInnerNode1(T n0)
 		{
 			super();
 			set(0, n0);
 		}
 		
-		public AstInnerNode1(Location arg0, T n0)
+		protected AstInnerNode1(Location arg0, T n0)
 		{
 			super(arg0);
 			set(0, n0);
@@ -166,24 +164,23 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		
 		private T n1;
 		
-		public AstInnerNode2()
+		protected AstInnerNode2(Uninitialized u)
 		{
-			super();
 		}
 		
-		public AstInnerNode2(Location arg0)
+		protected AstInnerNode2(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public AstInnerNode2(T n0, T n1)
+		protected AstInnerNode2(T n0, T n1)
 		{
 			super();
 			set(0, n0);
 			set(1, n1);
 		}
 		
-		public AstInnerNode2(
+		protected AstInnerNode2(
 				Location arg0,
 				T n0,
 				T n1)
@@ -260,17 +257,16 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		
 		private T n2;
 		
-		public AstInnerNode3()
+		protected AstInnerNode3(Uninitialized u)
 		{
-			super();
 		}
 		
-		public AstInnerNode3(Location arg0)
+		protected AstInnerNode3(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public AstInnerNode3(
+		protected AstInnerNode3(
 				T n0,
 				T n1,
 				T n2)
@@ -281,7 +277,7 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 			set(2, n2);
 		}
 		
-		public AstInnerNode3(
+		protected AstInnerNode3(
 				Location arg0,
 				T n0,
 				T n1,
@@ -368,17 +364,16 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		
 		private T n3;
 		
-		public AstInnerNode4()
+		protected AstInnerNode4(Uninitialized u)
 		{
-			super();
 		}
 		
-		public AstInnerNode4(Location arg0)
+		protected AstInnerNode4(Location arg0)
 		{
 			super(arg0);
 		}
 		
-		public AstInnerNode4(
+		protected AstInnerNode4(
 				T n0,
 				T n1,
 				T n2,
@@ -391,7 +386,7 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 			set(3, n3);
 		}
 		
-		public AstInnerNode4(
+		protected AstInnerNode4(
 				Location arg0,
 				T n0,
 				T n1,

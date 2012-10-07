@@ -19,6 +19,8 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 
+import xtc.tree.Location;
+
 public abstract class AstLeafNodeImpl<T extends AstNode<T>>
 		extends
 			AstNodeImpl<T>
@@ -28,6 +30,15 @@ public abstract class AstLeafNodeImpl<T extends AstNode<T>>
 	private static final long serialVersionUID = 3078845253977311630L;
 	
 	// =========================================================================
+	
+	protected AstLeafNodeImpl()
+	{
+	}
+	
+	protected AstLeafNodeImpl(Location arg0)
+	{
+		super(arg0);
+	}
 	
 	@Override
 	public int size()

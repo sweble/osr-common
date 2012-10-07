@@ -29,7 +29,11 @@ public abstract class AstStringNodeImpl<T extends AstNode<T>>
 {
 	private static final long serialVersionUID = -3995972757553601033L;
 	
-	public AstStringNodeImpl(String content)
+	protected AstStringNodeImpl(Uninitialized u)
+	{
+	}
+	
+	protected AstStringNodeImpl(String content)
 	{
 		setContent(content);
 	}
