@@ -51,11 +51,8 @@ public class AstVisitor<T extends AstNode<T>>
 	 */
 	protected final Object dispatch(T node)
 	{
-		// FIXME!
 		if (node == null)
-			return null;
-		//		if (node == null)
-		//			throw new NullPointerException();
+			throw new NullPointerException();
 		return resolveAndVisit(node);
 	}
 	
@@ -63,11 +60,8 @@ public class AstVisitor<T extends AstNode<T>>
 	
 	protected final void iterate(T node)
 	{
-		// FIXME!
 		if (node == null)
-			return;
-		//		if (node == null)
-		//			throw new NullPointerException();
+			throw new NullPointerException();
 		for (T n : node)
 			dispatch(n);
 	}
@@ -91,11 +85,8 @@ public class AstVisitor<T extends AstNode<T>>
 	 */
 	protected final void mapInPlace(T node)
 	{
-		// FIXME!
 		if (node == null)
-			return;
-		//		if (node == null)
-		//			throw new NullPointerException();
+			throw new NullPointerException();
 		
 		if (node.isList())
 		{
@@ -106,11 +97,10 @@ public class AstVisitor<T extends AstNode<T>>
 				Object result = dispatch(current);
 				if (result == null)
 				{
-					// FIXME!
-					//					throw new NullPointerException();
-					//				}
-					//				else if (result == REMOVE)
-					//				{	
+					throw new NullPointerException();
+				}
+				else if (result == REMOVE)
+				{
 					i.remove();
 				}
 				else

@@ -122,8 +122,8 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		public T set(int index, T n)
 		{
 			if (n == null)
-				; //throw new NullPointerException("node may not be null");
-				
+				throw new NullPointerException("node may not be null");
+			
 			T o;
 			switch (index)
 			{
@@ -210,8 +210,8 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		public T set(int index, T n)
 		{
 			if (n == null)
-				; //throw new NullPointerException("node may not be null");
-				
+				throw new NullPointerException("node may not be null");
+			
 			T o;
 			switch (index)
 			{
@@ -312,8 +312,8 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		public T set(int index, T n)
 		{
 			if (n == null)
-				; //throw new NullPointerException("node may not be null");
-				
+				throw new NullPointerException("node may not be null");
+			
 			T o;
 			switch (index)
 			{
@@ -426,8 +426,8 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		public T set(int index, T n)
 		{
 			if (n == null)
-				; //throw new NullPointerException("node may not be null");
-				
+				throw new NullPointerException("node may not be null");
+			
 			T o;
 			switch (index)
 			{
