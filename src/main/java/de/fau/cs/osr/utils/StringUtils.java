@@ -294,7 +294,10 @@ public final class StringUtils
 	
 	public static String startWithUppercase(String name)
 	{
-		// FIXME: Exception handling if name is null or empty!
+		if (name == null)
+			throw new NullPointerException();
+		if (name.isEmpty())
+			return name;
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 	
