@@ -18,6 +18,8 @@
 package de.fau.cs.osr.utils;
 
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -379,6 +381,26 @@ public final class StringUtils
 		}
 	}
 	
+	public static String trimUnderscores(String text)
+	{
+		int from = 0;
+		int length = text.length();
+		while ((from < length) && (text.charAt(from) == '_'))
+			++from;
+		
+		while ((from < length) && (text.charAt(length - 1) == '_'))
+			--length;
+		
+		if (from > 0 || length < text.length())
+		{
+			return text.substring(from, length);
+		}
+		else
+		{
+			return text;
+		}
+	}
+	
 	public static String trimLeft(String text)
 	{
 		int from = 0;
@@ -422,14 +444,6 @@ public final class StringUtils
 			throw new NullPointerException();
 		
 		return org.apache.commons.lang.StringUtils.isWhitespace(text);
-		
-		/*
-		for (int i = 0; i < text.length(); ++i)
-			if (!Character.isWhitespace(text.charAt(i)))
-				return false;
-		
-		return true;
-		*/
 	}
 	
 	public static String collapseWhitespace(String trim)
@@ -451,6 +465,93 @@ public final class StringUtils
 			}
 			else
 				b.append(ch);
+		}
+		return b.toString();
+	}
+	
+	// =========================================================================
+	
+	public static String urlDecode(String text)
+	{
+		StringBuilder b = new StringBuilder();
+		for (int i = 0; i < text.length(); ++i)
+		{
+			char ch = text.charAt(i);
+			if (ch == '%' && i + 2 < text.length())
+			{
+				String num = text.substring(i + 1, i + 3);
+				try
+				{
+					int val = Integer.valueOf(num, 16);
+					if (val >= 0x20 && val < 0x7F)
+					{
+						ch = (char) val;
+						i += 2;
+					}
+				}
+				catch (NumberFormatException e)
+				{
+				}
+			}
+			else if (ch == '+')
+			{
+				ch = ' ';
+			}
+			
+			b.append(ch);
+		}
+		return b.toString();
+	}
+	
+	public static String xmlDecode(String text, XmlEntityResolver resolver)
+	{
+		Pattern rx = XmlGrammar.xmlReference();
+		
+		int start = 0;
+		StringBuilder b = new StringBuilder();
+		while (true)
+		{
+			Matcher m = rx.matcher(text);
+			if (m.find(start))
+			{
+				b.append(text.substring(start, m.start()));
+				
+				String resolved = null;
+				if (m.group(1) != null)
+				{
+					resolved = resolver.resolveXmlEntity(m.group(1));
+				}
+				else
+				{
+					try
+					{
+						boolean decimal = m.group(2) != null;
+						
+						String num = decimal ? m.group(2) : m.group(3);
+						
+						int val = Integer.valueOf(num, decimal ? 10 : 16);
+						if (val >= 0x20 && val != 0x7F)
+							resolved = String.valueOf((char) val);
+					}
+					catch (NumberFormatException e)
+					{
+					}
+				}
+				
+				if (resolved != null)
+					b.append(resolved);
+				else
+					b.append(text.substring(m.start(), m.end()));
+				
+				start = m.end();
+			}
+			else
+			{
+				if (start < text.length())
+					b.append(text.substring(start));
+				
+				break;
+			}
 		}
 		return b.toString();
 	}
