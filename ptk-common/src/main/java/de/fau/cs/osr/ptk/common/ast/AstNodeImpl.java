@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import xtc.tree.Locatable;
+import xtc.tree.Location;
 import xtc.util.Pair;
 import de.fau.cs.osr.utils.WrappedException;
 
@@ -46,7 +47,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	
 	private HashMap<String, Object> attributes;
 	
-	private Location location;
+	private AstLocation location;
 	
 	// =========================================================================
 	
@@ -54,12 +55,12 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	{
 	}
 	
-	protected AstNodeImpl(Location location)
+	protected AstNodeImpl(AstLocation location)
 	{
 		setNativeLocation(location);
 	}
 	
-	protected AstNodeImpl(xtc.tree.Location location)
+	protected AstNodeImpl(Location location)
 	{
 		setLocation(location);
 	}
@@ -343,15 +344,15 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final xtc.tree.Location getLocation()
+	public final Location getLocation()
 	{
 		return location.toXtcLocation();
 	}
 	
 	@Override
-	public final void setLocation(xtc.tree.Location location)
+	public final void setLocation(Location location)
 	{
-		setNativeLocation(new Location(location));
+		setNativeLocation(new AstLocation(location));
 	}
 	
 	@Override
@@ -364,13 +365,13 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	// =========================================================================
 	
 	@Override
-	public final Location getNativeLocation()
+	public final AstLocation getNativeLocation()
 	{
 		return location;
 	}
 	
 	@Override
-	public final void setNativeLocation(Location location)
+	public final void setNativeLocation(AstLocation location)
 	{
 		this.location = location;
 	}

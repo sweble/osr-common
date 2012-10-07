@@ -37,7 +37,7 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.AstText;
-import de.fau.cs.osr.ptk.common.ast.Location;
+import de.fau.cs.osr.ptk.common.ast.AstLocation;
 import de.fau.cs.osr.utils.NameAbbrevService;
 
 public class JsonConverterImpl<T extends AstNode<T>>
@@ -241,12 +241,12 @@ public class JsonConverterImpl<T extends AstNode<T>>
 		return src.getNativeLocation().toString();
 	}
 	
-	private Location strToLocation(JsonElement location)
+	private AstLocation strToLocation(JsonElement location)
 	{
 		String s = location.getAsString();
 		if (s == null)
 			return null;
-		return Location.valueOf(s);
+		return AstLocation.valueOf(s);
 	}
 	
 	private T instantiateNode(JsonObject jo)

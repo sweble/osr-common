@@ -41,7 +41,7 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.AstText;
-import de.fau.cs.osr.ptk.common.ast.Location;
+import de.fau.cs.osr.ptk.common.ast.AstLocation;
 import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
 
@@ -206,7 +206,7 @@ public class XmlReader<T extends AstNode<T>>
 				{
 					Attribute l = elem.getAttributeByName(XmlConstants.ATTR_LOCATION_QNAME);
 					if (l != null)
-						node.setNativeLocation(Location.valueOf(l.getValue()));
+						node.setNativeLocation(AstLocation.valueOf(l.getValue()));
 				}
 				
 				expectEndElement();

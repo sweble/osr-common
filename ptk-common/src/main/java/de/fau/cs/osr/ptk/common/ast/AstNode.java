@@ -86,9 +86,9 @@ public interface AstNode<T extends AstNode<T>>
 	// =========================================================================
 	// native location
 	
-	public Location getNativeLocation();
+	public AstLocation getNativeLocation();
 	
-	public void setNativeLocation(Location location);
+	public void setNativeLocation(AstLocation location);
 	
 	// =========================================================================
 	

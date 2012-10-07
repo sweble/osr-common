@@ -19,7 +19,7 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.Serializable;
 
-public class Location
+public class AstLocation
 		implements
 			Serializable
 {
@@ -33,28 +33,28 @@ public class Location
 	
 	// =========================================================================
 	
-	public Location()
+	public AstLocation()
 	{
 		this.file = "";
 		this.line = -1;
 		this.column = -1;
 	}
 	
-	public Location(String file, int line, int column)
+	public AstLocation(String file, int line, int column)
 	{
 		this.file = file;
 		this.line = line;
 		this.column = column;
 	}
 	
-	public Location(Location location)
+	public AstLocation(AstLocation location)
 	{
 		this.file = location.file;
 		this.line = location.line;
 		this.column = location.column;
 	}
 	
-	public Location(xtc.tree.Location location)
+	public AstLocation(xtc.tree.Location location)
 	{
 		this.file = location.file;
 		this.line = location.line;
@@ -83,7 +83,7 @@ public class Location
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Location other = (Location) obj;
+		AstLocation other = (AstLocation) obj;
 		if (column != other.column)
 			return false;
 		if (file == null)
@@ -106,7 +106,7 @@ public class Location
 			return getFile() + ":" + getLine() + ":" + getColumn();
 	}
 	
-	public static Location valueOf(String s)
+	public static AstLocation valueOf(String s)
 	{
 		int line;
 		int column;
@@ -129,7 +129,7 @@ public class Location
 			column = Integer.parseInt(s.substring(j + 1));
 		}
 		
-		return new Location(file, line, column);
+		return new AstLocation(file, line, column);
 	}
 	
 	// =========================================================================
