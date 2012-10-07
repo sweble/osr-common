@@ -46,16 +46,20 @@ public class PrinterBase
 		
 		public int needNewlines;
 		
+		public int eatNewlines;
+		
 		public State(
 				PrintWriter out,
 				int indent,
 				int hadNewlines,
-				int needNewlines)
+				int needNewlines,
+				int eatNewlines)
 		{
 			this.out = out;
 			this.indent = indent;
 			this.hadNewlines = hadNewlines;
 			this.needNewlines = needNewlines;
+			this.eatNewlines = eatNewlines;
 		}
 		
 		@Override
@@ -63,6 +67,7 @@ public class PrinterBase
 		{
 			final int prime = 31;
 			int result = 1;
+			result = prime * result + eatNewlines;
 			result = prime * result + hadNewlines;
 			result = prime * result + indent;
 			result = prime * result + needNewlines;
@@ -79,6 +84,8 @@ public class PrinterBase
 			if (getClass() != obj.getClass())
 				return false;
 			State other = (State) obj;
+			if (eatNewlines != other.eatNewlines)
+				return false;
 			if (hadNewlines != other.hadNewlines)
 				return false;
 			if (indent != other.indent)
@@ -110,7 +117,7 @@ public class PrinterBase
 	
 	private State getState()
 	{
-		return new State(out, indent, hadNewlines, needNewlines);
+		return new State(out, indent, hadNewlines, needNewlines, eatNewlines);
 	}
 	
 	public void setState(State state)
@@ -119,6 +126,7 @@ public class PrinterBase
 		this.indent = state.indent;
 		this.hadNewlines = state.hadNewlines;
 		this.needNewlines = state.needNewlines;
+		this.eatNewlines = state.eatNewlines;
 	}
 	
 	public void setStateNotOut(State state)
@@ -126,6 +134,7 @@ public class PrinterBase
 		this.indent = state.indent;
 		this.hadNewlines = state.hadNewlines;
 		this.needNewlines = state.needNewlines;
+		this.eatNewlines = state.eatNewlines;
 	}
 	
 	// =========================================================================
@@ -193,11 +202,15 @@ public class PrinterBase
 	
 	private PrintWriter out;
 	
+	private String indentString = "\t";
+	
 	private int indent = 0;
 	
 	private int hadNewlines = 1;
 	
 	private int needNewlines = 0;
+	
+	private int eatNewlines = 0;
 	
 	// =========================================================================
 	
@@ -205,7 +218,7 @@ public class PrinterBase
 	{
 		++indent;
 		while (indentStrings.size() <= indent)
-			indentStrings.add(indentStrings.get(indentStrings.size() - 1) + "  ");
+			indentStrings.add(indentStrings.get(indentStrings.size() - 1) + indentString);
 	}
 	
 	public void decIndent()
@@ -216,15 +229,28 @@ public class PrinterBase
 	
 	public void indent()
 	{
-		needNewlines(1);
-		if (indent > 0)
-			print(indentStrings.get(indent));
+		if (eatNewlines > 0)
+		{
+			--eatNewlines;
+		}
+		else
+		{
+			needNewlines(1);
+			if (indent > 0)
+				print(indentStrings.get(indent));
+		}
 	}
 	
 	public void indent(String text)
 	{
 		indent();
 		print(text);
+	}
+	
+	public void indent(char ch)
+	{
+		indent();
+		print(ch);
 	}
 	
 	public void indentln(char ch)
@@ -239,9 +265,25 @@ public class PrinterBase
 		println(text);
 	}
 	
+	/**
+	 * Don't print already requested newlines.
+	 */
 	public void ignoreNewlines()
 	{
 		needNewlines = 0;
+	}
+	
+	/**
+	 * Ignore the next upcoming newline or indent.
+	 */
+	public void eatNewlinesAndIndents(int i)
+	{
+		eatNewlines += i;
+	}
+	
+	public void clearEatNewlinesAndIndents()
+	{
+		eatNewlines = 0;
 	}
 	
 	public void print(char ch)
@@ -291,8 +333,17 @@ public class PrinterBase
 	{
 		int newlines = needNewlines - hadNewlines;
 		while (newlines-- > 0)
-			out.println();
-		hadNewlines += newlines;
+		{
+			if (eatNewlines > 0)
+			{
+				--eatNewlines;
+			}
+			else
+			{
+				out.println();
+				++hadNewlines;
+			}
+		}
 		needNewlines = 0;
 	}
 	
