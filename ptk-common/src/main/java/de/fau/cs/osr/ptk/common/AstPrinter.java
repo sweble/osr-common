@@ -400,11 +400,11 @@ public class AstPrinter<T extends AstNode<T>>
 		this.setCompact(true);
 	}
 	
+	@Override
 	protected Object after(T node, Object result)
 	{
 		p.flush();
 		return result;
-		
 	}
 	
 	// =========================================================================
