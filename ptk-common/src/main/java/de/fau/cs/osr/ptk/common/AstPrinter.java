@@ -75,10 +75,9 @@ public class AstPrinter<T extends AstNode<T>>
 	{
 		if (!hasVisibleProperties(n))
 		{
-			p.indent(n.getNodeName());
-			p.print("(\"");
+			p.indent('"');
 			p.print(StringUtils.escJava(n.getContent()));
-			p.println("\")");
+			p.println('"');
 		}
 		else
 		{
@@ -106,61 +105,17 @@ public class AstPrinter<T extends AstNode<T>>
 		Memoize m = p.memoizeStart(n);
 		if (m != null)
 		{
+			String name = "";
+			if (n.getNodeType() != AstNode.NT_NODE_LIST)
+				name = n.getNodeName();
+			
 			if (hasVisibleProperties(n))
 			{
 				printNode(n);
 			}
 			else if (n.isEmpty())
 			{
-				p.indentln("[ ]");
-			}
-			else
-			{
-				boolean singleLine = false;
-				if (isCompact() && n.size() <= 1)
-				{
-					OutputBuffer b = p.outputBufferStart();
-					printListOfNodes(n);
-					b.stop();
-					
-					String output = b.getBuffer().trim();
-					if (isSingleLine(output))
-					{
-						p.indent("[ ");
-						p.print(output);
-						p.println(" ]");
-						singleLine = true;
-					}
-				}
-				
-				if (!singleLine)
-				{
-					p.indentln("[");
-					
-					p.incIndent();
-					printListOfNodes(n);
-					p.decIndent();
-					
-					p.indentln(']');
-				}
-			}
-			p.memoizeStop(m);
-		}
-	}
-	
-	/* FIXME: Remove
-	public void visit(GenericContentNode<T, AstNodeListImpl<T>> n)
-	{
-		Memoize m = p.memoizeStart(n);
-		if (m != null)
-		{
-			if (hasVisibleProperties(n))
-			{
-				printNode(n);
-			}
-			else if (n.isEmpty())
-			{
-				p.indent(n.getNodeName());
+				p.indent(name);
 				p.println("[]");
 			}
 			else
@@ -175,30 +130,29 @@ public class AstPrinter<T extends AstNode<T>>
 					String output = b.getBuffer().trim();
 					if (isSingleLine(output))
 					{
-						p.indent(n.getNodeName());
-						p.print('(');
+						p.indent(name);
+						p.print("[ ");
 						p.print(output);
-						p.println(')');
+						p.println(" ]");
 						singleLine = true;
 					}
 				}
 				
 				if (!singleLine)
 				{
-					p.indent(n.getNodeName());
-					p.println("([");
+					p.indent(name);
+					p.println('[');
 					
 					p.incIndent();
-					printListOfNodes(n.getContent());
+					printListOfNodes(n);
 					p.decIndent();
 					
-					p.indentln("])");
+					p.indentln(']');
 				}
 			}
 			p.memoizeStop(m);
 		}
 	}
-	*/
 	
 	// =========================================================================
 	
@@ -250,11 +204,7 @@ public class AstPrinter<T extends AstNode<T>>
 	protected void printNodeContent(AstNode<T> n)
 	{
 		if (hasVisibleProperties(n))
-		{
 			printProperties(n);
-			if (!n.isEmpty())
-				p.needNewlines(2);
-		}
 		
 		printListOfNodes(n);
 	}
@@ -264,37 +214,34 @@ public class AstPrinter<T extends AstNode<T>>
 		Map<String, Object> props = new TreeMap<String, Object>();
 		
 		for (Entry<String, Object> entry : n.getAttributes().entrySet())
-			props.put(entry.getKey(), entry.getValue());
+			props.put("{A} " + entry.getKey(), entry.getValue());
 		
 		AstNodePropertyIterator i = n.propertyIterator();
 		while (i.next())
 		{
 			if (i.getValue() != null || !i.getName().equals("rtd"))
-				props.put(i.getName(), i.getValue());
+				props.put("{P} " + i.getName(), i.getValue());
 		}
 		
-		p.indentln("Properties:");
-		
-		p.incIndent();
 		for (Entry<String, Object> entry : props.entrySet())
 		{
-			p.indent(n.hasAttribute(entry.getKey()) ? "" : "{N} ");
-			p.print(entry.getKey());
+			p.indent(entry.getKey());
 			p.print(" = ");
+			p.eatNewlinesAndIndents(1);
 			printPropertyValue(entry.getValue());
+			p.clearEatNewlinesAndIndents();
 		}
-		p.decIndent();
 	}
 	
 	protected void printPropertyValue(Object value)
 	{
 		if (value == null)
 		{
-			p.println("null");
+			p.indentln("null");
 		}
 		else if (value instanceof String)
 		{
-			p.print('"');
+			p.indent('"');
 			p.print(StringUtils.escJava((String) value));
 			p.println('"');
 		}
@@ -306,85 +253,120 @@ public class AstPrinter<T extends AstNode<T>>
 			dispatch(node);
 			p.decIndent();
 		}
-		/*
-		else if (value instanceof GenericEntityMap)
+		else if (value instanceof AstEntityMap)
 		{
 			@SuppressWarnings("unchecked")
-			GenericEntityMap<T> map = (GenericEntityMap<T>) value;
+			AstEntityMap<T> map = (AstEntityMap<T>) value;
 			printEntityMap(map);
 		}
-		*/
 		else if (value instanceof Collection)
 		{
 			printCollection((Collection<?>) value);
 		}
 		else
 		{
-			p.println(value);
+			p.indentln(value.toString());
 		}
 	}
 	
-	/*
-	private void printEntityMap(GenericEntityMap<T> entityMap)
+	protected void printEntityMap(AstEntityMap<T> entityMap)
 	{
 		if (entityMap.getMap().isEmpty())
 		{
-			p.println("[]");
+			p.indentln("-");
 		}
 		else
 		{
 			Map<Integer, T> map = new TreeMap<Integer, T>(entityMap.getMap());
 			
-			p.println("[");
+			p.indentln("{");
 			
 			p.incIndent();
 			for (Iterator<Entry<Integer, T>> k = map.entrySet().iterator(); k.hasNext();)
 			{
-				p.indent();
 				Entry<Integer, T> entry = k.next();
+				p.indent('[');
 				p.print(entry.getKey().toString());
-				p.print(" = ");
+				p.print("] = ");
+				p.eatNewlinesAndIndents(1);
 				printPropertyValue(entry.getValue());
+				p.clearEatNewlinesAndIndents();
 				p.ignoreNewlines();
 				p.println(k.hasNext() ? "," : "");
 			}
 			p.decIndent();
 			
-			p.indentln(']');
+			p.indentln('}');
 		}
 	}
-	*/
 	
-	private void printCollection(Collection<?> c)
+	protected void printCollection(Collection<?> c)
 	{
 		if (c.isEmpty())
 		{
-			p.println("[]");
+			p.indentln("C[]");
 		}
 		else
 		{
-			// TODO: Also include single line case!
-			
-			p.indentln("[");
-			
-			p.incIndent();
-			for (Iterator<?> k = c.iterator(); k.hasNext();)
+			boolean singleLine = false;
+			if (isCompact() && c.size() == 1)
 			{
-				p.indent();
-				printPropertyValue(k.next());
-				p.ignoreNewlines();
-				p.println(k.hasNext() ? "," : "");
+				OutputBuffer b = p.outputBufferStart();
+				printPropertyValue(c.toArray()[0]);
+				b.stop();
+				
+				String output = b.getBuffer().trim();
+				if (isSingleLine(output))
+				{
+					p.indent("C[ ");
+					p.print(output);
+					p.println(" ]");
+					singleLine = true;
+				}
 			}
-			p.decIndent();
 			
-			p.indentln(']');
+			if (!singleLine)
+			{
+				p.indentln("C[");
+				
+				p.incIndent();
+				for (Iterator<?> k = c.iterator(); k.hasNext();)
+				{
+					p.indent();
+					printPropertyValue(k.next());
+					p.ignoreNewlines();
+					p.println(k.hasNext() ? "," : "");
+				}
+				p.decIndent();
+				
+				p.indentln(']');
+			}
 		}
 	}
 	
 	protected void printListOfNodes(AstNode<T> n)
 	{
+		int j = 0;
+		String[] childNames = n.getChildNames();
 		for (Iterator<T> i = n.iterator(); i.hasNext();)
+		{
+			if (!n.isList())
+			{
+				p.indent(childNames[j++]);
+			}
+			else
+			{
+				p.indent('[');
+				p.print(String.valueOf(j++));
+				p.print(']');
+			}
+			p.print(" = ");
+			p.eatNewlinesAndIndents(1);
 			dispatch(i.next());
+			p.clearEatNewlinesAndIndents();
+			p.ignoreNewlines();
+			p.println(i.hasNext() ? "," : "");
+		}
 	}
 	
 	// =========================================================================
