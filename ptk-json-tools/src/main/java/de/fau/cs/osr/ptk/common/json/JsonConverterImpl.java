@@ -17,6 +17,8 @@
 
 package de.fau.cs.osr.ptk.common.json;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
@@ -32,8 +34,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
-import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
+import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.AstText;
 import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.utils.NameAbbrevService;
@@ -273,13 +275,31 @@ public class JsonConverterImpl<T extends AstNode<T>>
 		Exception e = null;
 		try
 		{
-			return checkNodeType(clazz.newInstance());
+			Constructor<?> ctor = clazz.getDeclaredConstructor();
+			ctor.setAccessible(true);
+			return checkNodeType(ctor.newInstance());
 		}
 		catch (InstantiationException e_)
 		{
 			e = e_;
 		}
 		catch (IllegalAccessException e_)
+		{
+			e = e_;
+		}
+		catch (SecurityException e_)
+		{
+			e = e_;
+		}
+		catch (NoSuchMethodException e_)
+		{
+			e = e_;
+		}
+		catch (IllegalArgumentException e_)
+		{
+			e = e_;
+		}
+		catch (InvocationTargetException e_)
 		{
 			e = e_;
 		}

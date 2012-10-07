@@ -21,6 +21,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Reader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import javax.xml.bind.JAXBException;
@@ -36,8 +38,8 @@ import javax.xml.stream.events.XMLEvent;
 import org.apache.commons.codec.binary.Base64;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
-import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
+import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.AstText;
 import de.fau.cs.osr.ptk.common.ast.Location;
 import de.fau.cs.osr.utils.NameAbbrevService;
@@ -560,13 +562,31 @@ public class XmlReader<T extends AstNode<T>>
 		Exception e = null;
 		try
 		{
-			return checkNodeType(clazz.newInstance());
+			Constructor<?> ctor = clazz.getDeclaredConstructor();
+			ctor.setAccessible(true);
+			return checkNodeType(ctor.newInstance());
 		}
 		catch (InstantiationException e_)
 		{
 			e = e_;
 		}
 		catch (IllegalAccessException e_)
+		{
+			e = e_;
+		}
+		catch (SecurityException e_)
+		{
+			e = e_;
+		}
+		catch (NoSuchMethodException e_)
+		{
+			e = e_;
+		}
+		catch (IllegalArgumentException e_)
+		{
+			e = e_;
+		}
+		catch (InvocationTargetException e_)
 		{
 			e = e_;
 		}
