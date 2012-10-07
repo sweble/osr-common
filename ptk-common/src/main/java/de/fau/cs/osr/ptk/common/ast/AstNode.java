@@ -100,6 +100,11 @@ public interface AstNode<T extends AstNode<T>>
 	public boolean addAll(Pair<? extends T> p);
 	
 	/**
+	 * Same as get(index) but casts the node to the specified type.
+	 */
+	public <S extends T> S get(int index, Class<S> clazz);
+	
+	/**
 	 * Determine whether this node can have a variable number of children and
 	 * implements the {@link List} interface (or parts of it).
 	 */

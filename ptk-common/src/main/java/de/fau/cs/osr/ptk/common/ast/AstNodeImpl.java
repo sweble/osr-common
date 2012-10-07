@@ -390,6 +390,12 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		throw new UnsupportedOperationException();
 	}
 	
+	@Override
+	public <S extends T> S get(int index, Class<S> clazz)
+	{
+		throw new UnsupportedOperationException();
+	}
+	
 	// =========================================================================
 	// Extension of the List interface for Pair
 	

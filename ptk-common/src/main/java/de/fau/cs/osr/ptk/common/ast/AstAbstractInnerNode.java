@@ -39,6 +39,14 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		super(arg0);
 	}
 	
+	@Override
+	public <S extends T> S get(int index, Class<S> clazz)
+	{
+		@SuppressWarnings("unchecked")
+		S value = (S) get(index);
+		return value;
+	}
+	
 	// =========================================================================
 	
 	public abstract String[] getChildNames();
