@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.fau.cs.osr.utils.StringUtils;
+import de.fau.cs.osr.utils.WrappedException;
 
 public class RtData
 		implements
@@ -488,5 +489,17 @@ public class RtData
 	public Object clone() throws CloneNotSupportedException
 	{
 		return new RtData(this);
+	}
+	
+	public RtData cloneWrapException()
+	{
+		try
+		{
+			return (RtData) this.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new WrappedException(e);
+		}
 	}
 }
