@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import de.fau.cs.osr.ptk.common.ast.AstLeafNodeImpl;
+import de.fau.cs.osr.ptk.common.ast.AstLeafNode;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
-import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
+import de.fau.cs.osr.ptk.common.ast.AstNodeList;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.AstStringNodeImpl;
+import de.fau.cs.osr.ptk.common.ast.AstStringNode;
 import de.fau.cs.osr.ptk.common.ast.AstText;
 import de.fau.cs.osr.utils.PrinterBase;
 import de.fau.cs.osr.utils.PrinterBase.Memoize;
@@ -58,7 +58,7 @@ public class AstPrinter<T extends AstNode<T>>
 		}
 	}
 	
-	public void visit(AstLeafNodeImpl<T> n)
+	public void visit(AstLeafNode<T> n)
 	{
 		if (n.isEmpty() && !hasVisibleProperties(n))
 		{
@@ -85,7 +85,7 @@ public class AstPrinter<T extends AstNode<T>>
 		}
 	}
 	
-	public void visit(AstStringNodeImpl<T> n)
+	public void visit(AstStringNode<T> n)
 	{
 		if (!hasVisibleProperties(n))
 		{
@@ -100,7 +100,7 @@ public class AstPrinter<T extends AstNode<T>>
 		}
 	}
 	
-	public void visit(AstNodeListImpl<T> n)
+	public void visit(AstNodeList<T> n)
 	{
 		Memoize m = p.memoizeStart(n);
 		if (m != null)
@@ -179,7 +179,7 @@ public class AstPrinter<T extends AstNode<T>>
 					if (i.getValue() != null)
 						return true;
 				}
-				else if (!i.getName().equals("content") || !(n instanceof AstStringNodeImpl))
+				else if (!i.getName().equals("content") || !(n instanceof AstStringNode))
 				{
 					return true;
 				}
