@@ -86,7 +86,7 @@ public class FileCompare
 	
 	// =========================================================================
 	
-	private String fixActualText(String actual)
+	public String fixActualText(String actual)
 	{
 		return resources.stripBaseDirectoryAndFixPath(
 				lineEndToUnix(actual));
@@ -144,12 +144,17 @@ public class FileCompare
 		}
 	}
 	
-	private void assertEquals(File expectedFile, String actual) throws IOException
+	public void assertEquals(File expectedFile, String actual) throws IOException
 	{
 		FileContent reftext = new FileContent(expectedFile);
 		
 		// We always operate with UNIX line end '\n':
 		String reference = lineEndToUnix(reftext.getContent());
+		
+		/* UGLY DANGEROUS INTERMEDIATE EVIL HACK*
+		if (!reference.equals(actual))
+			FileUtils.writeStringToFile(expectedFile, actual);
+		/**/
 		
 		Assert.assertEquals(reference, actual);
 	}

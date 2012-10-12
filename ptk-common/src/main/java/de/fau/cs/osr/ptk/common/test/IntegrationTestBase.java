@@ -128,11 +128,11 @@ public abstract class IntegrationTestBase<T extends AstNode<T>>
 	/**
 	 * Override and return parser to use in tests.
 	 */
-	protected abstract ParserInterface<T> instantiateParser();
+	public abstract ParserInterface<T> instantiateParser();
 	
 	// =========================================================================
 	
-	private Object parse(File inputFile, AstVisitor<T>... visitors) throws IOException, ParseException
+	public Object parse(File inputFile, AstVisitor<T>... visitors) throws IOException, ParseException
 	{
 		ParserInterface<T> parser = instantiateParser();
 		
