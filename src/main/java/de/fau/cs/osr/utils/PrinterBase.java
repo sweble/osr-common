@@ -288,16 +288,58 @@ public class PrinterBase
 	
 	public void print(char ch)
 	{
-		flush();
-		out.print(ch);
-		hadNewlines = 0;
+		if (ch == '\n')
+		{
+			println();
+		}
+		else
+		{
+			flush();
+			out.print(ch);
+			hadNewlines = 0;
+			eatNewlines = 0;
+		}
 	}
 	
 	public void print(String text)
 	{
+		int from = 0;
+		int length = text.length();
+		while (from < length)
+		{
+			boolean hadNewline = false;
+			
+			int to = from;
+			for (; to < length; ++to)
+			{
+				char ch = text.charAt(to);
+				if (ch == '\n')
+				{
+					hadNewline = true;
+					break;
+				}
+			}
+			
+			if (to > from)
+			{
+				flush();
+				out.print(text.substring(from, to));
+				hadNewlines = 0;
+				eatNewlines = 0;
+			}
+			
+			if (hadNewline)
+				println();
+			
+			from = to + 1;
+		}
+	}
+	
+	public void verbatim(String text)
+	{
 		flush();
 		out.print(text);
-		hadNewlines = 0;
+		hadNewlines = (text.isEmpty() || text.charAt(text.length() - 1) != '\n') ? 0 : 1;
 	}
 	
 	public void println()
@@ -327,6 +369,11 @@ public class PrinterBase
 	{
 		if (i > needNewlines)
 			needNewlines = i;
+	}
+	
+	public void capNewlines(int min, int max)
+	{
+		needNewlines = Math.max(min, Math.min(max, needNewlines));
 	}
 	
 	public void forceln()
