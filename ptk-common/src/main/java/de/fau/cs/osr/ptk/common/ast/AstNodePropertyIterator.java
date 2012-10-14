@@ -49,31 +49,16 @@ public abstract class AstNodePropertyIterator
 	
 	public String getName()
 	{
-		assert i >= 0 && i < getPropertyCount();
-		/*
-		if (i < 0 || i >= getPropertyCount())
-			throw new NoSuchElementException();
-		*/
 		return getName(i);
 	}
 	
 	public Object getValue()
 	{
-		assert i >= 0 && i < getPropertyCount();
-		/*
-		if (i < 0 || i >= getPropertyCount())
-			throw new NoSuchElementException();
-		*/
 		return getValue(i);
 	}
 	
 	public Object setValue(Object value)
 	{
-		assert i >= 0 && i < getPropertyCount();
-		/*
-		if (i < 0 || i >= getPropertyCount())
-			throw new NoSuchElementException();
-		*/
 		return setValue(i, value);
 	}
 	

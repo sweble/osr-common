@@ -126,17 +126,8 @@ public abstract class AstStringNodeImpl<T extends AstNode<T>>
 	public void toString(Appendable out) throws IOException
 	{
 		out.append(getClass().getSimpleName());
-		out.append('(');
-		if (getContent() != null)
-		{
-			out.append('"');
-			out.append(StringUtils.escJava(getContent()));
-			out.append('"');
-		}
-		else
-		{
-			out.append("null");
-		}
-		out.append(')');
+		out.append("(\"");
+		out.append(StringUtils.escJava(getContent()));
+		out.append("\")");
 	}
 }

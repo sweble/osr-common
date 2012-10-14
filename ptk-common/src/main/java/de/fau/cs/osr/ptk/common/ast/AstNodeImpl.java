@@ -454,14 +454,8 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 				out.append(", ");
 			}
 			
-			if (node == null)
-			{
-				out.append("null");
-			}
-			else
-			{
-				node.toString(out);
-			}
+			node.toString(out);
+			
 		}
 		
 		out.append(')');
