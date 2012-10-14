@@ -90,6 +90,13 @@ public class TestResourcesFixture
 	
 	// =========================================================================
 	
+	public File getBaseDirectory()
+	{
+		return baseDirectory;
+	}
+	
+	// =========================================================================
+	
 	/**
 	 * Recursively gather files which match a certain pattern.
 	 * 
