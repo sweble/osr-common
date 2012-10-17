@@ -265,6 +265,36 @@ public class PrinterBase
 		println(text);
 	}
 	
+	public void indentAtBol()
+	{
+		if (atBol())
+			indent();
+	}
+	
+	public void indentAtBol(String text)
+	{
+		indentAtBol();
+		print(text);
+	}
+	
+	public void indentAtBol(char ch)
+	{
+		indentAtBol();
+		print(ch);
+	}
+	
+	public void indentlnAtBol(char ch)
+	{
+		indentAtBol();
+		println(ch);
+	}
+	
+	public void indentlnAtBol(String text)
+	{
+		indentAtBol();
+		println(text);
+	}
+	
 	/**
 	 * Don't print already requested newlines.
 	 */
@@ -374,6 +404,11 @@ public class PrinterBase
 	public void capNewlines(int min, int max)
 	{
 		needNewlines = Math.max(min, Math.min(max, needNewlines));
+	}
+	
+	public boolean atBol()
+	{
+		return needNewlines > eatNewlines || hadNewlines > 0;
 	}
 	
 	public void forceln()
