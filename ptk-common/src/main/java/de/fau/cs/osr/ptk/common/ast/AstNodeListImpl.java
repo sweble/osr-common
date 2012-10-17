@@ -171,7 +171,7 @@ public class AstNodeListImpl<T extends AstNode<T>>
 		}
 		else if (e.getNodeType() == AstNode.NT_NODE_LIST)
 		{
-			return children.addAll(((AstNodeListImpl<T>) e).children);
+			return children.addAll((Collection<T>) e);
 		}
 		else
 		{
@@ -214,7 +214,7 @@ public class AstNodeListImpl<T extends AstNode<T>>
 			}
 			else if (n.getNodeType() == AstNode.NT_NODE_LIST)
 			{
-				insert.addAll(((AstNodeListImpl<T>) n).children);
+				insert.addAll((Collection<T>) n);
 			}
 			else
 			{
