@@ -446,6 +446,10 @@ public final class StringUtils
 		return org.apache.commons.lang.StringUtils.isWhitespace(text);
 	}
 	
+	/**
+	 * Collapses a sequence of multiple whitespace characters into a single
+	 * space. Does NOT trim the string.
+	 */
 	public static String collapseWhitespace(String trim)
 	{
 		if (trim.isEmpty())
