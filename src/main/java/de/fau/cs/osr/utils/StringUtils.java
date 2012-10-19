@@ -17,10 +17,12 @@
 
 package de.fau.cs.osr.utils;
 
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public final class StringUtils
@@ -558,5 +560,55 @@ public final class StringUtils
 			}
 		}
 		return b.toString();
+	}
+	
+	public static String safeFilename(String fileTitle)
+	{
+		final int MAX_LENGTH = 128;
+		final int ABBREV_LENGTH = MAX_LENGTH - 32;
+		
+		Charset utf8 = Charset.forName("UTF8");
+		
+		String abbrev = null;
+		StringBuilder b = new StringBuilder();
+		for (int i = 0; i < fileTitle.length(); ++i)
+		{
+			char ch = fileTitle.charAt(i);
+			switch (ch)
+			{
+				case ' ':
+				case '_':
+					b.append(ch);
+					break;
+				
+				default:
+					if ((ch >= '0' && ch <= '9')
+							|| (ch >= 'A' && ch <= 'Z')
+							|| (ch >= 'a' && ch <= 'z'))
+					{
+						b.append(ch);
+					}
+					else
+					{
+						byte[] bytes;
+						bytes = fileTitle.substring(i, i + 1).getBytes(utf8);
+						
+						if (b.length() > ABBREV_LENGTH - 3 * bytes.length && abbrev == null)
+							abbrev = b.toString();
+						
+						for (byte unit : bytes)
+							b.append(String.format("%%%02X", unit));
+					}
+			}
+			
+			if (b.length() >= ABBREV_LENGTH && abbrev == null)
+				abbrev = b.toString();
+		}
+		
+		String safe = b.toString();
+		if (abbrev != null && safe.length() > MAX_LENGTH)
+			safe = abbrev + "-" + DigestUtils.md5Hex(fileTitle);
+		
+		return safe;
 	}
 }
