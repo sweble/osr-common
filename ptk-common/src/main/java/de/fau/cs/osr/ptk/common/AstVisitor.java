@@ -49,7 +49,7 @@ public class AstVisitor<T extends AstNode<T>>
 	 * the visitation. If the given node is <code>null</code> this method
 	 * returns immediately with <code>null</code> as result.
 	 */
-	protected final Object dispatch(T node)
+	protected Object dispatch(T node)
 	{
 		if (node == null)
 			throw new NullPointerException();
@@ -58,7 +58,7 @@ public class AstVisitor<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	protected final void iterate(T node)
+	protected void iterate(T node)
 	{
 		if (node == null)
 			throw new NullPointerException();
@@ -66,7 +66,7 @@ public class AstVisitor<T extends AstNode<T>>
 			dispatch(n);
 	}
 	
-	protected final List<Object> map(T node)
+	protected List<Object> map(T node)
 	{
 		if (node == null)
 			throw new NullPointerException();
@@ -83,7 +83,7 @@ public class AstVisitor<T extends AstNode<T>>
 	 * AST node is a NodeList, the call will be passed to mapInPlace(NodeList)
 	 * which has special semantics.
 	 */
-	protected final void mapInPlace(T node)
+	protected void mapInPlace(T node)
 	{
 		if (node == null)
 			throw new NullPointerException();
