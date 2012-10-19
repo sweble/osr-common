@@ -113,7 +113,7 @@ public class NamedParametrized
 			if (object instanceof String)
 				return String.format("\"%s\"", (String) object);
 			else
-				return "<UKNOWN>";
+				return "<UNKNOWN>";
 		}
 		
 		@Override
