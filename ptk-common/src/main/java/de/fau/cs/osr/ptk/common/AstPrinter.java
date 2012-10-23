@@ -332,7 +332,6 @@ public class AstPrinter<T extends AstNode<T>>
 				p.incIndent();
 				for (Iterator<?> k = c.iterator(); k.hasNext();)
 				{
-					p.indent();
 					printPropertyValue(k.next());
 					p.ignoreNewlines();
 					p.println(k.hasNext() ? "," : "");
