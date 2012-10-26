@@ -77,4 +77,35 @@ public class AstEntityMapImpl<T extends AstNode<T>>
 	{
 		return "EntityMap " + entityMap;
 	}
+	
+	// =========================================================================
+	
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((entityMap == null) ? 0 : entityMap.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AstEntityMapImpl<?> other = (AstEntityMapImpl<?>) obj;
+		if (entityMap == null)
+		{
+			if (other.entityMap != null)
+				return false;
+		}
+		else if (!entityMap.equals(other.entityMap))
+			return false;
+		return true;
+	}
 }
