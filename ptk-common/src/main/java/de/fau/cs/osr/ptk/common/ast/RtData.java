@@ -415,7 +415,7 @@ public class RtData
 			if (i > 0)
 				sb.append(" <o> ");
 			
-			if (getField(i) == EMPTY_FIELD)
+			if (getField(i).length == 0)
 			{
 				sb.append("\"\"");
 			}
