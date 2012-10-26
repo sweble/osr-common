@@ -346,6 +346,8 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	@Override
 	public final Location getLocation()
 	{
+		if (location == null)
+			return null;
 		return location.toXtcLocation();
 	}
 	
@@ -564,8 +566,10 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		// Type checking
 		if (this == obj)
 			return true;
+		/*
 		if (!super.equals(obj))
 			return false;
+		*/
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
