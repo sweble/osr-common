@@ -570,7 +570,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		if (!super.equals(obj))
 			return false;
 		*/
-		if (getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
 		AstNodeImpl<T> other = (AstNodeImpl<T>) obj;
