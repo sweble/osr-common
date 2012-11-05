@@ -61,7 +61,8 @@ public class FileContent
 					file.getAbsolutePath());
 		
 		this.file = file;
-		this.content = FileUtils.readFileToString(file, encoding);
+		this.content = TestResourcesFixture.lineEndToUnix(
+				FileUtils.readFileToString(file, encoding));
 	}
 	
 	// =========================================================================
