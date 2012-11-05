@@ -29,6 +29,7 @@ import de.fau.cs.osr.ptk.common.AstVisitor;
 import de.fau.cs.osr.ptk.common.ParserInterface;
 import de.fau.cs.osr.ptk.common.PrinterInterface;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.utils.StringUtils;
 import de.fau.cs.osr.utils.WrappedException;
 
 public abstract class IntegrationTestBase<T extends AstNode<T>>
@@ -43,7 +44,8 @@ public abstract class IntegrationTestBase<T extends AstNode<T>>
 		
 		try
 		{
-			resources = new TestResourcesFixture(new File(url.getFile()));
+			String path = StringUtils.decodeUsingDefaultCharset(url.getFile());
+			resources = new TestResourcesFixture(new File(path));
 		}
 		catch (FileNotFoundException e)
 		{

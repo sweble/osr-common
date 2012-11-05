@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.fau.cs.osr.utils.FmtIllegalArgumentException;
+import de.fau.cs.osr.utils.StringUtils;
 
 public class TestResourcesFixture
 {
@@ -85,7 +86,8 @@ public class TestResourcesFixture
 					"Cannot find index file in resource path: `%s'",
 					pathToIndex));
 		
-		return new File(url.getFile()).getParentFile();
+		String path = StringUtils.decodeUsingDefaultCharset(url.getFile());
+		return new File(path).getParentFile();
 	}
 	
 	// =========================================================================
