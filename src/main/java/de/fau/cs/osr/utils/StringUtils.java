@@ -17,6 +17,8 @@
 
 package de.fau.cs.osr.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -610,5 +612,16 @@ public final class StringUtils
 			safe = abbrev + "-" + DigestUtils.md5Hex(fileTitle);
 		
 		return safe;
+	}
+
+	public static String decodeUsingDefaultCharset(String url)
+	{
+		try
+		{
+			return URLDecoder.decode(url, Charset.defaultCharset().name());
+		} catch (UnsupportedEncodingException e)
+		{
+			throw new WrappedException(e);
+		}
 	}
 }
