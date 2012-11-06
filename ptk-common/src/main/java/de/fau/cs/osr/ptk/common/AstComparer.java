@@ -124,11 +124,11 @@ public class AstComparer
 			if (a.size() != b.size())
 				return false;
 			
-			@SuppressWarnings("unchecked")
-			Iterator<AstNode<?>> i = (Iterator<AstNode<?>>) a.iterator();
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			Iterator<AstNode> i = (Iterator) a.iterator();
 			
-			@SuppressWarnings("unchecked")
-			Iterator<AstNode<?>> j = (Iterator<AstNode<?>>) b.iterator();
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			Iterator<AstNode> j = (Iterator) b.iterator();
 			
 			while (i.hasNext() & j.hasNext())
 			{

@@ -588,11 +588,11 @@ public class DeepAstComparer
 			if (a.size() != b.size())
 				throw new ComparisonException(a, b, AstDifference.NUMBER_OF_CHILDREN_DIFFERS);
 			
-			@SuppressWarnings("unchecked")
-			Iterator<AstNode<?>> i = (Iterator<AstNode<?>>) a.iterator();
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			Iterator<AstNode> i = (Iterator) a.iterator();
 			
-			@SuppressWarnings("unchecked")
-			Iterator<AstNode<?>> j = (Iterator<AstNode<?>>) b.iterator();
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			Iterator<AstNode> j = (Iterator) b.iterator();
 			
 			int k = 0;
 			while (i.hasNext() & j.hasNext())
