@@ -17,6 +17,7 @@
 
 package de.fau.cs.osr.utils;
 
+import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -179,4 +180,19 @@ public class TestStringUtils
 			}
 		}
 	};
+	
+	@Test
+	public void testTrimWithEmptyString() throws Exception {
+		assertEquals("", StringUtils.trim(""));
+	}
+	
+	@Test
+	public void testTrimUnderscoresWithEmptyString() throws Exception {
+		assertEquals("", StringUtils.trimUnderscores(""));
+	}
+	
+	@Test
+	public void testTrimUnderscoresWithOnlyUnderscores() throws Exception {
+		assertEquals("", StringUtils.trimUnderscores("_"));
+	}
 }
