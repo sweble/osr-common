@@ -23,5 +23,5 @@ public interface AstStringNode<T extends AstNode<T>>
 {
 	public abstract String getContent();
 	
-	public abstract String setContent(String content);
+	public abstract void setContent(String content);
 }

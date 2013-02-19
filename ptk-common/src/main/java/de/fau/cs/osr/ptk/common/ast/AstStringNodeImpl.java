@@ -49,13 +49,11 @@ public abstract class AstStringNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public String setContent(String content)
+	public void setContent(String content)
 	{
 		if (content == null)
 			throw new NullPointerException();
-		String old = this.content;
 		this.content = content;
-		return old;
 	}
 	
 	@Override
@@ -112,8 +110,12 @@ public abstract class AstStringNodeImpl<T extends AstNode<T>>
 			switch (index)
 			{
 				case 0:
-					return AstStringNodeImpl.this.setContent((String) value);
-					
+				{
+					String old = AstStringNodeImpl.this.getContent();
+					AstStringNodeImpl.this.setContent((String) value);
+					return old;
+				}
+				
 				default:
 					throw new IndexOutOfBoundsException();
 			}
