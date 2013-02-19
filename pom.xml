@@ -41,7 +41,7 @@
     <version.plugin.jar>2.3.1</version.plugin.jar>
     <version.plugin.war>2.1.1</version.plugin.war>
     <version.plugin.assembly>2.2</version.plugin.assembly>
-    <version.plugin.eclipse>2.6</version.plugin.eclipse>
+    <version.plugin.eclipse>2.9</version.plugin.eclipse>
     <version.plugin.release>2.1</version.plugin.release>
     <version.plugin.javadoc>2.8</version.plugin.javadoc>
     <version.plugin.source>2.1.2</version.plugin.source>
@@ -63,6 +63,7 @@
     <version.site-plugin.cobertura>2.5.1</version.site-plugin.cobertura>
     <version.site-plugin.taglist>2.4</version.site-plugin.taglist>
     <version.site-plugin.jxr>2.3</version.site-plugin.jxr>
+    <version.site-plugin.pmd>2.7.1</version.site-plugin.pmd>
     <version.site-plugin.plugin>2.9</version.site-plugin.plugin>
     <version.site-plugin.changes>2.7.1</version.site-plugin.changes>
 
@@ -542,6 +543,15 @@
           <artifactId>maven-jxr-plugin</artifactId>
           <version>${version.site-plugin.jxr}</version>
           <inherited>true</inherited>
+        </plugin>
+
+        <!-- Maven PMD (source code analyzer) Plugin -->
+        <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>${version.site-plugin.pmd}</version>
+          <configuration>
+            <targetJdk>${version.java}</targetJdk>
+          </configuration>
         </plugin>
 
         <!-- Maven Cobertura Report Plugin -->
