@@ -104,9 +104,12 @@ final class OptionState
 	
 	public String getSafeDefaultValue()
 	{
-		List<String> values = Arrays.asList(defaultValues);
-		if (values != null && !values.isEmpty())
-			return values.get(0);
+		if (defaultValues != null)
+		{
+			List<String> values = Arrays.asList(defaultValues);
+			if (!values.isEmpty())
+				return values.get(0);
+		}
 		return null;
 	}
 	
