@@ -508,8 +508,8 @@ public class DeepAstComparer
 	 *            Second subtree.
 	 * @param compareAttributes
 	 *            Whether to include the node attributes in the comparison.
-	 * @return True if both subtrees are equal, false otherwise.
 	 * @throws ComparisonException
+	 *            Thrown if the two trees differ.
 	 */
 	public static void compare(
 			AstNode<?> rootA,

@@ -39,7 +39,7 @@ public class TestResourcesFixture
 	// =========================================================================
 	
 	/**
-	 * @param pathToIndex
+	 * @param baseDirectory
 	 *            Path to a directory in which the resources will be gathered.
 	 * 
 	 * @throws FileNotFoundException
