@@ -18,11 +18,14 @@ package de.fau.cs.osr.utils;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestBuildInfo
 {
+	// FIXME: This test is useless in this form!
 	@Test
+	@Ignore
 	public void test() throws IOException
 	{
 		ClassLoader cl;
@@ -30,8 +33,8 @@ public class TestBuildInfo
 		cl = getClass().getClassLoader();
 		
 		System.out.println(BuildInfo.build(
-		        "de.fau.cs.osr.utils",
-		        "utils",
-		        cl));
+				"de.fau.cs.osr.utils",
+				"utils",
+				cl));
 	}
 }
