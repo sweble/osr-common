@@ -17,17 +17,7 @@
 
 package de.fau.cs.osr.ptk.common.xml;
 
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.AST_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_ARRAY_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_LOCATION_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_NAME_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_NULL_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.ATTR_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.LIST_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.NULL_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.PTK_NS;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.TEXT_QNAME;
-import static de.fau.cs.osr.ptk.common.xml.XmlConstants.typeNameToTagName;
+import static de.fau.cs.osr.ptk.common.xml.XmlConstants.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -50,9 +40,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeList;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
-import de.fau.cs.osr.ptk.common.ast.AstText;
+import de.fau.cs.osr.ptk.common.ast.AstStringNode;
 import de.fau.cs.osr.utils.NameAbbrevService;
 import de.fau.cs.osr.utils.ReflectionUtils;
 import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
@@ -150,10 +140,10 @@ public class XmlWriter<T extends AstNode<T>>
 		if (!nodeClass.isAssignableFrom(textClass))
 			throw new IllegalArgumentException("An instance of textClass must be assignable to nodeClass");
 		
-		if (!AstNodeListImpl.class.isAssignableFrom(listClass))
-			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + AstNodeListImpl.class.getName());
-		if (!AstText.class.isAssignableFrom(textClass))
-			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + AstText.class.getName());
+		if (!AstNodeList.class.isAssignableFrom(listClass))
+			throw new IllegalArgumentException("An instance of listClass must be assignable to type " + AstNodeList.class.getName());
+		if (!AstStringNode.class.isAssignableFrom(textClass))
+			throw new IllegalArgumentException("An instance of textClass must be assignable to type " + AstStringNode.class.getName());
 	}
 	
 	// =========================================================================
@@ -263,11 +253,11 @@ public class XmlWriter<T extends AstNode<T>>
 	{
 		if (listClass.isInstance(n))
 		{
-			visit((AstNodeListImpl<T>) n);
+			visit((AstNodeList<T>) n);
 		}
 		else if (textClass.isInstance(n))
 		{
-			visit((AstText<T>) n);
+			visit((AstStringNode<T>) n);
 		}
 		else if (n == null)
 		{
@@ -322,7 +312,7 @@ public class XmlWriter<T extends AstNode<T>>
 		endElement(tagName);
 	}
 	
-	private void visit(AstText<T> n) throws SAXException
+	private void visit(AstStringNode<T> n) throws SAXException
 	{
 		if (n.getNativeLocation() != null)
 			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
@@ -335,7 +325,7 @@ public class XmlWriter<T extends AstNode<T>>
 		endElement(TEXT_QNAME);
 	}
 	
-	private void visit(AstNodeListImpl<T> n) throws SAXException, JAXBException, IOException
+	private void visit(AstNodeList<T> n) throws SAXException, JAXBException, IOException
 	{
 		if (n.getNativeLocation() != null)
 			addAttribute(ATTR_LOCATION_QNAME, n.getNativeLocation().toString());
