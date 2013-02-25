@@ -373,6 +373,13 @@ public class RtData
 		}
 	}
 	
+	public boolean isStringOnly(int index)
+	{
+		Object[] field = fields[index];
+		return (field.length == 0)
+				|| (field.length == 1 && field[0] instanceof String);
+	}
+	
 	protected void toString(int index, StringBuilder sb)
 	{
 		Object[] field = fields[index];
