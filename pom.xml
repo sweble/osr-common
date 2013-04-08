@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
 
   <name>Tooling</name>
-  <url>http://sweble.org/doc/site/tooling</url>
+  <url>http://sweble.org/sites/swc-devel/latest/tooling</url>
   <inceptionYear>2011</inceptionYear>
   <description>
     This is a pure POM project that serves as basis for projects developed at
@@ -700,7 +700,7 @@
 
   <issueManagement>
     <system>Mantis</system>
-    <url>http://sweble.org/bugtracker/</url>
+    <url>http://sweble.org/bugtracker</url>
   </issueManagement>
 
   <!--
@@ -722,14 +722,14 @@
       <subscribe>sweble-wt-parser-subscribe@sweble.org</subscribe>
       <unsubscribe>sweble-wt-parser-unsubscribe@sweble.org</unsubscribe>
       <post>sweble-wt-parser@sweble.org</post>
-      <archive>http://sweble.org/pipermail/sweble-wt-parser/</archive>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser</archive>
     </mailingList>
     <mailingList>
       <name>Sweble Project - Developer Discussion</name>
       <subscribe>sweble-wt-parser-devel-subscribe@sweble.org</subscribe>
       <unsubscribe>sweble-wt-parser-devel-unsubscribe@sweble.org</unsubscribe>
       <post>sweble-wt-parser-devel@sweble.org</post>
-      <archive>http://sweble.org/pipermail/sweble-wt-parser-devel/</archive>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser-devel</archive>
     </mailingList>
   </mailingLists>
 
@@ -743,7 +743,7 @@
     <repository>
       <id>sonatype-nexus-staging</id>
       <name>Sonatype Nexus Staging</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
     <snapshotRepository>
       <id>osr-public-snapshots-deployment</id>
@@ -752,7 +752,7 @@
     </snapshotRepository>
     <site>
       <id>sweble.org</id>
-      <url>http://sweble.org/doc/site/tooling</url>
+      <url>http://sweble.org/sites/swc-devel/latest/tooling</url>
     </site>
   </distributionManagement>
 
