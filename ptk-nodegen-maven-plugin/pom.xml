@@ -18,7 +18,7 @@
   <packaging>maven-plugin</packaging>
 
   <name>PTK - NodeGen Maven Plugin</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-nodegen-maven-plugin</url>
+  <url>http://sweble.org/sites/swc-devel/latest/tooling/parser-toolkit/ptk-nodegen-maven-plugin</url>
   <inceptionYear>2010</inceptionYear>
   <description>
     The NodeGen (Node Generator) Maven Plugin generates Ast Nodes from a node

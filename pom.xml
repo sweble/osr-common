@@ -19,7 +19,7 @@
   <packaging>pom</packaging>
 
   <name>Parser Toolkit</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit</url>
+  <url>http://sweble.org/sites/swc-devel/latest/tooling/parser-toolkit</url>
   <inceptionYear>2009</inceptionYear>
   <description>
     The parser toolkit provides the basic facilities for AST building,

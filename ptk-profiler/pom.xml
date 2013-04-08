@@ -18,7 +18,7 @@
   <packaging>jar</packaging>
 
   <name>PTK - Test and Performance Toolkit</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-profiler</url>
+  <url>http://sweble.org/sites/swc-devel/latest/tooling/parser-toolkit/ptk-profiler</url>
   <inceptionYear>2010</inceptionYear>
   <description>
     A toolkit providing means to test and correctness and performance of parser
