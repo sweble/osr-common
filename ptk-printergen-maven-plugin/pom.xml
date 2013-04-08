@@ -18,7 +18,7 @@
   <packaging>maven-plugin</packaging>
 
   <name>PTK - PrinterGen Maven Plugin</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-printergen-maven-plugin</url>
+  <url>http://sweble.org/sites/swc-devel/latest/tooling/parser-toolkit/ptk-printergen-maven-plugin</url>
   <inceptionYear>2010</inceptionYear>
   <description>
     The PrinterGen (Printer Generator) Maven Plugin generates a printer class

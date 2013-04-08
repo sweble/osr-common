@@ -18,7 +18,7 @@
   <packaging>jar</packaging>
 
   <name>PTK - Common</name>
-  <url>http://sweble.org/doc/site/tooling/parser-toolkit/ptk-common</url>
+  <url>http://sweble.org/sites/swc-devel/latest/tooling/parser-toolkit/ptk-common</url>
   <inceptionYear>2009</inceptionYear>
   <description>
     The parser toolkit common module provides the basic facilities for AST
