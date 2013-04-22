@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
 
   <name>Tooling</name>
-  <url>http://sweble.org/doc/site/tooling</url>
+  <url>http://sweble.org/sites/swc-devel/latest/tooling</url>
   <inceptionYear>2011</inceptionYear>
   <description>
     This is a pure POM project that serves as basis for projects developed at
@@ -626,71 +626,6 @@
     </extensions>
   </build>
 
-  <!-- ==[ Reporting ]====================================================== -->
-
-  <!--
-  <reporting>
-    <plugins>
-
-      <!- Javadoc ->
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-
-      <!- Scaladoc ->
-      <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-      </plugin>
-
-      <!- Cross referencing ->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jxr-maven-plugin</artifactId>
-      </plugin>
-
-      <!- JUnit reports ->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-
-      <!- Test coverage ->
-      <plugin>
-        <artifactId>maven-clover-plugin</artifactId>
-      </plugin>
-
-      <!- Code analysis report ->
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <targetjdk>${version.java}</targetjdk>
-          <rulesets>
-            <ruleset>/rulesets/basic.xml</ruleset>
-            <ruleset>/rulesets/controversial.xml</ruleset>
-          </rulesets>
-          <format>xml</format>
-          <linkXref>true</linkXref>
-          <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-          <minimumTokens>100</minimumTokens>
-        </configuration>
-      </plugin>
-
-      <!- SCM changelog report ->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>changelog-maven-plugin</artifactId>
-      </plugin>
-
-      <!- Todo tags report ->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>taglist-maven-plugin</artifactId>
-      </plugin>
-
-    </plugins>
-  </reporting>
-  -->
-
   <!-- ==[ More Project Information ]======================================= -->
 
   <licenses>
@@ -749,7 +684,7 @@
 
   <issueManagement>
     <system>Mantis</system>
-    <url>http://sweble.org/bugtracker/</url>
+    <url>http://sweble.org/bugtracker</url>
   </issueManagement>
 
   <!--
@@ -771,14 +706,14 @@
       <subscribe>sweble-wt-parser-subscribe@sweble.org</subscribe>
       <unsubscribe>sweble-wt-parser-unsubscribe@sweble.org</unsubscribe>
       <post>sweble-wt-parser@sweble.org</post>
-      <archive>http://sweble.org/pipermail/sweble-wt-parser/</archive>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser</archive>
     </mailingList>
     <mailingList>
       <name>Sweble Project - Developer Discussion</name>
       <subscribe>sweble-wt-parser-devel-subscribe@sweble.org</subscribe>
       <unsubscribe>sweble-wt-parser-devel-unsubscribe@sweble.org</unsubscribe>
       <post>sweble-wt-parser-devel@sweble.org</post>
-      <archive>http://sweble.org/pipermail/sweble-wt-parser-devel/</archive>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser-devel</archive>
     </mailingList>
   </mailingLists>
 
@@ -792,7 +727,7 @@
     <repository>
       <id>sonatype-nexus-staging</id>
       <name>Sonatype Nexus Staging</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
     <snapshotRepository>
       <id>osr-public-snapshots-deployment</id>
@@ -801,7 +736,7 @@
     </snapshotRepository>
     <site>
       <id>sweble.org</id>
-      <url>http://sweble.org/doc/site/tooling</url>
+      <url>http://sweble.org/sites/swc-devel/latest/tooling</url>
     </site>
   </distributionManagement>
 
