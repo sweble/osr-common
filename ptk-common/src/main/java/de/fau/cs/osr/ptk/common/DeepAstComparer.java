@@ -509,15 +509,32 @@ public class DeepAstComparer
 	 * @param compareAttributes
 	 *            Whether to include the node attributes in the comparison.
 	 * @throws ComparisonException
-	 *            Thrown if the two trees differ.
+	 *             Thrown if the two trees differ.
 	 */
-	public static void compare(
+	public static void compareAndThrow(
 			AstNode<?> rootA,
 			AstNode<?> rootB,
 			boolean compareAttributes,
 			boolean compareLocation) throws ComparisonException
 	{
 		new DeepAstComparer(compareAttributes, compareLocation).compareIntern(rootA, rootB);
+	}
+	
+	public static boolean compare(
+			AstNode<?> rootA,
+			AstNode<?> rootB,
+			boolean compareAttributes,
+			boolean compareLocation)
+	{
+		try
+		{
+			new DeepAstComparer(compareAttributes, compareLocation).compareIntern(rootA, rootB);
+			return true;
+		}
+		catch (ComparisonException e)
+		{
+			return false;
+		}
 	}
 	
 	// =========================================================================

@@ -31,7 +31,7 @@ import java.util.Map.Entry;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.fau.cs.osr.ptk.common.AstComparer;
+import de.fau.cs.osr.ptk.common.DeepAstComparer;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.List;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Section;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
@@ -94,7 +94,7 @@ public class XmlWriterTest
 		
 		// -------
 		
-		assertTrue(AstComparer.compare(in, out, false, true));
+		assertTrue(DeepAstComparer.compare(in, out, false, true));
 		
 		// We have to compare the attribuets manually. The arrays contained in 
 		// the attribute won't be compared correctly by the .equals call.
