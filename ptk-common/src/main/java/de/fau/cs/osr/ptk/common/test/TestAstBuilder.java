@@ -279,11 +279,9 @@ public class TestAstBuilder
 			return this.level;
 		}
 		
-		public final int setLevel(int level)
+		public final void setLevel(int level)
 		{
-			int old = this.level;
 			this.level = level;
-			return old;
 		}
 		
 		@Override
@@ -335,8 +333,11 @@ public class TestAstBuilder
 					switch (index)
 					{
 						case 0:
-							return Section.this.setLevel((Integer) value);
-							
+						{
+							int old = Section.this.getLevel();
+							Section.this.setLevel((Integer) value);
+							return old;
+						}
 						default:
 							throw new IndexOutOfBoundsException();
 					}
@@ -625,11 +626,9 @@ public class TestAstBuilder
 			return this.protocol;
 		}
 		
-		public final String setProtocol(String protocol)
+		public final void setProtocol(String protocol)
 		{
-			String old = this.protocol;
 			this.protocol = protocol;
-			return old;
 		}
 		
 		private String path;
@@ -639,11 +638,9 @@ public class TestAstBuilder
 			return this.path;
 		}
 		
-		public final String setPath(String path)
+		public final void setPath(String path)
 		{
-			String old = this.path;
 			this.path = path;
-			return old;
 		}
 		
 		@Override
@@ -699,10 +696,18 @@ public class TestAstBuilder
 					switch (index)
 					{
 						case 0:
-							return Url.this.setProtocol((String) value);
+						{
+							String old = Url.this.getProtocol();
+							Url.this.setProtocol((String) value);
+							return old;
+						}
 						case 1:
-							return Url.this.setPath((String) value);
-							
+						{
+							String old = Url.this.getPath();
+							Url.this.setPath((String) value);
+							return old;
+						}
+						
 						default:
 							throw new IndexOutOfBoundsException();
 					}
