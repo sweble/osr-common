@@ -488,20 +488,15 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		@SuppressWarnings("unchecked")
 		AstNodeImpl<T> n = (AstNodeImpl<T>) super.clone();
 		
-		// not necessary, Location is immutable
-		//n.location = new Location(n.location);
+		// we don't clone the location since a location is immutable
 		
 		if (n.attributes != null)
 			n.attributes = new HashMap<String, Object>(n.attributes);
 		
-		if (hasProperties())
-		{
-			AstNodePropertyIterator i = propertyIterator();
-			AstNodePropertyIterator j = n.propertyIterator();
-			while (i.next() & j.next())
-				// don't short-circuit!
-				j.setValue(i.getValue());
-		}
+		// we don't copy the properties, we assume that properties are stored
+		// as attributes of classes and are therefore already copied.
+		
+		// we don't copy/clone children, we're doing a shallow clone.
 		
 		return n;
 	}
@@ -519,6 +514,11 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		}
 	}
 	
+	/**
+	 * Unlike clone() deepClone() calls deepClone() on children and thus
+	 * recursively create a deep copy of a sub-tree. It does, however, not clone
+	 * properties or attributes, those are just copied by reference.
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public AstNodeImpl<T> deepClone() throws CloneNotSupportedException
@@ -527,6 +527,9 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		
 		if (isList())
 		{
+			// First remove cloned references
+			n.clear();
+			
 			Iterator<T> i = iterator();
 			while (i.hasNext())
 				n.add((T) i.next().deepClone());

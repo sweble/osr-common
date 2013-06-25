@@ -403,6 +403,17 @@ public class AstNodeListImpl<T extends AstNode<T>>
 	
 	// =========================================================================
 	
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Object clone() throws CloneNotSupportedException
+	{
+		AstNodeListImpl clone = (AstNodeListImpl) super.clone();
+		clone.children = new LinkedList(children);
+		return clone;
+	}
+	
+	// =========================================================================
+	
 	private final class ChildListIterator
 			implements
 				AstChildIterator<T>
