@@ -569,36 +569,41 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		// Type checking
 		if (this == obj)
 			return true;
-		/*
-		if (!super.equals(obj))
-			return false;
-		*/
+		
 		if (obj == null || getClass() != obj.getClass())
 			return false;
+		
 		@SuppressWarnings("unchecked")
 		AstNodeImpl<T> other = (AstNodeImpl<T>) obj;
 		
+		return equalsNoTypeCheck(this, other);
+	}
+	
+	public static <S extends AstNode<S>> boolean equalsNoTypeCheck(
+			AstNode<S> a,
+			AstNode<S> b)
+	{
 		// Check location
-		if (location == null)
+		if (a.getNativeLocation() == null)
 		{
-			if (other.location != null)
+			if (b.getNativeLocation() != null)
 				return false;
 		}
-		else if (!location.equals(other.location))
+		else if (!a.getNativeLocation().equals(b.getNativeLocation()))
 			return false;
 		
 		// Check attributes
-		if (attributes == null)
+		if (a.getAttributes() == null)
 		{
-			if (other.attributes != null)
+			if (b.getAttributes() != null)
 				return false;
 		}
-		else if (!attributes.equals(other.attributes))
+		else if (!a.getAttributes().equals(b.getAttributes()))
 			return false;
 		
 		// Check properties
-		AstNodePropertyIterator p1 = propertyIterator();
-		AstNodePropertyIterator p2 = other.propertyIterator();
+		AstNodePropertyIterator p1 = a.propertyIterator();
+		AstNodePropertyIterator p2 = b.propertyIterator();
 		while (p1.next() & p2.next()) // Don't short-circuit!
 		{
 			Object v1 = p1.getValue();
@@ -614,12 +619,12 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		// Nodes of the same type have the same set of properties
 		
 		// Check children
-		Iterator<T> i1 = iterator();
-		Iterator<T> i2 = other.iterator();
+		Iterator<S> i1 = a.iterator();
+		Iterator<S> i2 = b.iterator();
 		while (i1.hasNext() && i2.hasNext())
 		{
-			T n1 = i1.next();
-			T n2 = i2.next();
+			S n1 = i1.next();
+			S n2 = i2.next();
 			if (n1 == null)
 			{
 				if (n2 != null)

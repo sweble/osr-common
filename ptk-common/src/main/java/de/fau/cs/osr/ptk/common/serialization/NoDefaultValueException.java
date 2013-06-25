@@ -15,30 +15,29 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.ptk.common.xml;
+package de.fau.cs.osr.ptk.common.serialization;
 
-public class SerializationException
+public class NoDefaultValueException
 		extends
-			Exception
+			RuntimeException
 {
 	private static final long serialVersionUID = 1L;
 	
-	public SerializationException()
+	public NoDefaultValueException()
 	{
-		super();
 	}
 	
-	public SerializationException(String message, Throwable cause)
+	public NoDefaultValueException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 	
-	public SerializationException(String message)
+	public NoDefaultValueException(String message)
 	{
 		super(message);
 	}
 	
-	public SerializationException(Throwable cause)
+	public NoDefaultValueException(Throwable cause)
 	{
 		super(cause);
 	}

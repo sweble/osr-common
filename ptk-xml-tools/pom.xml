@@ -41,6 +41,12 @@
       <artifactId>ptk-common</artifactId>
     </dependency>
 
+    <!-- XStream -->
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+    </dependency>
+
     <!--
       Testing
     -->
