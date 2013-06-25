@@ -32,7 +32,7 @@ import org.junit.Test;
 import com.google.gson.Gson;
 
 import de.fau.cs.osr.ptk.common.DeepAstComparer;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.List;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.NodeList;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Section;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
@@ -53,7 +53,7 @@ public class TestJsonConverter
 						"de.fau.cs.osr.ptk.common.json"),
 				false,
 				TestAstNode.class,
-				List.class,
+				NodeList.class,
 				Text.class);
 	}
 	
@@ -93,9 +93,9 @@ public class TestJsonConverter
 	@Test
 	public void testJsonToNodeListConversion() throws Exception
 	{
-		List nl = jconv.fromJson(
+		NodeList nl = jconv.fromJson(
 				"[\"Some text\", [\"Some more text\"]]",
-				List.class);
+				NodeList.class);
 		
 		assertThat(nl.size(), equalTo(2));
 		assertThat(((Text) nl.get(0)).getContent(), equalTo("Some text"));

@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import xtc.util.Pair;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.IdNode;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.List;
+import de.fau.cs.osr.ptk.common.test.TestAstBuilder.NodeList;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
 
 public class NodeListTest
@@ -37,7 +37,7 @@ public class NodeListTest
 	@Test
 	public void testNodeList()
 	{
-		List l = new List();
+		NodeList l = new NodeList();
 		checkNodeList(0, l);
 		assertTrue(l.isList());
 		assertTrue(l.isEmpty());
@@ -47,11 +47,11 @@ public class NodeListTest
 	public void testNodeList_AstNode()
 	{
 		{
-			List l = new List((TestAstNode) null);
+			NodeList l = new NodeList((TestAstNode) null);
 			checkNodeList(0, l);
 		}
 		{
-			List l = new List(astId(0));
+			NodeList l = new NodeList(astId(0));
 			checkNodeList(1, l);
 			assertFalse(l.isEmpty());
 		}
@@ -63,14 +63,14 @@ public class NodeListTest
 		{
 			Pair<TestAstNode> list = makeSimpleList3(1);
 			
-			List l = new List(astId(0), (Pair<TestAstNode>) list);
+			NodeList l = new NodeList(astId(0), (Pair<TestAstNode>) list);
 			
 			checkNodeList(4, l);
 		}
 		{
 			Pair<TestAstNode> list = makeSimpleList3(0);
 			
-			List l = new List(null, (Pair<TestAstNode>) list);
+			NodeList l = new NodeList(null, (Pair<TestAstNode>) list);
 			
 			checkNodeList(3, l);
 		}
@@ -80,7 +80,7 @@ public class NodeListTest
 				@Override
 				public void run()
 				{
-					new List(astId(0), (Pair<TestAstNode>) null);
+					new NodeList(astId(0), (Pair<TestAstNode>) null);
 				}
 			}, NullPointerException.class);
 		}
@@ -90,13 +90,13 @@ public class NodeListTest
 	public void testNodeList_AstNode_AstNode()
 	{
 		{
-			List l = new List(null, (TestAstNode) null);
+			NodeList l = new NodeList(null, (TestAstNode) null);
 			checkNodeList(0, l);
 		}
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
-					new List(makeNestedList5(3)));
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
+					new NodeList(makeNestedList5(3)));
 			
 			checkNodeList(8, l);
 		}
@@ -108,7 +108,7 @@ public class NodeListTest
 		{
 			Pair<TestAstNode> list = makeSimpleList3(0);
 			
-			List l = new List((Pair<TestAstNode>) list);
+			NodeList l = new NodeList((Pair<TestAstNode>) list);
 			
 			checkNodeList(3, l);
 		}
@@ -118,7 +118,7 @@ public class NodeListTest
 				@Override
 				public void run()
 				{
-					new List((Pair<TestAstNode>) null);
+					new NodeList((Pair<TestAstNode>) null);
 				}
 			}, NullPointerException.class);
 		}
@@ -130,7 +130,7 @@ public class NodeListTest
 	public void testSet()
 	{
 		{
-			List l = new List(makeSimpleList3(3));
+			NodeList l = new NodeList(makeSimpleList3(3));
 			l.set(2, astId(2));
 			l.set(0, astId(0));
 			l.set(1, astId(1));
@@ -142,7 +142,7 @@ public class NodeListTest
 				@Override
 				public void run()
 				{
-					new List(makeSimpleList3(0)).set(0, new List());
+					new NodeList(makeSimpleList3(0)).set(0, new NodeList());
 				}
 			}, IllegalArgumentException.class);
 		}
@@ -152,7 +152,7 @@ public class NodeListTest
 				@Override
 				public void run()
 				{
-					new List(makeSimpleList3(0)).set(0, null);
+					new NodeList(makeSimpleList3(0)).set(0, null);
 				}
 			}, NullPointerException.class);
 		}
@@ -162,8 +162,8 @@ public class NodeListTest
 	public void testLastIndexOf()
 	{
 		{
-			List l = new List(
-					new List(makeSimpleList3(3)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(3)),
 					makeNestedList5(10));
 			
 			assertEquals(l.lastIndexOf(null), -1);
@@ -179,8 +179,8 @@ public class NodeListTest
 	public void testAppend()
 	{
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			l.add(null);
@@ -195,16 +195,16 @@ public class NodeListTest
 	public void testAppendAll()
 	{
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			l.addAll(Pair.EMPTY);
 			checkNodeList(8, l);
 		}
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			Pair<TestAstNode> l2 = makeSimpleList3(7);
@@ -214,8 +214,8 @@ public class NodeListTest
 			checkNodeList(10, l);
 		}
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			Pair<TestAstNode> l2 = makeSimpleList3(7);
@@ -227,21 +227,21 @@ public class NodeListTest
 			checkNodeList(8, l);
 		}
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			Pair<TestAstNode> l2 = makeSimpleList3(0);
 			l2.set(0, null);
 			l2.set(1, null);
-			l2.set(2, new List(makeNestedList5(8)));
+			l2.set(2, new NodeList(makeNestedList5(8)));
 			
 			l.addAll(l2);
 			checkNodeList(13, l);
 		}
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			Pair<TestAstNode> l2 = makeSimpleList3(8);
@@ -252,8 +252,8 @@ public class NodeListTest
 			checkNodeList(10, l);
 		}
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			Pair<TestAstNode> l2 = makeSimpleList3(7);
@@ -269,7 +269,7 @@ public class NodeListTest
 	public void testPrepend()
 	{
 		{
-			List l = new List(makeSimpleList3(0));
+			NodeList l = new NodeList(makeSimpleList3(0));
 			
 			//l.prepend(null);
 			prepend(l, null);
@@ -277,7 +277,7 @@ public class NodeListTest
 			checkNodeList(3, l);
 		}
 		{
-			List l = new List(makeSimpleList3(1));
+			NodeList l = new NodeList(makeSimpleList3(1));
 			
 			//l.prepend(astId(0));
 			prepend(l, astId(0));
@@ -285,10 +285,10 @@ public class NodeListTest
 			checkNodeList(4, l);
 		}
 		{
-			List l = new List(makeNestedList5(5));
+			NodeList l = new NodeList(makeNestedList5(5));
 			
 			//l.prepend(new List(makeNestedList5(0)));
-			prepend(l, new List(makeNestedList5(0)));
+			prepend(l, new NodeList(makeNestedList5(0)));
 			
 			checkNodeList(10, l);
 		}
@@ -310,12 +310,12 @@ public class NodeListTest
 				public void run()
 				{
 					//new List(makeSimpleList3(0)).prependAll((Pair<TestAstNode>) null);
-					prependAll(new List(makeSimpleList3(0)), (Pair<TestAstNode>) null);
+					prependAll(new NodeList(makeSimpleList3(0)), (Pair<TestAstNode>) null);
 				}
 			}, NullPointerException.class);
 		}
 		{
-			List l = new List(makeNestedList5(5));
+			NodeList l = new NodeList(makeNestedList5(5));
 			
 			//l.prependAll(makeNestedList5(0));
 			prependAll(l, makeNestedList5(0));
@@ -333,8 +333,8 @@ public class NodeListTest
 	public void testClear()
 	{
 		{
-			List l = new List(
-					new List(makeSimpleList3(0)),
+			NodeList l = new NodeList(
+					new NodeList(makeSimpleList3(0)),
 					makeNestedList5(3));
 			
 			l.clear();
@@ -344,7 +344,7 @@ public class NodeListTest
 	
 	// =========================================================================
 	
-	private void checkNodeList(int size, List l)
+	private void checkNodeList(int size, NodeList l)
 	{
 		assertEquals(size, l.size());
 		for (int i = 0; i < l.size(); ++i)
@@ -371,7 +371,7 @@ public class NodeListTest
 			Pair<TestAstNode> nestedList = new Pair<TestAstNode>(astId(i++));
 			nestedList.add(astId(i++));
 			nestedList.add(astId(i++));
-			list.add(new List(nestedList));
+			list.add(new NodeList(nestedList));
 		}
 		list.add(astId(i++));
 		return list;

@@ -40,14 +40,14 @@ public class TestAstBuilder
 		return new Text(text);
 	}
 	
-	public static List astList()
+	public static NodeList astList()
 	{
-		return new List();
+		return new NodeList();
 	}
 	
-	public static List astList(TestAstNode... children)
+	public static NodeList astList(TestAstNode... children)
 	{
-		return new List(children);
+		return new NodeList(children);
 	}
 	
 	public static SectionBuilder astSection()
@@ -191,7 +191,7 @@ public class TestAstBuilder
 		}
 	}
 	
-	public static final class List
+	public static final class NodeList
 			extends
 				AstNodeListImpl<TestAstNode>
 			implements
@@ -199,46 +199,50 @@ public class TestAstBuilder
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public List()
+		public NodeList()
 		{
 		}
 		
-		public List(Collection<? extends TestAstNode> list)
-		{
-			super(list);
-		}
-		
-		public List(Pair<? extends TestAstNode> list)
+		public NodeList(Collection<? extends TestAstNode> list)
 		{
 			super(list);
 		}
 		
-		public List(TestAstNode car, Pair<? extends TestAstNode> cdr)
+		public NodeList(Pair<? extends TestAstNode> list)
+		{
+			super(list);
+		}
+		
+		public NodeList(TestAstNode car, Pair<? extends TestAstNode> cdr)
 		{
 			super(car, cdr);
 		}
 		
-		public List(TestAstNode a, TestAstNode b, TestAstNode c, TestAstNode d)
+		public NodeList(
+				TestAstNode a,
+				TestAstNode b,
+				TestAstNode c,
+				TestAstNode d)
 		{
 			super(a, b, c, d);
 		}
 		
-		public List(TestAstNode a, TestAstNode b, TestAstNode c)
+		public NodeList(TestAstNode a, TestAstNode b, TestAstNode c)
 		{
 			super(a, b, c);
 		}
 		
-		public List(TestAstNode a, TestAstNode b)
+		public NodeList(TestAstNode a, TestAstNode b)
 		{
 			super(a, b);
 		}
 		
-		public List(TestAstNode... children)
+		public NodeList(TestAstNode... children)
 		{
 			super(children);
 		}
 		
-		public List(TestAstNode child)
+		public NodeList(TestAstNode child)
 		{
 			super(child);
 		}
