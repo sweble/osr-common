@@ -22,8 +22,8 @@ import java.io.Serializable;
 import de.fau.cs.osr.ptk.common.ast.Span;
 
 public abstract class Warning
-        implements
-            Serializable
+		implements
+			Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -38,8 +38,8 @@ public abstract class Warning
 	public Warning()
 	{
 		this(new Span(),
-		        "Unknown origin",
-		        "Unknown warning.");
+				"Unknown origin",
+				"Unknown warning.");
 	}
 	
 	public Warning(Span span, String origin, String message)

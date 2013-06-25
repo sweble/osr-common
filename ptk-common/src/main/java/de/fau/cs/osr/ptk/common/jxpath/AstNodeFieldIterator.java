@@ -28,8 +28,8 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public class AstNodeFieldIterator
-        implements
-            NodeIterator
+		implements
+			NodeIterator
 {
 	/** A pointer to the node over whose children we are iterating. */
 	private NodePointer parent;
@@ -73,10 +73,10 @@ public class AstNodeFieldIterator
 	 *            node will have negative indices. <b>NOT YET SUPPORTED!</b>
 	 */
 	public AstNodeFieldIterator(
-	        NodePointer parent,
-	        NodeTest nodeTest,
-	        boolean reverse,
-	        NodePointer startWith)
+			NodePointer parent,
+			NodeTest nodeTest,
+			boolean reverse,
+			NodePointer startWith)
 	{
 		this.parent = parent;
 		this.node = (AstNode<?>) parent.getImmediateNode();
@@ -140,7 +140,7 @@ public class AstNodeFieldIterator
 		if (position <= 0)
 			throw new IndexOutOfBoundsException();
 		*/
-
+		
 		try
 		{
 			if (position <= 0)

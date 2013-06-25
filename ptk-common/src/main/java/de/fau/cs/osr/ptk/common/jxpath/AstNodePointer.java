@@ -29,8 +29,8 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.FmtInternalLogicError;
 
 public class AstNodePointer
-        extends
-            NodePointer
+		extends
+			NodePointer
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -72,7 +72,10 @@ public class AstNodePointer
 	}
 	
 	@Override
-	public NodeIterator childIterator(NodeTest test, boolean reverse, NodePointer startWith)
+	public NodeIterator childIterator(
+			NodeTest test,
+			boolean reverse,
+			NodePointer startWith)
 	{
 		//debug("childIterator");
 		
@@ -105,7 +108,7 @@ public class AstNodePointer
 		
 		return isEmpty;
 		*/
-
+		
 		return node.isEmpty();
 	}
 	
@@ -170,7 +173,9 @@ public class AstNodePointer
 	}
 	
 	@Override
-	public int compareChildNodePointers(NodePointer pointer1, NodePointer pointer2)
+	public int compareChildNodePointers(
+			NodePointer pointer1,
+			NodePointer pointer2)
 	{
 		//debug("compareChildNodePointers");
 		
