@@ -153,7 +153,7 @@ public final class Span
 			buf.append(from.getLine());
 			buf.append(':');
 			buf.append(from.getColumn());
-			if (to != null && to != from)
+			if (to != null && !to.equals(from))
 			{
 				buf.append(" - ");
 				if (from.getLine() != to.getLine())
