@@ -18,6 +18,11 @@
 package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
+import de.fau.cs.osr.utils.WrappedException;
 
 public class AstLocation
 		implements
@@ -100,10 +105,18 @@ public class AstLocation
 	
 	public String toString()
 	{
-		if (getFile() == null)
+		String file = getFile();
+		if (file == null)
 			return getLine() + ":" + getColumn();
-		else
-			return getFile() + ":" + getLine() + ":" + getColumn();
+		
+		try
+		{
+			return URLEncoder.encode(file, "UTF-8") + ":" + getLine() + ":" + getColumn();
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new WrappedException(e);
+		}
 	}
 	
 	public static AstLocation valueOf(String s)
@@ -124,7 +137,14 @@ public class AstLocation
 		}
 		else
 		{
-			file = s.substring(0, i);
+			try
+			{
+				file = URLDecoder.decode(s.substring(0, i), "UTF-8");
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				throw new WrappedException(e);
+			}
 			line = Integer.parseInt(s.substring(i + 1, j));
 			column = Integer.parseInt(s.substring(j + 1));
 		}
