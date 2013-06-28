@@ -51,7 +51,7 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 	
 	private NodeFactory<T> nodeFactory = new SimpleNodeFactory<T>();
 	
-	private boolean storeTypes = true;
+	private boolean alwaysStoreType = false;
 	
 	private Set<Class<?>> suppressTypeInfo = null;
 	
@@ -85,9 +85,14 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 		this.nodeFactory = nodeFactory;
 	}
 	
-	public void setStoreTypes(boolean storeTypes)
+	public NodeFactory<T> getNodeFactory()
 	{
-		this.storeTypes = storeTypes;
+		return nodeFactory;
+	}
+	
+	public void setAlwaysStoreType(boolean alwaysStoreType)
+	{
+		this.alwaysStoreType = alwaysStoreType;
 	}
 	
 	public void suppressTypeInfo(Class<?> type)
@@ -152,9 +157,14 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 		return nodeType;
 	}
 	
+	public boolean isAlwaysStoreType()
+	{
+		return alwaysStoreType;
+	}
+	
 	protected boolean isTypeInfoSuppressed(Class<?> type)
 	{
-		return !storeTypes ||
+		return !alwaysStoreType &&
 				((suppressTypeInfo != null) && suppressTypeInfo.contains(type));
 	}
 	
@@ -181,18 +191,19 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 	
 	protected boolean isSuppressed(Object n)
 	{
-		if (suppressNodes != null && suppressNodes.contains(n.getClass()))
+		Class<?> objType = n.getClass();
+		if (suppressNodes != null && suppressNodes.contains(objType))
 		{
 			return true;
 		}
-		else if (suppressEmptyStringNodes && isStringNode(n))
+		else if (suppressEmptyStringNodes && isStringNode(objType))
 		{
 			@SuppressWarnings("unchecked")
 			String content = ((AstStringNode<T>) n).getContent();
 			if (content.isEmpty())
 				return true;
 		}
-		else if (suppressEmptyStringProperties && String.class.isInstance(n))
+		else if (suppressEmptyStringProperties && String.class == objType)
 		{
 			String content = (String) n;
 			if (content.isEmpty())
@@ -202,14 +213,14 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 		return false;
 	}
 	
-	protected boolean isStringNode(Object n)
-	{
-		return stringNodeType != null && stringNodeType.isInstance(n);
-	}
-	
 	protected boolean isStringNode(Class<?> clazz)
 	{
-		return stringNodeType != null && stringNodeType.isAssignableFrom(clazz);
+		return stringNodeType == clazz;
+	}
+	
+	public Class<? extends AstStringNode<T>> getStringNodeType()
+	{
+		return stringNodeType;
 	}
 	
 	// =========================================================================
@@ -254,18 +265,9 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 	}
 	
 	protected boolean serializedTypeIsExpectedType(
-			AstNode<T> parent,
-			String name,
-			Object value)
-	{
-		return serializedTypeIsExpectedType(getGetterType(parent, name), value);
-	}
-	
-	protected boolean serializedTypeIsExpectedType(
 			Class<?> expectedType,
-			Object value)
+			Class<?> childType)
 	{
-		Class<?> childType = value.getClass();
 		if (childType == expectedType)
 			return true;
 		
@@ -274,6 +276,23 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 			return ReflectionUtils.mapPrimitiveToUcType(expectedType) == childType;
 		
 		return false;
+	}
+	
+	protected boolean serializedTypeIsExpectedType(
+			AstNode<T> parent,
+			String name,
+			Class<?> valueType)
+	{
+		return serializedTypeIsExpectedType(getGetterType(parent, name), valueType);
+	}
+	
+	protected boolean isTypeInfoRequired(
+			AstNode<T> parentNode,
+			String name,
+			Class<?> valueType)
+	{
+		return alwaysStoreType
+				|| (!serializedTypeIsExpectedType(parentNode, name, valueType) && !isTypeInfoSuppressed(valueType));
 	}
 	
 	protected Class<?> getGetterType(AstNode<T> n, String name)

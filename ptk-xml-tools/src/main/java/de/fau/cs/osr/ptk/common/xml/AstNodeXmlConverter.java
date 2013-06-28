@@ -17,6 +17,7 @@
 
 package de.fau.cs.osr.ptk.common.xml;
 
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -32,7 +33,7 @@ import de.fau.cs.osr.ptk.common.ast.AstStringNode;
 import de.fau.cs.osr.ptk.common.serialization.AstNodeConverterBase;
 import de.fau.cs.osr.ptk.common.serialization.SyntaxErrorException;
 
-public class AstNodeConverter<T extends AstNode<T>>
+public class AstNodeXmlConverter<T extends AstNode<T>>
 		extends
 			AstNodeConverterBase<T>
 		implements
@@ -50,15 +51,15 @@ public class AstNodeConverter<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	public AstNodeConverter(Class<T> nodeType)
+	public AstNodeXmlConverter(Class<T> nodeType)
 	{
 		super(nodeType);
 	}
 	
-	public static <S extends AstNode<S>> AstNodeConverter<S> forNodeType(
+	public static <S extends AstNode<S>> AstNodeXmlConverter<S> forNodeType(
 			Class<S> nodeType)
 	{
-		return new AstNodeConverter<S>(nodeType);
+		return new AstNodeXmlConverter<S>(nodeType);
 	}
 	
 	// =========================================================================
@@ -116,9 +117,17 @@ public class AstNodeConverter<T extends AstNode<T>>
 			MarshallingContext context)
 	{
 		if (explicit)
+		{
 			writer.startNode(getTypeAlias(n));
+			/* From the context it is always clear that here the node name 
+			 * is also the type name. An explicit ptk:type="..." attribute
+			 * would only repeat the node name verbatim.
+			if (isAlwaysStoreType())
+				storeType(n, writer);
+			*/
+		}
 		
-		boolean isStringNode = isStringNode(n) && !n.hasAttributes();
+		boolean isStringNode = isStringNode(n.getClass()) && !n.hasAttributes();
 		
 		storeLocation(n, writer);
 		storeAttributes(n, writer, context);
@@ -246,11 +255,15 @@ public class AstNodeConverter<T extends AstNode<T>>
 		if (isAttributesSuppressed())
 			return;
 		
-		for (Entry<String, Object> e : n.getAttributes().entrySet())
+		Map<String, Object> attrs = n.getAttributes();
+		if (!attrs.isEmpty())
 		{
-			String name = e.getKey();
-			if (!isAttributeSuppressed(name))
-				writeAttribute(name, e.getValue(), writer, context);
+			for (Entry<String, Object> e : attrs.entrySet())
+			{
+				String name = e.getKey();
+				if (!isAttributeSuppressed(name))
+					writeAttribute(name, e.getValue(), writer, context);
+			}
 		}
 	}
 	
@@ -354,17 +367,20 @@ public class AstNodeConverter<T extends AstNode<T>>
 			HierarchicalStreamWriter writer,
 			MarshallingContext context)
 	{
-		for (AstNodePropertyIterator i = n.propertyIterator(); i.next();)
+		if (n.getPropertyCount() > 0)
 		{
-			Object value = i.getValue();
-			if (value == null)
-				continue;
-			
-			String name = i.getName();
-			if (isPropertySuppressed(name))
-				continue;
-			
-			writeProperty(n, name, value, writer, context);
+			for (AstNodePropertyIterator i = n.propertyIterator(); i.next();)
+			{
+				Object value = i.getValue();
+				if (value == null)
+					continue;
+				
+				String name = i.getName();
+				if (isPropertySuppressed(name))
+					continue;
+				
+				writeProperty(n, name, value, writer, context);
+			}
 		}
 	}
 	
@@ -380,7 +396,8 @@ public class AstNodeConverter<T extends AstNode<T>>
 		
 		writer.startNode(name);
 		
-		if (!serializedTypeIsExpectedType(parentNode, name, value))
+		//if (!serializedTypeIsExpectedType(parentNode, name, value.getClass()))
+		if (isTypeInfoRequired(parentNode, name, value.getClass()))
 			storeType(value, writer);
 		
 		context.convertAnother(value);
@@ -474,7 +491,8 @@ public class AstNodeConverter<T extends AstNode<T>>
 		String name = n.getChildNames()[i];
 		writer.startNode(name);
 		
-		if (!serializedTypeIsExpectedType(n, name, child))
+		//if (!serializedTypeIsExpectedType(n, name, child.getClass()))
+		if (isTypeInfoRequired(n, name, child.getClass()))
 			storeType(child, writer);
 		
 		dispatch(child, false, writer, context);
@@ -588,8 +606,8 @@ public class AstNodeConverter<T extends AstNode<T>>
 	private void storeType(Object obj, HierarchicalStreamWriter writer)
 	{
 		Class<? extends Object> type = obj.getClass();
-		if (!isTypeInfoSuppressed(type))
-			writer.addAttribute(ATTR_NAME_TYPE, getTypeAlias(type));
+		//if (!isTypeInfoSuppressed(type))
+		writer.addAttribute(ATTR_NAME_TYPE, getTypeAlias(type));
 	}
 	
 	private Class<?> getExplicitType(HierarchicalStreamReader reader)

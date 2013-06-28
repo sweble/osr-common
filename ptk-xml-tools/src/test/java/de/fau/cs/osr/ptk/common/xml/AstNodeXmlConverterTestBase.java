@@ -42,18 +42,18 @@ import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
 import de.fau.cs.osr.utils.ComparisonException;
 
-public class AstNodeConverterTestBase
+public class AstNodeXmlConverterTestBase
 {
 	private XStream xstream;
 	
-	private AstNodeConverter<TestAstNode> converter;
+	private AstNodeXmlConverter<TestAstNode> converter;
 	
 	// =========================================================================
 	
 	@Before
 	public void before()
 	{
-		converter = AstNodeConverter.forNodeType(TestAstNode.class);
+		converter = AstNodeXmlConverter.forNodeType(TestAstNode.class);
 		converter.setStringNodeType(Text.class);
 		
 		xstream = new XStream(new DomDriver());
@@ -91,7 +91,7 @@ public class AstNodeConverterTestBase
 		converter.suppressTypeInfo(TestAstBuilder.Title.TitleImpl.class);
 	}
 	
-	public AstNodeConverter<TestAstNode> getConverter()
+	public AstNodeXmlConverter<TestAstNode> getConverter()
 	{
 		return converter;
 	}

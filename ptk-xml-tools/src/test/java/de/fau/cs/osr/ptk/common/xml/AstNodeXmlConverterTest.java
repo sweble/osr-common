@@ -33,9 +33,9 @@ import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
 import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Url;
 import de.fau.cs.osr.utils.ComparisonException;
 
-public class AstNodeConverterTest
+public class AstNodeXmlConverterTest
 		extends
-			AstNodeConverterTestBase
+			AstNodeXmlConverterTestBase
 {
 	@Before
 	public void before()
