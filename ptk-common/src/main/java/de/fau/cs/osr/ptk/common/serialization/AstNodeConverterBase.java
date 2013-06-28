@@ -30,10 +30,10 @@ import de.fau.cs.osr.ptk.common.serialization.NodeFactory.NamedMemberId;
 import de.fau.cs.osr.utils.ReflectionUtils;
 
 public class AstNodeConverterBase<T extends AstNode<T>>
+		extends
+			AstConverterBase
 {
 	private final Class<T> nodeType;
-	
-	private TypeNameMapper typeNameMapper = new SimpleTypeNameMapper();
 	
 	private NodeFactory<T> nodeFactory = new SimpleNodeFactory<T>();
 	
@@ -65,11 +65,6 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 	}
 	
 	// =========================================================================
-	
-	public void setTypeNameMapper(TypeNameMapper typeNameMapper)
-	{
-		this.typeNameMapper = typeNameMapper;
-	}
 	
 	public void setNodeFactory(NodeFactory<T> nodeFactory)
 	{
@@ -244,15 +239,6 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 		return getTypeAlias(n.getClass());
 	}
 	
-	protected String getTypeAlias(Class<?> n)
-	{
-		String typeAlias = typeNameMapper.nameForType(n);
-		if (typeAlias == null)
-			throw new MissingTypeInformationException(
-					"Cannot determine type alias for class '" + n.getName() + "'");
-		return typeAlias;
-	}
-	
 	protected boolean serializedTypeIsExpectedType(
 			AstNode<T> parent,
 			String name,
@@ -287,13 +273,5 @@ public class AstNodeConverterBase<T extends AstNode<T>>
 		{
 			throw new IncompatibleAstNodeClassException("Class '" + n.getClass().getName() + "' is malformed", e);
 		}
-	}
-	
-	protected Class<?> getClassForAlias(String typeAlias)
-	{
-		Class<?> type = typeNameMapper.typeForName(typeAlias);
-		if (type == null)
-			throw new UnknownTypeException("Cannot find type for name '" + typeAlias + "'");
-		return type;
 	}
 }
