@@ -27,7 +27,19 @@ public class SimpleTypeNameMapper
 		implements
 			TypeNameMapper
 {
-	private static final DualHashBidiMap typeToName = new DualHashBidiMap();
+	private DualHashBidiMap typeToName;
+	
+	// =========================================================================
+	
+	public SimpleTypeNameMapper()
+	{
+		typeToName = new DualHashBidiMap();
+	}
+	
+	public SimpleTypeNameMapper(SimpleTypeNameMapper stnm)
+	{
+		typeToName = new DualHashBidiMap(stnm.typeToName);
+	}
 	
 	// =========================================================================
 	
