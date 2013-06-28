@@ -297,8 +297,11 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 		AstNodePropertyIterator i = propertyIterator();
 		while (i.next())
 		{
-			if (i.getName().equals(name))
-				return i.getValue();
+			if (i.getName().equals(name)) {
+				Object old = i.getValue();
+				i.setValue(value);
+				return old;
+			}
 		}
 		throw new NoSuchPropertyException();
 	}
