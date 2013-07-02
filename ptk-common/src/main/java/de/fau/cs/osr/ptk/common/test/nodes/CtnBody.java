@@ -24,13 +24,13 @@ public interface CtnBody
 			CtnNode,
 			AstNodeList<CtnNode>
 {
-	public static final CtnBody.NoBody NO_BODY = new NoBody();
+	public static final CtnBody.CtnNoBody NO_BODY = new CtnNoBody();
 	
-	public static final CtnBody.EmptyBody EMPTY = new EmptyBody();
+	public static final CtnBody.CtnEmptyBody EMPTY = new CtnEmptyBody();
 	
 	// =========================================================================
 	
-	public static final class NoBody
+	public static final class CtnNoBody
 			extends
 				CtnEmptyImmutableNode
 			implements
@@ -59,7 +59,7 @@ public interface CtnBody
 	
 	// =========================================================================
 	
-	public static final class EmptyBody
+	public static final class CtnEmptyBody
 			extends
 				CtnEmptyImmutableNode
 			implements
@@ -88,7 +88,7 @@ public interface CtnBody
 	
 	// =========================================================================
 	
-	public static final class BodyImpl
+	public static final class CtnBodyImpl
 			extends
 				AstNodeListImpl<CtnNode>
 			implements
@@ -96,11 +96,11 @@ public interface CtnBody
 	{
 		private static final long serialVersionUID = 1L;
 		
-		protected BodyImpl()
+		protected CtnBodyImpl()
 		{
 		}
 		
-		public BodyImpl(CtnNode... children)
+		public CtnBodyImpl(CtnNode... children)
 		{
 			super(children);
 		}

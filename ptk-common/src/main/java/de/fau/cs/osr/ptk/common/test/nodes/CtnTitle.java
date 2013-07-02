@@ -24,13 +24,13 @@ public interface CtnTitle
 			CtnNode,
 			AstNodeList<CtnNode>
 {
-	public static final CtnTitle.NoTitle NO_TITLE = new NoTitle();
+	public static final CtnTitle.CtnNoTitle NO_TITLE = new CtnNoTitle();
 	
-	public static final CtnTitle.EmptyTitle EMPTY = new EmptyTitle();
+	public static final CtnTitle.CtnEmptyTitle EMPTY = new CtnEmptyTitle();
 	
 	// =========================================================================
 	
-	public static final class NoTitle
+	public static final class CtnNoTitle
 			extends
 				CtnEmptyImmutableNode
 			implements
@@ -59,7 +59,7 @@ public interface CtnTitle
 	
 	// =========================================================================
 	
-	public static final class EmptyTitle
+	public static final class CtnEmptyTitle
 			extends
 				CtnEmptyImmutableNode
 			implements
@@ -88,7 +88,7 @@ public interface CtnTitle
 	
 	// =========================================================================
 	
-	public static final class TitleImpl
+	public static final class CtnTitleImpl
 			extends
 				AstNodeListImpl<CtnNode>
 			implements
@@ -96,11 +96,11 @@ public interface CtnTitle
 	{
 		private static final long serialVersionUID = 1L;
 		
-		protected TitleImpl()
+		protected CtnTitleImpl()
 		{
 		}
 		
-		public TitleImpl(CtnNode... children)
+		public CtnTitleImpl(CtnNode... children)
 		{
 			super(children);
 		}

@@ -350,7 +350,7 @@ public class AstNodeXmlConverterTest
 	{
 		CtnSection sec = astSection().build();
 		CtnDocument doc = astDoc(sec);
-		assertEquals(CtnBody.BodyImpl.class, sec.getBody().getClass());
+		assertEquals(CtnBody.CtnBodyImpl.class, sec.getBody().getClass());
 		assertTrue(sec.hasBody());
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
 		assertNotNull(queryNode("//section/body", xmlDoc));
@@ -363,7 +363,7 @@ public class AstNodeXmlConverterTest
 		CtnSection sec = astSection().build();
 		sec.removeBody();
 		CtnDocument doc = astDoc(sec);
-		assertEquals(CtnBody.NoBody.class, sec.getBody().getClass());
+		assertEquals(CtnBody.CtnNoBody.class, sec.getBody().getClass());
 		assertFalse(sec.hasBody());
 		
 		roundtrip(doc);
@@ -382,7 +382,7 @@ public class AstNodeXmlConverterTest
 		CtnSection sec = astSection().build();
 		sec.removeTitle();
 		CtnDocument doc = astDoc(sec);
-		assertEquals(CtnTitle.NoTitle.class, sec.getTitle().getClass());
+		assertEquals(CtnTitle.CtnNoTitle.class, sec.getTitle().getClass());
 		assertFalse(sec.hasTitle());
 		assertTrue(sec.hasBody());
 		

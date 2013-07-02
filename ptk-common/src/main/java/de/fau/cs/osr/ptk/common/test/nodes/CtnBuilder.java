@@ -46,12 +46,12 @@ public class CtnBuilder
 	
 	public static CtnTitle astTitle(CtnNode... children)
 	{
-		return new CtnTitle.TitleImpl(children);
+		return new CtnTitle.CtnTitleImpl(children);
 	}
 	
 	public static CtnBody astBody(CtnNode... children)
 	{
-		return new CtnBody.BodyImpl(children);
+		return new CtnBody.CtnBodyImpl(children);
 	}
 	
 	public static CtnDocument astDoc(CtnNode... children)
@@ -87,9 +87,9 @@ public class CtnBuilder
 	{
 		private int level = 0;
 		
-		private CtnTitle title = new CtnTitle.TitleImpl(astText("Default section title"));
+		private CtnTitle title = new CtnTitle.CtnTitleImpl(astText("Default section title"));
 		
-		private CtnBody body = new CtnBody.BodyImpl(astText("Default section body"));
+		private CtnBody body = new CtnBody.CtnBodyImpl(astText("Default section body"));
 		
 		public SectionBuilder withLevel(int level)
 		{
@@ -105,7 +105,7 @@ public class CtnBuilder
 		
 		public SectionBuilder withTitle(CtnNode... children)
 		{
-			this.title = new CtnTitle.TitleImpl(children);
+			this.title = new CtnTitle.CtnTitleImpl(children);
 			return this;
 		}
 		
@@ -117,7 +117,7 @@ public class CtnBuilder
 		
 		public SectionBuilder withBody(CtnNode... children)
 		{
-			this.body = new CtnBody.BodyImpl(children);
+			this.body = new CtnBody.CtnBodyImpl(children);
 			return this;
 		}
 		

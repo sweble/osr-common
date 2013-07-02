@@ -54,8 +54,8 @@ public class CtnFactory
 		addPrototype(new CtnUrl());
 		addPrototype(new CtnNodeWithObjProp());
 		addPrototype(new CtnNodeWithPropAndContent());
-		addPrototype(new CtnTitle.TitleImpl(), CtnTitle.class);
-		addPrototype(new CtnBody.BodyImpl(), CtnBody.class);
+		addPrototype(new CtnTitle.CtnTitleImpl(), CtnTitle.class);
+		addPrototype(new CtnBody.CtnBodyImpl(), CtnBody.class);
 		
 		addDvi(CtnUrl.class, "protocol", "");
 		addDvi(CtnSection.class, "body", CtnBody.NO_BODY);

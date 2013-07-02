@@ -91,13 +91,13 @@ public class AstNodeXmlConverterTestBase
 		typeNameMapper.add(CtnNodeWithPropAndContent.class, "nwpac");
 		converter.setTypeNameMapper(typeNameMapper);
 		
-		converter.suppressNode(CtnBody.NoBody.class);
-		converter.suppressNode(CtnTitle.NoTitle.class);
+		converter.suppressNode(CtnBody.CtnNoBody.class);
+		converter.suppressNode(CtnTitle.CtnNoTitle.class);
 		
-		converter.suppressTypeInfo(CtnBody.EmptyBody.class);
-		converter.suppressTypeInfo(CtnBody.BodyImpl.class);
-		converter.suppressTypeInfo(CtnTitle.EmptyTitle.class);
-		converter.suppressTypeInfo(CtnTitle.TitleImpl.class);
+		converter.suppressTypeInfo(CtnBody.CtnEmptyBody.class);
+		converter.suppressTypeInfo(CtnBody.CtnBodyImpl.class);
+		converter.suppressTypeInfo(CtnTitle.CtnEmptyTitle.class);
+		converter.suppressTypeInfo(CtnTitle.CtnTitleImpl.class);
 	}
 	
 	public AstNodeXmlConverter<CtnNode> getConverter()
