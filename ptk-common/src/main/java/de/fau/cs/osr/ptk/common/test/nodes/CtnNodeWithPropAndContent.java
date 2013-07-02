@@ -35,7 +35,7 @@ public final class CtnNodeWithPropAndContent
 		super(Uninitialized.X);
 	}
 	
-	public CtnNodeWithPropAndContent(Object prop, String content)
+	protected CtnNodeWithPropAndContent(Object prop, String content)
 	{
 		super(content);
 		setProp(prop);

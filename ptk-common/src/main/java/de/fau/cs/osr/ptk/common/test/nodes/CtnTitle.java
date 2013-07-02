@@ -38,6 +38,10 @@ public interface CtnTitle
 	{
 		private static final long serialVersionUID = -1064749733891892633L;
 		
+		protected CtnNoTitle()
+		{
+		}
+		
 		@Override
 		public int getNodeType()
 		{
@@ -66,6 +70,10 @@ public interface CtnTitle
 				CtnTitle
 	{
 		private static final long serialVersionUID = -1064749733891892633L;
+		
+		protected CtnEmptyTitle()
+		{
+		}
 		
 		@Override
 		public int getNodeType()
@@ -100,7 +108,7 @@ public interface CtnTitle
 		{
 		}
 		
-		public CtnTitleImpl(CtnNode... children)
+		protected CtnTitleImpl(CtnNode... children)
 		{
 			super(children);
 		}

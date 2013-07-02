@@ -31,26 +31,26 @@ public final class CtnNodeList
 	
 	// =========================================================================
 	
-	public CtnNodeList()
+	protected CtnNodeList()
 	{
 	}
 	
-	public CtnNodeList(Collection<? extends CtnNode> list)
-	{
-		super(list);
-	}
-	
-	public CtnNodeList(Pair<? extends CtnNode> list)
+	protected CtnNodeList(Collection<? extends CtnNode> list)
 	{
 		super(list);
 	}
 	
-	public CtnNodeList(CtnNode car, Pair<? extends CtnNode> cdr)
+	protected CtnNodeList(Pair<? extends CtnNode> list)
+	{
+		super(list);
+	}
+	
+	protected CtnNodeList(CtnNode car, Pair<? extends CtnNode> cdr)
 	{
 		super(car, cdr);
 	}
 	
-	public CtnNodeList(
+	protected CtnNodeList(
 			CtnNode a,
 			CtnNode b,
 			CtnNode c,
@@ -59,22 +59,22 @@ public final class CtnNodeList
 		super(a, b, c, d);
 	}
 	
-	public CtnNodeList(CtnNode a, CtnNode b, CtnNode c)
+	protected CtnNodeList(CtnNode a, CtnNode b, CtnNode c)
 	{
 		super(a, b, c);
 	}
 	
-	public CtnNodeList(CtnNode a, CtnNode b)
+	protected CtnNodeList(CtnNode a, CtnNode b)
 	{
 		super(a, b);
 	}
 	
-	public CtnNodeList(CtnNode... children)
+	protected CtnNodeList(CtnNode... children)
 	{
 		super(children);
 	}
 	
-	public CtnNodeList(CtnNode child)
+	protected CtnNodeList(CtnNode child)
 	{
 		super(child);
 	}

@@ -30,7 +30,7 @@ public final class CtnIdNode
 	
 	// =========================================================================
 	
-	public CtnIdNode(int id)
+	protected CtnIdNode(int id)
 	{
 		this.id = id;
 	}

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.ptk.common.ast;
+package de.fau.cs.osr.ptk.common.test.nodes;
 
 import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.*;
 import static org.junit.Assert.*;

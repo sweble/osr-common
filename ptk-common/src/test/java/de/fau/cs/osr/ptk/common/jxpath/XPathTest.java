@@ -34,7 +34,6 @@ import org.junit.Test;
 import de.fau.cs.osr.ptk.common.jxpath.AstPropertyIterator.Property;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnNode;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnSection;
-import de.fau.cs.osr.ptk.common.test.nodes.CtnText;
 
 public class XPathTest
 {
@@ -47,8 +46,8 @@ public class XPathTest
 					.withLevel(0)
 					.withTitle(astText("1st"))
 					.withBody(
-							new CtnText("2nd"),
-							new CtnText("3rd"),
+							astText("2nd"),
+							astText("3rd"),
 							astSection()
 									.withLevel(1)
 									.withTitle()

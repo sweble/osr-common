@@ -29,12 +29,12 @@ public final class CtnText
 	
 	// =========================================================================
 	
-	public CtnText()
+	protected CtnText()
 	{
 		super(Uninitialized.X);
 	}
 	
-	public CtnText(String text)
+	protected CtnText(String text)
 	{
 		super(text);
 	}

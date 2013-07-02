@@ -33,7 +33,7 @@ public final class CtnUrl
 	{
 	}
 	
-	public CtnUrl(String protocol, String path)
+	protected CtnUrl(String protocol, String path)
 	{
 		super();
 		setProtocol(protocol);

@@ -16,9 +16,6 @@
  */
 package de.fau.cs.osr.ptk.common.test.nodes;
 
-import java.util.Collection;
-
-import xtc.util.Pair;
 import de.fau.cs.osr.ptk.common.ast.AstNodeListImpl;
 
 public final class CtnDocument
@@ -31,43 +28,13 @@ public final class CtnDocument
 	
 	// =========================================================================
 	
-	public CtnDocument()
+	protected CtnDocument()
 	{
 	}
 	
-	public CtnDocument(Collection<? extends CtnNode> list)
-	{
-		super(list);
-	}
-	
-	public CtnDocument(Pair<? extends CtnNode> list)
-	{
-		super(list);
-	}
-	
-	public CtnDocument(CtnNode car, Pair<? extends CtnNode> cdr)
-	{
-		super(car, cdr);
-	}
-	
-	public CtnDocument(CtnNode a, CtnNode b, CtnNode c)
-	{
-		super(a, b, c);
-	}
-	
-	public CtnDocument(CtnNode a, CtnNode b)
-	{
-		super(a, b);
-	}
-	
-	public CtnDocument(CtnNode... children)
+	protected CtnDocument(CtnNode... children)
 	{
 		super(children);
-	}
-	
-	public CtnDocument(CtnNode child)
-	{
-		super(child);
 	}
 	
 	// =========================================================================

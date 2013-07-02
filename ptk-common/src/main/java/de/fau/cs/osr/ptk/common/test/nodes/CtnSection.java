@@ -35,7 +35,7 @@ public final class CtnSection
 		super(Uninitialized.X);
 	}
 	
-	public CtnSection(int level, CtnTitle title, CtnBody body)
+	protected CtnSection(int level, CtnTitle title, CtnBody body)
 	{
 		super(title, body);
 		setLevel(level);

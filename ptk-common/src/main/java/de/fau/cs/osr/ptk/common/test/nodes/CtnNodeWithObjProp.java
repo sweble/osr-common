@@ -34,7 +34,7 @@ public final class CtnNodeWithObjProp
 	{
 	}
 	
-	public CtnNodeWithObjProp(Object prop)
+	protected CtnNodeWithObjProp(Object prop)
 	{
 		setProp(prop);
 	}

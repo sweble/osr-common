@@ -38,6 +38,10 @@ public interface CtnBody
 	{
 		private static final long serialVersionUID = -1064749733891892633L;
 		
+		protected CtnNoBody()
+		{
+		}
+		
 		@Override
 		public int getNodeType()
 		{
@@ -66,6 +70,10 @@ public interface CtnBody
 				CtnBody
 	{
 		private static final long serialVersionUID = -1064749733891892633L;
+		
+		protected CtnEmptyBody()
+		{
+		}
 		
 		@Override
 		public int getNodeType()
@@ -100,7 +108,7 @@ public interface CtnBody
 		{
 		}
 		
-		public CtnBodyImpl(CtnNode... children)
+		protected CtnBodyImpl(CtnNode... children)
 		{
 			super(children);
 		}
