@@ -25,17 +25,24 @@ import com.google.gson.GsonBuilder;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.ptk.common.comparer.AstComparer;
-import de.fau.cs.osr.ptk.common.json.AstNodeJsonTypeAdapter;
 import de.fau.cs.osr.ptk.common.serialization.SimpleTypeNameMapper;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Document;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnBody;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnDocument;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnFactory;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnIdNode;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnNode;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnNodeList;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnNodeWithObjProp;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnNodeWithPropAndContent;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnSection;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnText;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnTitle;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnUrl;
 import de.fau.cs.osr.utils.ComparisonException;
 
 public class AstNodeJsonConverterTestBase
 {
-	private AstNodeJsonTypeAdapter<TestAstNode> converter;
+	private AstNodeJsonTypeAdapter<CtnNode> converter;
 	
 	private Gson gson;
 	
@@ -44,8 +51,8 @@ public class AstNodeJsonConverterTestBase
 	@Before
 	public void before()
 	{
-		converter = AstNodeJsonTypeAdapter.forNodeType(TestAstNode.class);
-		converter.setStringNodeType(Text.class);
+		converter = AstNodeJsonTypeAdapter.forNodeType(CtnNode.class);
+		converter.setStringNodeType(CtnText.class);
 		
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeHierarchyAdapter(AstNode.class, converter);
@@ -56,34 +63,34 @@ public class AstNodeJsonConverterTestBase
 	
 	public void setupDefaultNodeFactory()
 	{
-		converter.setNodeFactory(TestAstBuilder.getFactory());
+		converter.setNodeFactory(CtnFactory.get());
 	}
 	
 	public void setupDefaultTypeMappings()
 	{
 		SimpleTypeNameMapper typeNameMapper = new SimpleTypeNameMapper();
-		typeNameMapper.add(TestAstBuilder.Text.class, "text");
-		typeNameMapper.add(TestAstBuilder.NodeList.class, "list");
-		typeNameMapper.add(TestAstBuilder.Section.class, "section");
-		typeNameMapper.add(TestAstBuilder.Title.class, "title");
-		typeNameMapper.add(TestAstBuilder.Body.class, "body");
-		typeNameMapper.add(TestAstBuilder.Document.class, "document");
-		typeNameMapper.add(TestAstBuilder.IdNode.class, "id");
-		typeNameMapper.add(TestAstBuilder.Url.class, "url");
-		typeNameMapper.add(TestAstBuilder.NodeWithObjProp.class, "nwop");
-		typeNameMapper.add(TestAstBuilder.NodeWithPropAndContent.class, "nwpac");
+		typeNameMapper.add(CtnText.class, "text");
+		typeNameMapper.add(CtnNodeList.class, "list");
+		typeNameMapper.add(CtnSection.class, "section");
+		typeNameMapper.add(CtnTitle.class, "title");
+		typeNameMapper.add(CtnBody.class, "body");
+		typeNameMapper.add(CtnDocument.class, "document");
+		typeNameMapper.add(CtnIdNode.class, "id");
+		typeNameMapper.add(CtnUrl.class, "url");
+		typeNameMapper.add(CtnNodeWithObjProp.class, "nwop");
+		typeNameMapper.add(CtnNodeWithPropAndContent.class, "nwpac");
 		converter.setTypeNameMapper(typeNameMapper);
 		
-		converter.suppressNode(TestAstBuilder.Body.NoBody.class);
-		converter.suppressNode(TestAstBuilder.Title.NoTitle.class);
+		converter.suppressNode(CtnBody.NoBody.class);
+		converter.suppressNode(CtnTitle.NoTitle.class);
 		
-		converter.suppressTypeInfo(TestAstBuilder.Body.EmptyBody.class);
-		converter.suppressTypeInfo(TestAstBuilder.Body.BodyImpl.class);
-		converter.suppressTypeInfo(TestAstBuilder.Title.EmptyTitle.class);
-		converter.suppressTypeInfo(TestAstBuilder.Title.TitleImpl.class);
+		converter.suppressTypeInfo(CtnBody.EmptyBody.class);
+		converter.suppressTypeInfo(CtnBody.BodyImpl.class);
+		converter.suppressTypeInfo(CtnTitle.EmptyTitle.class);
+		converter.suppressTypeInfo(CtnTitle.TitleImpl.class);
 	}
 	
-	public AstNodeJsonTypeAdapter<TestAstNode> getConverter()
+	public AstNodeJsonTypeAdapter<CtnNode> getConverter()
 	{
 		return converter;
 	}
@@ -98,16 +105,16 @@ public class AstNodeJsonConverterTestBase
 		return gson.toJson(what);
 	}
 	
-	public Document deserialize(String json, Class<?> typeOfT)
+	public CtnDocument deserialize(String json, Class<?> typeOfT)
 	{
-		return (Document) gson.fromJson(json, typeOfT);
+		return (CtnDocument) gson.fromJson(json, typeOfT);
 	}
 	
-	public void roundtrip(TestAstNode node) throws ComparisonException
+	public void roundtrip(CtnNode node) throws ComparisonException
 	{
 		String json = serialize(node);
 		
-		TestAstNode restoredNode = (TestAstNode) deserialize(json, Document.class);
+		CtnNode restoredNode = (CtnNode) deserialize(json, CtnDocument.class);
 		
 		try
 		{
@@ -121,7 +128,7 @@ public class AstNodeJsonConverterTestBase
 		}
 	}
 	
-	public void printSerialized(TestAstNode node)
+	public void printSerialized(CtnNode node)
 	{
 		System.out.println(StringUtils.repeat("=", 80));
 		System.out.println("\"\"\"" + serialize(node) + "\"\"\"");

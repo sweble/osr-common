@@ -17,7 +17,7 @@
 
 package de.fau.cs.osr.ptk.common.jxpath;
 
-import static de.fau.cs.osr.ptk.common.test.TestAstBuilder.*;
+import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,9 +32,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.fau.cs.osr.ptk.common.jxpath.AstPropertyIterator.Property;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Section;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.TestAstNode;
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder.Text;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnSection;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnNode;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnText;
 
 public class XPathTest
 {
@@ -42,13 +42,13 @@ public class XPathTest
 	
 	// =========================================================================
 	
-	private static final Section AST1 =
+	private static final CtnSection AST1 =
 			astSection()
 					.withLevel(0)
 					.withTitle(astText("1st"))
 					.withBody(
-							new Text("2nd"),
-							new Text("3rd"),
+							new CtnText("2nd"),
+							new CtnText("3rd"),
 							astSection()
 									.withLevel(1)
 									.withTitle()
@@ -56,7 +56,7 @@ public class XPathTest
 									.build())
 					.build();
 	
-	private static final TestAstNode AST2 =
+	private static final CtnNode AST2 =
 			astDoc(
 					astSection()
 							.withLevel(1)
@@ -69,7 +69,7 @@ public class XPathTest
 							.withBody()
 							.build());
 	
-	private static final TestAstNode AST4 =
+	private static final CtnNode AST4 =
 			astDoc(
 					astText("1"),
 					astText("2"));
@@ -126,7 +126,7 @@ public class XPathTest
 		runTest("/body/*[last()]",
 				AST1.getBody().get(2));
 		
-		runTest("/body/Text/@content",
+		runTest("/body/text/@content",
 				AST1.getBody().get(0).getProperty("content"),
 				AST1.getBody().get(1).getProperty("content"));
 		

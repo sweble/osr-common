@@ -20,7 +20,7 @@ package de.fau.cs.osr.ptk.common.xml;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-import de.fau.cs.osr.ptk.common.test.TestAstBuilder;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnDocument;
 
 @XStreamAlias("article-container")
 public class ArticleContainer
@@ -37,9 +37,9 @@ public class ArticleContainer
 	public static final String XMLNS_PTK = "http://sweble.org/projects/parser-toolkit";
 	
 	@XStreamAlias("document")
-	protected final TestAstBuilder.Document doc;
+	protected final CtnDocument doc;
 	
-	public ArticleContainer(TestAstBuilder.Document doc)
+	public ArticleContainer(CtnDocument doc)
 	{
 		this.doc = doc;
 	}
