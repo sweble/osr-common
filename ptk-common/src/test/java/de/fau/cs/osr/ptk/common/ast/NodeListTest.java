@@ -25,8 +25,8 @@ import org.junit.Test;
 
 import xtc.util.Pair;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnIdNode;
-import de.fau.cs.osr.ptk.common.test.nodes.CtnNodeList;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnNode;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnNodeList;
 
 public class NodeListTest
 {

@@ -32,8 +32,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.fau.cs.osr.ptk.common.jxpath.AstPropertyIterator.Property;
-import de.fau.cs.osr.ptk.common.test.nodes.CtnSection;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnNode;
+import de.fau.cs.osr.ptk.common.test.nodes.CtnSection;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnText;
 
 public class XPathTest

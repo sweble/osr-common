@@ -38,9 +38,9 @@ public final class CtnText
 	{
 		super(text);
 	}
-
+	
 	// =========================================================================
-
+	
 	@Override
 	public String getNodeName()
 	{
