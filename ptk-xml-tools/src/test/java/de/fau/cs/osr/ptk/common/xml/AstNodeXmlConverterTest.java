@@ -397,16 +397,6 @@ public class AstNodeXmlConverterTest
 	}
 	
 	@Test
-	public void testRemoveEmptyTextNode() throws Exception
-	{
-		CtnDocument doc = astDoc(astText(""));
-		assertTrue(serialize(doc).contains("<text>"));
-		
-		getConverter().setSuppressEmptyStringNodes(true);
-		assertFalse(serialize(doc).contains("<text>"));
-	}
-	
-	@Test
 	public void testStoreComplexArrayAsAttribute() throws Exception
 	{
 		CtnDocument doc = astDoc();

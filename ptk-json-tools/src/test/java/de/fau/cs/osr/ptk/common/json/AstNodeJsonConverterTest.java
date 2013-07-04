@@ -287,16 +287,6 @@ public class AstNodeJsonConverterTest
 	}
 	
 	@Test
-	public void testRemoveEmptyTextNode() throws Exception
-	{
-		CtnDocument doc = astDoc(astText(""));
-		assertTrue(serialize(doc).contains("\"\""));
-		
-		getConverter().setSuppressEmptyStringNodes(true);
-		assertFalse(serialize(doc).contains("\"\""));
-	}
-	
-	@Test
 	public void testStoreComplexArrayAsAttribute() throws Exception
 	{
 		CtnDocument doc = astDoc();

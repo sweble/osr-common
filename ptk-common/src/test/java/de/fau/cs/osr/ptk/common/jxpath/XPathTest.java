@@ -47,7 +47,7 @@ public class XPathTest
 					.withTitle(astText("1st"))
 					.withBody(
 							astText("2nd"),
-							astText("3rd"),
+							astId(3),
 							astSection()
 									.withLevel(1)
 									.withTitle()
@@ -68,10 +68,10 @@ public class XPathTest
 							.withBody()
 							.build());
 	
-	private static final CtnNode AST4 =
+	private static final CtnNode AST3 =
 			astDoc(
 					astText("1"),
-					astText("2"));
+					astId(2));
 	
 	// =========================================================================
 	
@@ -88,53 +88,73 @@ public class XPathTest
 	// =========================================================================
 	
 	@Test
-	public void XPathStandardTest()
+	public void test01()
 	{
 		context = JXPathContext.newContext(AST1);
-		
-		/*
-		if (!QUIET)
-		{
-			System.out.println("Properties:");
-			for (String propName : AST1.getPropertyNames())
-				System.out.format("  - %s: %s\n", propName, AST1.getProperty(propName).toString());
-			
-			System.out.println();
-			System.out.println("Children:");
-			for (String childName : AST1.getChildNames())
-				System.out.format("  - %s\n", childName);
-		}
-		*/
-		
-		// ======== Working ========
-		
 		runTest("/body/*[2]",
 				AST1.getBody().get(1));
-		
+	}
+	
+	@Test
+	public void test02()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/@*",
 				AST1.getProperty("level"));
-		
+	}
+	
+	@Test
+	public void test03()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/*/*[2]",
 				AST1.getBody().get(1));
-		
-		runTest("/body[last()]",
-				AST1.getBody());
-		
+	}
+	
+	@Test
+	public void test04()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/body[last()-1]");
-		
+	}
+	
+	@Test
+	public void test05()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/body/*[last()]",
 				AST1.getBody().get(2));
-		
+	}
+	
+	@Test
+	public void test06()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/body/text/@content",
-				AST1.getBody().get(0).getProperty("content"),
-				AST1.getBody().get(1).getProperty("content"));
-		
+				AST1.getBody().get(0).getProperty("content"));
+	}
+	
+	@Test
+	public void test07()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/body/body[last()-1]");
+	}
+	
+	@Test
+	public void test08()
+	{
+		context = JXPathContext.newContext(AST1);
 		
 		runTest("//@level",
 				AST1.getProperty("level"),
 				AST1.getBody().get(2).getProperty("level"));
-		
+	}
+	
+	@Test
+	public void test09()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/descendant-or-self::node()",
 				AST1,
 				AST1.getTitle(),
@@ -145,11 +165,21 @@ public class XPathTest
 				AST1.getBody().get(2),
 				AST1.getBody().get(2).get(0),
 				AST1.getBody().get(2).get(1));
-		
+	}
+	
+	@Test
+	public void test10()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/descendant-or-self::node()[@level]",
 				AST1,
 				AST1.getBody().get(2));
-		
+	}
+	
+	@Test
+	public void test11()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/descendant-or-self::node()/*",
 				AST1.getTitle(),
 				AST1.getTitle().get(0),
@@ -159,31 +189,56 @@ public class XPathTest
 				AST1.getBody().get(2),
 				AST1.getBody().get(2).get(0),
 				AST1.getBody().get(2).get(1));
-		
+	}
+	
+	@Test
+	public void test12()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("/descendant-or-self::node()/*[@level]",
 				AST1.getBody().get(2));
-		
+	}
+	
+	@Test
+	public void test13()
+	{
+		context = JXPathContext.newContext(AST1);
 		runTest("//*[@level]",
 				AST1.getBody().get(2));
 	}
 	
 	@Test
-	public void XPathPredicateTest()
+	public void test14()
+	{
+		context = JXPathContext.newContext(AST1);
+		runTest("/body[last()]",
+				AST1.getBody());
+	}
+	
+	@Test
+	public void testPredicate01()
 	{
 		context = JXPathContext.newContext(AST2);
 		runTest("/*[@level]",
 				AST2.get(0),
 				AST2.get(1));
-		
+	}
+	
+	@Test
+	public void testPredicate02()
+	{
 		context = JXPathContext.newContext(AST2);
 		runTest("/*/@level",
 				AST2.get(0).getProperty("level"),
 				AST2.get(1).getProperty("level"));
-		
-		context = JXPathContext.newContext(AST4);
+	}
+	
+	@Test
+	public void testPredicate03()
+	{
+		context = JXPathContext.newContext(AST3);
 		runTest("//*[@content]",
-				AST4.get(0),
-				AST4.get(1));
+				AST3.get(0));
 	}
 	
 	// =========================================================================

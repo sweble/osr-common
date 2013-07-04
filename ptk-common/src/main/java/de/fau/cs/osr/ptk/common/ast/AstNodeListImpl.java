@@ -18,9 +18,9 @@
 package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -49,7 +49,7 @@ public class AstNodeListImpl<T extends AstNode<T>>
 	
 	// =========================================================================
 	
-	private LinkedList<T> children = new LinkedList<T>();
+	private ArrayList<T> children = new ArrayList<T>();
 	
 	// =========================================================================
 	
@@ -62,9 +62,7 @@ public class AstNodeListImpl<T extends AstNode<T>>
 		add(child);
 	}
 	
-	public AstNodeListImpl(
-			T car,
-			Pair<? extends T> cdr)
+	public AstNodeListImpl(T car, Pair<? extends T> cdr)
 	{
 		add(car);
 		addAll(cdr);
@@ -76,21 +74,14 @@ public class AstNodeListImpl<T extends AstNode<T>>
 		add(b);
 	}
 	
-	public AstNodeListImpl(
-			T a,
-			T b,
-			T c)
+	public AstNodeListImpl(T a, T b, T c)
 	{
 		add(a);
 		add(b);
 		add(c);
 	}
 	
-	public AstNodeListImpl(
-			T a,
-			T b,
-			T c,
-			T d)
+	public AstNodeListImpl(T a, T b, T c, T d)
 	{
 		add(a);
 		add(b);
@@ -165,18 +156,7 @@ public class AstNodeListImpl<T extends AstNode<T>>
 	@Override
 	public boolean add(T e)
 	{
-		if (e == null)
-		{
-			return false;
-		}
-		else if (e.getNodeType() == AstNode.NT_NODE_LIST)
-		{
-			return children.addAll((Collection<T>) e);
-		}
-		else
-		{
-			return children.add(e);
-		}
+		return addIntern(children, e);
 	}
 	
 	@Override
@@ -196,32 +176,13 @@ public class AstNodeListImpl<T extends AstNode<T>>
 	@Override
 	public boolean addAll(Collection<? extends T> c)
 	{
-		boolean changed = false;
-		for (T n : c)
-			changed |= add(n);
-		return changed;
+		return addAllIntern(children, c);
 	}
 	
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c)
 	{
-		final LinkedList<T> insert = new LinkedList<T>();
-		for (T n : c)
-		{
-			if (n == null)
-			{
-				continue;
-			}
-			else if (n.getNodeType() == AstNode.NT_NODE_LIST)
-			{
-				insert.addAll((Collection<T>) n);
-			}
-			else
-			{
-				insert.add(n);
-			}
-		}
-		return children.addAll(index, insert);
+		return addAllIntern(children, index, c);
 	}
 	
 	@Override
@@ -258,31 +219,161 @@ public class AstNodeListImpl<T extends AstNode<T>>
 			throw new NullPointerException(
 					"A NodeList must not contain a null element!");
 		}
-		else if (value.getNodeType() == AstNode.NT_NODE_LIST)
+		else
 		{
-			throw new IllegalArgumentException(
-					"Must not set a single element to a NodeList");
+			switch (value.getNodeType())
+			{
+				case AstNode.NT_NODE_LIST:
+					throw new IllegalArgumentException(
+							"Must not set a single element to a NodeList");
+					
+				case AstNode.NT_TEXT:
+					return setTextIntern(children, index, (AstStringNode<T>) value);
+					
+				default:
+					return children.set(index, value);
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <S extends AstNode<S>> S setTextIntern(
+			ArrayList<S> list,
+			int index,
+			AstStringNode<S> text)
+	{
+		if (text.getContent().isEmpty())
+		{
+			return list.remove(index);
 		}
 		else
 		{
-			return children.set(index, value);
+			if (index > 0 && !text.hasAttributes())
+			{
+				S prev = list.get(index - 1);
+				if (prev.getNodeType() == AstNode.NT_TEXT && !prev.hasAttributes())
+				{
+					try
+					{
+						list.set(index - 1, (S) mergeTextNodes((AstStringNode<S>) prev, text));
+						return list.remove(index);
+					}
+					catch (CloneNotSupportedException e)
+					{
+						// Just set, don't merge
+					}
+				}
+			}
+			return list.set(index, (S) text);
 		}
 	}
 	
 	@Override
 	public void add(int index, T element)
 	{
+		addIntern(children, index, element);
+	}
+	
+	private static <S extends AstNode<S>> boolean addIntern(
+			ArrayList<S> list,
+			S element)
+	{
+		return addIntern(list, list.size(), element);
+	}
+	
+	private static <S extends AstNode<S>> boolean addIntern(
+			ArrayList<S> list,
+			int index,
+			S element)
+	{
 		if (element == null)
-			return;
-		
-		else if (element.getNodeType() == AstNode.NT_NODE_LIST)
 		{
-			addAll(index, element);
+			return false;
 		}
 		else
 		{
-			children.add(index, element);
+			switch (element.getNodeType())
+			{
+				case AstNode.NT_NODE_LIST:
+					return addAllIntern(list, index, element);
+					
+				case AstNode.NT_TEXT:
+					return addTextIntern(list, index, (AstStringNode<S>) element);
+					
+				default:
+					list.add(index, element);
+					return true;
+			}
 		}
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static boolean addTextIntern(
+			ArrayList list,
+			int index,
+			AstStringNode text)
+	{
+		if (text.getContent().isEmpty())
+		{
+			return false;
+		}
+		else
+		{
+			if (index > 0 && !text.hasAttributes())
+			{
+				AstNode prev = (AstNode) list.get(index - 1);
+				if (prev.getNodeType() == AstNode.NT_TEXT && !prev.hasAttributes())
+				{
+					try
+					{
+						list.set(index - 1, mergeTextNodes((AstStringNode) prev, text));
+						return true;
+					}
+					catch (CloneNotSupportedException e)
+					{
+						// Just add, don't merge
+					}
+				}
+			}
+			
+			list.add(index, text);
+			return true;
+		}
+	}
+	
+	private static <S extends AstNode<S>> AstStringNode<S> mergeTextNodes(
+			AstStringNode<S> prev,
+			AstStringNode<S> text) throws CloneNotSupportedException
+	{
+		@SuppressWarnings("unchecked")
+		AstStringNode<S> merged = (AstStringNode<S>) prev.clone();
+		merged.setContent(merged.getContent() + text.getContent());
+		return merged;
+	}
+	
+	private static <S extends AstNode<S>> boolean addAllIntern(
+			ArrayList<S> list,
+			Collection<? extends S> c)
+	{
+		boolean changed = false;
+		for (S n : c)
+			changed |= addIntern(list, n);
+		return changed;
+	}
+	
+	private static <S extends AstNode<S>> boolean addAllIntern(
+			ArrayList<S> list,
+			int index,
+			Collection<? extends S> c)
+	{
+		boolean changed = false;
+		for (S n : c)
+		{
+			int oldSize = list.size();
+			changed |= addIntern(list, index, n);
+			index += list.size() - oldSize;
+		}
+		return changed;
 	}
 	
 	@Override
@@ -390,7 +481,7 @@ public class AstNodeListImpl<T extends AstNode<T>>
 		if (other instanceof AstNodeListImpl)
 		{
 			AstNodeListImpl<T> other2 = (AstNodeListImpl<T>) other;
-			LinkedList<T> tmp = this.children;
+			ArrayList<T> tmp = this.children;
 			this.children = other2.children;
 			other2.children = tmp;
 		}
@@ -408,7 +499,7 @@ public class AstNodeListImpl<T extends AstNode<T>>
 	public Object clone() throws CloneNotSupportedException
 	{
 		AstNodeListImpl clone = (AstNodeListImpl) super.clone();
-		clone.children = new LinkedList(children);
+		clone.children = new ArrayList(children);
 		return clone;
 	}
 	
@@ -489,34 +580,125 @@ public class AstNodeListImpl<T extends AstNode<T>>
 				throw new NullPointerException(
 						"A NodeList must not contain a null element!");
 			}
-			else if (e.getNodeType() == AstNode.NT_NODE_LIST)
+			else
 			{
-				throw new IllegalArgumentException(
-						"Must not set a single element to a NodeList");
+				switch (e.getNodeType())
+				{
+					case AstNode.NT_NODE_LIST:
+						throw new IllegalArgumentException(
+								"Must not set a single element to a NodeList");
+						
+					case AstNode.NT_TEXT:
+						setTextIntern((AstStringNode<T>) e);
+						break;
+					
+					default:
+						i.set(e);
+						current = e;
+						break;
+				}
+			}
+		}
+		
+		/**
+		 * This whole method breaks the set() interface established by the
+		 * ListIterator class!
+		 */
+		@SuppressWarnings("unchecked")
+		private void setTextIntern(AstStringNode<T> text)
+		{
+			if (current == null)
+				throw new IllegalStateException();
+			
+			if (text.getContent().isEmpty())
+			{
+				i.remove();
+				current = null;
 			}
 			else
 			{
-				i.set(e);
-				current = e;
+				if (i.hasPrevious() && !text.hasAttributes())
+				{
+					i.previous();
+					if (i.hasPrevious())
+					{
+						T prev = i.previous();
+						if (prev.getNodeType() == AstNode.NT_TEXT && !prev.hasAttributes())
+						{
+							try
+							{
+								i.set((T) mergeTextNodes((AstStringNode<T>) prev, text));
+								// set() protocol requires that the iterator doesn't 
+								// move. When deleting something that's not 
+								// possible. So we move to the merged text element.
+								i.next();
+								i.next();
+								i.remove();
+								i.previous();
+								// use own method to set current!
+								next();
+								return;
+							}
+							catch (CloneNotSupportedException e)
+							{
+								// Just set, don't merge
+							}
+						}
+						i.next();
+					}
+					i.next();
+				}
+				i.set((T) text);
 			}
 		}
 		
 		@Override
 		public void add(T e)
 		{
-			if (e == null)
-				return;
-			
-			if (e.getNodeType() == AstNode.NT_NODE_LIST)
+			if (e != null)
 			{
-				for (T n : (AstNodeList<T>) e)
-					i.add(n);
 				current = null;
+				switch (e.getNodeType())
+				{
+					case AstNode.NT_NODE_LIST:
+						for (T n : (AstNodeList<T>) e)
+							i.add(n);
+						break;
+					
+					case AstNode.NT_TEXT:
+						addTextIntern((AstStringNode<T>) e);
+						break;
+					
+					default:
+						i.add(e);
+						break;
+				}
 			}
-			else
+		}
+		
+		@SuppressWarnings("unchecked")
+		private void addTextIntern(AstStringNode<T> text)
+		{
+			if (!text.getContent().isEmpty())
 			{
-				i.add(e);
-				current = null;
+				if (i.hasPrevious() && !text.hasAttributes())
+				{
+					T prev = i.previous();
+					if (prev.getNodeType() == AstNode.NT_TEXT && !prev.hasAttributes())
+					{
+						try
+						{
+							i.set((T) mergeTextNodes((AstStringNode<T>) prev, text));
+							i.next();
+							return;
+						}
+						catch (CloneNotSupportedException e)
+						{
+							// Just add, don't merge
+						}
+					}
+				}
+				i.add((T) text);
 			}
 		}
 		
