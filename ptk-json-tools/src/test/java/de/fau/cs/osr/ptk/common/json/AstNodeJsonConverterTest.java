@@ -48,14 +48,14 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testRoundTripWithRoots() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		roundtrip(doc);
 	}
 	
 	@Test
 	public void testSerializationOfIntAttribute() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		doc.setAttribute("int", 5);
 		roundtrip(doc);
 	}
@@ -63,7 +63,7 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testSerializationOfStringAttribute() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		doc.setAttribute("str", "Hello World");
 		roundtrip(doc);
 	}
@@ -74,7 +74,7 @@ public class AstNodeJsonConverterTest
 		ArbitraryObj obj = new ArbitraryObj();
 		obj.set();
 		
-		CtnDocument doc = astDoc(astObjProp(obj));
+		CtnDocument doc = ctnDoc(ctnObjProp(obj));
 		roundtrip(doc);
 	}
 	
@@ -84,7 +84,7 @@ public class AstNodeJsonConverterTest
 		ArbitraryObj obj = new ArbitraryObj();
 		obj.set();
 		
-		CtnDocument doc = astDoc(astObjProp(astUrl().build()));
+		CtnDocument doc = ctnDoc(ctnObjProp(ctnUrl().build()));
 		roundtrip(doc);
 	}
 	
@@ -95,15 +95,15 @@ public class AstNodeJsonConverterTest
 	@Ignore
 	public void testSerializationOfObjectArray() throws Exception
 	{
-		CtnDocument doc = astDoc();
-		doc.setAttribute("array", new Object[] { astText("Hallo"), astUrl().build() });
+		CtnDocument doc = ctnDoc();
+		doc.setAttribute("array", new Object[] { ctnText("Hallo"), ctnUrl().build() });
 		roundtrip(doc);
 	}
 	
 	@Test
 	public void testNoContentPropertyFoundWhenTextNodeTypeSet() throws Exception
 	{
-		CtnDocument doc = astDoc(astText("Hallo"));
+		CtnDocument doc = ctnDoc(ctnText("Hallo"));
 		assertFalse(serialize(doc).contains("\"$content\""));
 		
 		getConverter().setStringNodeType(null);
@@ -113,16 +113,16 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testAttributesOnTextNodeForceContentElement() throws Exception
 	{
-		CtnText text = astText("Hallo");
+		CtnText text = ctnText("Hallo");
 		text.setAttribute("ruins", "it");
-		CtnDocument doc = astDoc(text);
+		CtnDocument doc = ctnDoc(text);
 		assertTrue(serialize(doc).contains("\"$content\""));
 	}
 	
 	@Test
 	public void testInstantiationOfNullReplacementProperty() throws Exception
 	{
-		CtnDocument doc = astDoc(astUrl().withProtocol("").build());
+		CtnDocument doc = ctnDoc(ctnUrl().withProtocol("").build());
 		getConverter().setSuppressEmptyStringProperties(true);
 		assertFalse(serialize(doc).contains("\"$protocol\""));
 		roundtrip(doc);
@@ -131,7 +131,7 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testNullProperty() throws Exception
 	{
-		CtnDocument doc = astDoc(astObjProp(null));
+		CtnDocument doc = ctnDoc(ctnObjProp(null));
 		assertFalse(serialize(doc).contains("\"$prop"));
 		roundtrip(doc);
 	}
@@ -139,7 +139,7 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testSuppressedProperty() throws Exception
 	{
-		CtnDocument doc = astDoc(astObjProp("Hello World"));
+		CtnDocument doc = ctnDoc(ctnObjProp("Hello World"));
 		getConverter().suppressProperty("prop");
 		assertFalse(serialize(doc).contains("\"$prop"));
 	}
@@ -148,12 +148,12 @@ public class AstNodeJsonConverterTest
 	public void testNodeWithContentAndAnotherProperty() throws Exception
 	{
 		// First make sure that the node is properly recognized as string node
-		CtnDocument doc = astDoc(astObjProp(astPropContent(null, "Hello World")));
+		CtnDocument doc = ctnDoc(ctnObjProp(ctnPropContent(null, "Hello World")));
 		getConverter().setStringNodeType(CtnNodeWithPropAndContent.class);
 		assertFalse(serialize(doc).contains("\"$content\""));
 		roundtrip(doc);
 		
-		doc = astDoc(astObjProp(astPropContent(42, "Hello World")));
+		doc = ctnDoc(ctnObjProp(ctnPropContent(42, "Hello World")));
 		getConverter().setStringNodeType(CtnNodeWithPropAndContent.class);
 		assertTrue(serialize(doc).contains("\"$content\""));
 		roundtrip(doc);
@@ -162,7 +162,7 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testNodeWithAtLeastTwoNamedChildren() throws Exception
 	{
-		CtnDocument doc = astDoc(astSection().build());
+		CtnDocument doc = ctnDoc(ctnSection().build());
 		String serialized = serialize(doc);
 		assertTrue(serialized.contains("\"title\":"));
 		assertTrue(serialized.contains("\"body\":"));
@@ -187,11 +187,11 @@ public class AstNodeJsonConverterTest
 	
 	private CtnDocument astWithLocations()
 	{
-		CtnText text = astText("Hello");
+		CtnText text = ctnText("Hello");
 		text.setNativeLocation(new AstLocation("some file", 42, 43));
-		CtnUrl url = astUrl().build();
+		CtnUrl url = ctnUrl().build();
 		url.setNativeLocation(new AstLocation("some file", 44, 45));
-		CtnDocument doc = astDoc(text, url);
+		CtnDocument doc = ctnDoc(text, url);
 		return doc;
 	}
 	
@@ -224,27 +224,27 @@ public class AstNodeJsonConverterTest
 	
 	private CtnDocument astWithAttributes()
 	{
-		CtnUrl url = astUrl().build();
+		CtnUrl url = ctnUrl().build();
 		url.setAttribute("area51", "Hello World 1");
 		url.setAttribute("area52", "Hello World 2");
-		CtnDocument doc = astDoc(url);
+		CtnDocument doc = ctnDoc(url);
 		return doc;
 	}
 	
 	@Test
 	public void testStoreNullAttribute() throws Exception
 	{
-		CtnUrl url = astUrl().build();
+		CtnUrl url = ctnUrl().build();
 		url.setAttribute("area51", null);
-		CtnDocument doc = astDoc(url);
+		CtnDocument doc = ctnDoc(url);
 		roundtrip(doc);
 	}
 	
 	@Test
 	public void testBodyInterfaceNode() throws Exception
 	{
-		CtnSection sec = astSection().build();
-		CtnDocument doc = astDoc(sec);
+		CtnSection sec = ctnSection().build();
+		CtnDocument doc = ctnDoc(sec);
 		assertEquals(CtnBody.CtnBodyImpl.class, sec.getBody().getClass());
 		assertTrue(sec.hasBody());
 		assertTrue(serialize(doc).contains("\"body\""));
@@ -254,9 +254,9 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testNoBodyNode() throws Exception
 	{
-		CtnSection sec = astSection().build();
+		CtnSection sec = ctnSection().build();
 		sec.removeBody();
-		CtnDocument doc = astDoc(sec);
+		CtnDocument doc = ctnDoc(sec);
 		assertEquals(CtnBody.CtnNoBody.class, sec.getBody().getClass());
 		assertFalse(sec.hasBody());
 		
@@ -271,9 +271,9 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testNoTitleNodeToCoverAllPaths() throws Exception
 	{
-		CtnSection sec = astSection().build();
+		CtnSection sec = ctnSection().build();
 		sec.removeTitle();
-		CtnDocument doc = astDoc(sec);
+		CtnDocument doc = ctnDoc(sec);
 		assertEquals(CtnTitle.CtnNoTitle.class, sec.getTitle().getClass());
 		assertFalse(sec.hasTitle());
 		assertTrue(sec.hasBody());
@@ -289,7 +289,7 @@ public class AstNodeJsonConverterTest
 	@Test
 	public void testStoreComplexArrayAsAttribute() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		doc.setAttribute("DoubleTrouble", new Double[][] {
 				new Double[] { 3.1415, 2 * 3.1415 },
 				new Double[] { 2.7182, 2 * 2.7182 } });

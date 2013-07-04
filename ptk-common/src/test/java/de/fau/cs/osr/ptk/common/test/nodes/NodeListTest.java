@@ -17,9 +17,9 @@
 
 package de.fau.cs.osr.ptk.common.test.nodes;
 
-import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.astId;
-import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.astList;
-import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.astText;
+import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.ctnId;
+import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.ctnList;
+import static de.fau.cs.osr.ptk.common.test.nodes.CtnBuilder.ctnText;
 import static org.junit.Assert.*;
 
 import java.util.ListIterator;
@@ -51,7 +51,7 @@ public class NodeListTest
 			checkNodeList(0, l);
 		}
 		{
-			CtnNodeList l = new CtnNodeList(astId(0));
+			CtnNodeList l = new CtnNodeList(ctnId(0));
 			checkNodeList(1, l);
 			assertFalse(l.isEmpty());
 		}
@@ -63,7 +63,7 @@ public class NodeListTest
 		{
 			Pair<CtnNode> list = makeSimpleList3(1);
 			
-			CtnNodeList l = new CtnNodeList(astId(0), (Pair<CtnNode>) list);
+			CtnNodeList l = new CtnNodeList(ctnId(0), (Pair<CtnNode>) list);
 			
 			checkNodeList(4, l);
 		}
@@ -80,7 +80,7 @@ public class NodeListTest
 				@Override
 				public void run()
 				{
-					new CtnNodeList(astId(0), (Pair<CtnNode>) null);
+					new CtnNodeList(ctnId(0), (Pair<CtnNode>) null);
 				}
 			}, NullPointerException.class);
 		}
@@ -131,9 +131,9 @@ public class NodeListTest
 	{
 		{
 			CtnNodeList l = new CtnNodeList(makeSimpleList3(3));
-			l.set(2, astId(2));
-			l.set(0, astId(0));
-			l.set(1, astId(1));
+			l.set(2, ctnId(2));
+			l.set(0, ctnId(0));
+			l.set(1, ctnId(1));
 			checkNodeList(3, l);
 		}
 		{
@@ -167,11 +167,11 @@ public class NodeListTest
 					makeNestedList5(10));
 			
 			assertEquals(l.lastIndexOf(null), -1);
-			assertEquals(l.lastIndexOf(astId(7)), -1);
-			assertEquals(l.lastIndexOf(astId(5)), 2);
-			assertEquals(l.lastIndexOf(astId(3)), 0);
-			assertEquals(l.lastIndexOf(astId(10)), 3);
-			assertEquals(l.lastIndexOf(astId(14)), 7);
+			assertEquals(l.lastIndexOf(ctnId(7)), -1);
+			assertEquals(l.lastIndexOf(ctnId(5)), 2);
+			assertEquals(l.lastIndexOf(ctnId(3)), 0);
+			assertEquals(l.lastIndexOf(ctnId(10)), 3);
+			assertEquals(l.lastIndexOf(ctnId(14)), 7);
 		}
 	}
 	
@@ -184,7 +184,7 @@ public class NodeListTest
 					makeNestedList5(3));
 			
 			l.add(null);
-			l.add(astId(8));
+			l.add(ctnId(8));
 			l.add(null);
 			checkNodeList(9, l);
 		}
@@ -247,7 +247,7 @@ public class NodeListTest
 			Pair<CtnNode> l2 = makeSimpleList3(8);
 			l2.set(2, null);
 			l.addAll(l2);
-			l.set(9, astId(9));
+			l.set(9, ctnId(9));
 			
 			checkNodeList(10, l);
 		}
@@ -278,7 +278,7 @@ public class NodeListTest
 		{
 			CtnNodeList l = new CtnNodeList(makeSimpleList3(1));
 			
-			prepend(l, astId(0));
+			prepend(l, ctnId(0));
 			
 			checkNodeList(4, l);
 		}
@@ -312,8 +312,8 @@ public class NodeListTest
 	@Test
 	public void testSetText() throws Exception
 	{
-		CtnNodeList l = astList(astText("Hallo"));
-		l.set(0, astText("Welt"));
+		CtnNodeList l = ctnList(ctnText("Hallo"));
+		l.set(0, ctnText("Welt"));
 		assertEquals(1, l.size());
 		assertEquals("Welt", ((CtnText) l.get(0)).getContent());
 	}
@@ -321,17 +321,17 @@ public class NodeListTest
 	@Test
 	public void testSetEmptyText() throws Exception
 	{
-		CtnNodeList l = astList(astText("Hallo"));
-		l.set(0, astText(""));
+		CtnNodeList l = ctnList(ctnText("Hallo"));
+		l.set(0, ctnText(""));
 		assertEquals(0, l.size());
 	}
 	
 	@Test
 	public void testSetTextAfterExistingTextNode() throws Exception
 	{
-		CtnText t0 = astText("Hallo");
-		CtnNodeList l = astList(t0, astId(0));
-		CtnText t1 = astText(" Welt");
+		CtnText t0 = ctnText("Hallo");
+		CtnNodeList l = ctnList(t0, ctnId(0));
+		CtnText t1 = ctnText(" Welt");
 		l.set(1, t1);
 		assertEquals(1, l.size());
 		assertEquals("Hallo Welt", ((CtnText) l.get(0)).getContent());
@@ -342,8 +342,8 @@ public class NodeListTest
 	@Test
 	public void testSetTextInFrontOfExistingTextNode() throws Exception
 	{
-		CtnNodeList l = astList(astId(0), astText("Welt"));
-		l.set(0, astText("Hallo "));
+		CtnNodeList l = ctnList(ctnId(0), ctnText("Welt"));
+		l.set(0, ctnText("Hallo "));
 		assertEquals(2, l.size());
 		assertEquals("Hallo ", ((CtnText) l.get(0)).getContent());
 		assertEquals("Welt", ((CtnText) l.get(1)).getContent());
@@ -352,9 +352,9 @@ public class NodeListTest
 	@Test
 	public void testCtorWithTwoAdjacentTextNodes() throws Exception
 	{
-		CtnText t0 = astText("Hallo");
-		CtnText t1 = astText(" Welt");
-		CtnNodeList l = astList(t0, t1);
+		CtnText t0 = ctnText("Hallo");
+		CtnText t1 = ctnText(" Welt");
+		CtnNodeList l = ctnList(t0, t1);
 		assertEquals(1, l.size());
 		assertEquals("Hallo Welt", ((CtnText) l.get(0)).getContent());
 		assertFalse(l.get(0) == t0);
@@ -364,8 +364,8 @@ public class NodeListTest
 	@Test
 	public void testAddEmptyText() throws Exception
 	{
-		CtnNodeList l = astList(astText("Hallo"));
-		assertFalse(l.add(astText("")));
+		CtnNodeList l = ctnList(ctnText("Hallo"));
+		assertFalse(l.add(ctnText("")));
 		assertEquals(1, l.size());
 		assertEquals("Hallo", ((CtnText) l.get(0)).getContent());
 	}
@@ -373,9 +373,9 @@ public class NodeListTest
 	@Test
 	public void testAddTextAfterExistingText() throws Exception
 	{
-		CtnText t0 = astText("Hallo");
-		CtnNodeList l = astList(t0);
-		CtnText t1 = astText(" Welt");
+		CtnText t0 = ctnText("Hallo");
+		CtnNodeList l = ctnList(t0);
+		CtnText t1 = ctnText(" Welt");
 		l.add(t1);
 		assertEquals(1, l.size());
 		assertEquals("Hallo Welt", ((CtnText) l.get(0)).getContent());
@@ -386,8 +386,8 @@ public class NodeListTest
 	@Test
 	public void testAddTextBeforeExistingText() throws Exception
 	{
-		CtnNodeList l = astList(astText("Welt"));
-		l.add(0, astText("Hallo "));
+		CtnNodeList l = ctnList(ctnText("Welt"));
+		l.add(0, ctnText("Hallo "));
 		assertEquals(2, l.size());
 		assertEquals("Hallo ", ((CtnText) l.get(0)).getContent());
 		assertEquals("Welt", ((CtnText) l.get(1)).getContent());
@@ -396,9 +396,9 @@ public class NodeListTest
 	@Test
 	public void testAddTextWithIterator() throws Exception
 	{
-		CtnNodeList l = astList();
+		CtnNodeList l = ctnList();
 		ListIterator<CtnNode> i = l.listIterator();
-		i.add(astText("Hallo"));
+		i.add(ctnText("Hallo"));
 		assertEquals(1, l.size());
 		assertEquals("Hallo", ((CtnText) l.get(0)).getContent());
 	}
@@ -406,11 +406,11 @@ public class NodeListTest
 	@Test
 	public void testAddTextAfterTextWithIterator() throws Exception
 	{
-		CtnNodeList l = astList(astText("Hallo "));
+		CtnNodeList l = ctnList(ctnText("Hallo "));
 		ListIterator<CtnNode> i = l.listIterator();
 		assertEquals("Hallo ", ((CtnText) i.next()).getContent());
 		assertFalse(i.hasNext());
-		i.add(astText("Welt"));
+		i.add(ctnText("Welt"));
 		assertFalse(i.hasNext());
 		assertTrue(i.hasPrevious());
 		assertEquals("Hallo Welt", ((CtnText) i.previous()).getContent());
@@ -421,11 +421,11 @@ public class NodeListTest
 	@Test
 	public void testAddThreeTextNodesWithIterator() throws Exception
 	{
-		CtnNodeList l = astList();
+		CtnNodeList l = ctnList();
 		ListIterator<CtnNode> i = l.listIterator();
-		i.add(astText("Hallo"));
-		i.add(astText(" Welt"));
-		i.add(astText("!"));
+		i.add(ctnText("Hallo"));
+		i.add(ctnText(" Welt"));
+		i.add(ctnText("!"));
 		assertEquals(1, l.size());
 		assertEquals("Hallo Welt!", ((CtnText) l.get(0)).getContent());
 	}
@@ -433,9 +433,9 @@ public class NodeListTest
 	@Test
 	public void testAddTextInFrontOfAnotherTextNodeWithIterator() throws Exception
 	{
-		CtnNodeList l = astList(astText("Welt"));
+		CtnNodeList l = ctnList(ctnText("Welt"));
 		ListIterator<CtnNode> i = l.listIterator();
-		i.add(astText("Hallo "));
+		i.add(ctnText("Hallo "));
 		assertEquals(2, l.size());
 		assertEquals("Hallo ", ((CtnText) l.get(0)).getContent());
 		assertEquals("Welt", ((CtnText) l.get(1)).getContent());
@@ -444,9 +444,9 @@ public class NodeListTest
 	@Test
 	public void testAddEmptyTextWithIterator() throws Exception
 	{
-		CtnNodeList l = astList(astText("Welt"));
+		CtnNodeList l = ctnList(ctnText("Welt"));
 		ListIterator<CtnNode> i = l.listIterator();
-		i.add(astText(""));
+		i.add(ctnText(""));
 		assertEquals(1, l.size());
 		assertEquals("Welt", ((CtnText) l.get(0)).getContent());
 	}
@@ -454,13 +454,13 @@ public class NodeListTest
 	@Test
 	public void testSetEmptyTextWithIterator() throws Exception
 	{
-		CtnIdNode _0 = astId(0);
-		CtnIdNode _2 = astId(2);
-		CtnNodeList l = astList(_0, astId(1), _2);
+		CtnIdNode _0 = ctnId(0);
+		CtnIdNode _2 = ctnId(2);
+		CtnNodeList l = ctnList(_0, ctnId(1), _2);
 		ListIterator<CtnNode> i = l.listIterator();
 		i.next();
 		i.next();
-		i.set(astText(""));
+		i.set(ctnText(""));
 		assertEquals(_0, l.get(0));
 		assertEquals(_2, l.get(1));
 	}
@@ -468,14 +468,14 @@ public class NodeListTest
 	@Test
 	public void testSetTextNodeAfterAnotherTextNodeWithIterator() throws Exception
 	{
-		CtnNodeList l = astList(astText("Hallo "), astId(0));
+		CtnNodeList l = ctnList(ctnText("Hallo "), ctnId(0));
 		ListIterator<CtnNode> i = l.listIterator();
 		i.next();
 		i.next();
-		i.set(astText("Welt"));
+		i.set(ctnText("Welt"));
 		assertEquals(1, l.size());
 		assertEquals("Hallo Welt", ((CtnText) l.get(0)).getContent());
-		i.set(astText("X"));
+		i.set(ctnText("X"));
 		assertEquals(1, l.size());
 		assertEquals("X", ((CtnText) l.get(0)).getContent());
 	}
@@ -483,11 +483,11 @@ public class NodeListTest
 	@Test
 	public void testSetTextNodeInFrontOfAnotherTextNodeWithIterator() throws Exception
 	{
-		CtnText t1 = astText("Welt");
-		CtnNodeList l = astList(astId(0), t1);
+		CtnText t1 = ctnText("Welt");
+		CtnNodeList l = ctnList(ctnId(0), t1);
 		ListIterator<CtnNode> i = l.listIterator();
 		i.next();
-		i.set(astText("Hallo "));
+		i.set(ctnText("Hallo "));
 		assertEquals(2, l.size());
 		assertEquals("Hallo ", ((CtnText) l.get(0)).getContent());
 		assertEquals("Welt", ((CtnText) l.get(1)).getContent());
@@ -499,16 +499,16 @@ public class NodeListTest
 	@Test
 	public void testSetTextNodeAfterANonTextNodeWithIterator() throws Exception
 	{
-		CtnIdNode _0 = astId(0);
-		CtnNodeList l = astList(_0, astId(1));
+		CtnIdNode _0 = ctnId(0);
+		CtnNodeList l = ctnList(_0, ctnId(1));
 		ListIterator<CtnNode> i = l.listIterator();
 		i.next();
 		i.next();
-		i.set(astText("Welt"));
+		i.set(ctnText("Welt"));
 		assertEquals(2, l.size());
 		assertEquals(_0, l.get(0));
 		assertEquals("Welt", ((CtnText) l.get(1)).getContent());
-		i.set(astText("X"));
+		i.set(ctnText("X"));
 		assertEquals(2, l.size());
 		assertEquals(_0, l.get(0));
 		assertEquals("X", ((CtnText) l.get(1)).getContent());
@@ -530,22 +530,22 @@ public class NodeListTest
 	
 	private Pair<CtnNode> makeSimpleList3(int i)
 	{
-		Pair<CtnNode> list = new Pair<CtnNode>(astId(i++));
-		list.add(astId(i++));
-		list.add(astId(i++));
+		Pair<CtnNode> list = new Pair<CtnNode>(ctnId(i++));
+		list.add(ctnId(i++));
+		list.add(ctnId(i++));
 		return list;
 	}
 	
 	private Pair<CtnNode> makeNestedList5(int i)
 	{
-		Pair<CtnNode> list = new Pair<CtnNode>(astId(i++));
+		Pair<CtnNode> list = new Pair<CtnNode>(ctnId(i++));
 		{
-			Pair<CtnNode> nestedList = new Pair<CtnNode>(astId(i++));
-			nestedList.add(astId(i++));
-			nestedList.add(astId(i++));
+			Pair<CtnNode> nestedList = new Pair<CtnNode>(ctnId(i++));
+			nestedList.add(ctnId(i++));
+			nestedList.add(ctnId(i++));
 			list.add(new CtnNodeList(nestedList));
 		}
-		list.add(astId(i++));
+		list.add(ctnId(i++));
 		return list;
 	}
 	

@@ -50,7 +50,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testRoundTripWithImplicitRoots() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		roundtrip(doc);
 	}
 	
@@ -59,14 +59,14 @@ public class AstNodeXmlConverterTest
 	{
 		getConverter().setExplicitRoots(true);
 		
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		roundtrip(doc);
 	}
 	
 	@Test
 	public void testXmlFormatWithImplicitRoots() throws Exception
 	{
-		org.w3c.dom.Document doc = parseXml(serialize(astDoc()));
+		org.w3c.dom.Document doc = parseXml(serialize(ctnDoc()));
 		
 		// Has correct root node?
 		String root = "/" + CtnDocument.class.getName().replace("$", "_-");
@@ -79,7 +79,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testXmlFormatWithExplicitRoots() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		getConverter().setExplicitRoots(true);
 		
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
@@ -99,7 +99,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testSerializationOfIntAttribute() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		doc.setAttribute("int", 5);
 		roundtrip(doc);
 	}
@@ -107,7 +107,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testSerializationOfStringAttribute() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		doc.setAttribute("str", "Hello World");
 		roundtrip(doc);
 	}
@@ -118,7 +118,7 @@ public class AstNodeXmlConverterTest
 		ArbitraryObj obj = new ArbitraryObj();
 		obj.set();
 		
-		CtnDocument doc = astDoc(astObjProp(obj));
+		CtnDocument doc = ctnDoc(ctnObjProp(obj));
 		roundtrip(doc);
 	}
 	
@@ -128,7 +128,7 @@ public class AstNodeXmlConverterTest
 		ArbitraryObj obj = new ArbitraryObj();
 		obj.set();
 		
-		CtnDocument doc = astDoc(astObjProp(astUrl().build()));
+		CtnDocument doc = ctnDoc(ctnObjProp(ctnUrl().build()));
 		roundtrip(doc);
 	}
 	
@@ -140,22 +140,22 @@ public class AstNodeXmlConverterTest
 		ArbitraryObj obj = new ArbitraryObj();
 		obj.set();
 		
-		CtnDocument doc = astDoc(astObjProp(astUrl().build()));
+		CtnDocument doc = ctnDoc(ctnObjProp(ctnUrl().build()));
 		roundtrip(doc);
 	}
 	
 	@Test
 	public void testSerializationOfObjectArray() throws Exception
 	{
-		CtnDocument doc = astDoc();
-		doc.setAttribute("array", new Object[] { astText("Hallo"), astUrl().build() });
+		CtnDocument doc = ctnDoc();
+		doc.setAttribute("array", new Object[] { ctnText("Hallo"), ctnUrl().build() });
 		roundtrip(doc);
 	}
 	
 	@Test
 	public void testNoContentPropertyFoundWhenTextNodeTypeSet() throws Exception
 	{
-		CtnDocument doc = astDoc(astText("Hallo"));
+		CtnDocument doc = ctnDoc(ctnText("Hallo"));
 		assertFalse(serialize(doc).contains("<content>"));
 		
 		getConverter().setStringNodeType(null);
@@ -165,16 +165,16 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testAttributesOnTextNodeForceContentElement() throws Exception
 	{
-		CtnText text = astText("Hallo");
+		CtnText text = ctnText("Hallo");
 		text.setAttribute("ruins", "it");
-		CtnDocument doc = astDoc(text);
+		CtnDocument doc = ctnDoc(text);
 		assertTrue(serialize(doc).contains("<content>"));
 	}
 	
 	@Test
 	public void testWrapAstInArticleContainerAndRoundtrip() throws Exception
 	{
-		CtnDocument doc = astDoc(astText("Hallo Welt"));
+		CtnDocument doc = ctnDoc(ctnText("Hallo Welt"));
 		ArticleContainer ac = new ArticleContainer(doc);
 		
 		String xml = serialize(ac);
@@ -197,7 +197,7 @@ public class AstNodeXmlConverterTest
 	public void testWrapAstInArticleContainerAndCheckXml() throws Exception
 	{
 		ArticleContainer ac =
-				new ArticleContainer(astDoc(astText("Hallo Welt")));
+				new ArticleContainer(ctnDoc(ctnText("Hallo Welt")));
 		
 		org.w3c.dom.Document doc = parseXml(serialize(ac));
 		
@@ -216,7 +216,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testInstantiationOfNullReplacementProperty() throws Exception
 	{
-		CtnDocument doc = astDoc(astUrl().withProtocol("").build());
+		CtnDocument doc = ctnDoc(ctnUrl().withProtocol("").build());
 		getConverter().setSuppressEmptyStringProperties(true);
 		
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
@@ -228,7 +228,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testNullProperty() throws Exception
 	{
-		CtnDocument doc = astDoc(astObjProp(null));
+		CtnDocument doc = ctnDoc(ctnObjProp(null));
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
 		assertEquals(0, queryNodeSet("//prop", xmlDoc).getLength());
 		roundtrip(doc);
@@ -237,7 +237,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testSuppressedProperty() throws Exception
 	{
-		CtnDocument doc = astDoc(astObjProp("Hello World"));
+		CtnDocument doc = ctnDoc(ctnObjProp("Hello World"));
 		getConverter().suppressProperty("prop");
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
 		assertEquals(0, queryNodeSet("//prop", xmlDoc).getLength());
@@ -247,13 +247,13 @@ public class AstNodeXmlConverterTest
 	public void testNodeWithContentAndAnotherProperty() throws Exception
 	{
 		// First make sure that the node is properly recognized as string node
-		CtnDocument doc = astDoc(astPropContent(null, "Hello World"));
+		CtnDocument doc = ctnDoc(ctnPropContent(null, "Hello World"));
 		getConverter().setStringNodeType(CtnNodeWithPropAndContent.class);
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
 		assertEquals(0, queryNodeSet("//content", xmlDoc).getLength());
 		roundtrip(doc);
 		
-		doc = astDoc(astPropContent(42, "Hello World"));
+		doc = ctnDoc(ctnPropContent(42, "Hello World"));
 		getConverter().setStringNodeType(CtnNodeWithPropAndContent.class);
 		xmlDoc = parseXml(serialize(doc));
 		assertEquals(1, queryNodeSet("//content", xmlDoc).getLength());
@@ -263,7 +263,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testNodeWithAtLeastTwoNamedChildren() throws Exception
 	{
-		CtnDocument doc = astDoc(astSection().build());
+		CtnDocument doc = ctnDoc(ctnSection().build());
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
 		assertNotNull(queryNode("//title", xmlDoc));
 		assertNotNull(queryNode("//body", xmlDoc));
@@ -292,11 +292,11 @@ public class AstNodeXmlConverterTest
 	
 	private CtnDocument astWithLocations()
 	{
-		CtnText text = astText("Hello");
+		CtnText text = ctnText("Hello");
 		text.setNativeLocation(new AstLocation("some file", 42, 43));
-		CtnUrl url = astUrl().build();
+		CtnUrl url = ctnUrl().build();
 		url.setNativeLocation(new AstLocation("some file", 44, 45));
-		CtnDocument doc = astDoc(text, url);
+		CtnDocument doc = ctnDoc(text, url);
 		return doc;
 	}
 	
@@ -329,27 +329,27 @@ public class AstNodeXmlConverterTest
 	
 	private CtnDocument astWithAttributes()
 	{
-		CtnUrl url = astUrl().build();
+		CtnUrl url = ctnUrl().build();
 		url.setAttribute("area51", "Hello World 1");
 		url.setAttribute("area52", "Hello World 2");
-		CtnDocument doc = astDoc(url);
+		CtnDocument doc = ctnDoc(url);
 		return doc;
 	}
 	
 	@Test
 	public void testStoreNullAttribute() throws Exception
 	{
-		CtnUrl url = astUrl().build();
+		CtnUrl url = ctnUrl().build();
 		url.setAttribute("area51", null);
-		CtnDocument doc = astDoc(url);
+		CtnDocument doc = ctnDoc(url);
 		roundtrip(doc);
 	}
 	
 	@Test
 	public void testBodyInterfaceNode() throws Exception
 	{
-		CtnSection sec = astSection().build();
-		CtnDocument doc = astDoc(sec);
+		CtnSection sec = ctnSection().build();
+		CtnDocument doc = ctnDoc(sec);
 		assertEquals(CtnBody.CtnBodyImpl.class, sec.getBody().getClass());
 		assertTrue(sec.hasBody());
 		org.w3c.dom.Document xmlDoc = parseXml(serialize(doc));
@@ -360,9 +360,9 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testNoBodyNode() throws Exception
 	{
-		CtnSection sec = astSection().build();
+		CtnSection sec = ctnSection().build();
 		sec.removeBody();
-		CtnDocument doc = astDoc(sec);
+		CtnDocument doc = ctnDoc(sec);
 		assertEquals(CtnBody.CtnNoBody.class, sec.getBody().getClass());
 		assertFalse(sec.hasBody());
 		
@@ -379,9 +379,9 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testNoTitleNodeToCoverAllPaths() throws Exception
 	{
-		CtnSection sec = astSection().build();
+		CtnSection sec = ctnSection().build();
 		sec.removeTitle();
-		CtnDocument doc = astDoc(sec);
+		CtnDocument doc = ctnDoc(sec);
 		assertEquals(CtnTitle.CtnNoTitle.class, sec.getTitle().getClass());
 		assertFalse(sec.hasTitle());
 		assertTrue(sec.hasBody());
@@ -399,7 +399,7 @@ public class AstNodeXmlConverterTest
 	@Test
 	public void testStoreComplexArrayAsAttribute() throws Exception
 	{
-		CtnDocument doc = astDoc();
+		CtnDocument doc = ctnDoc();
 		doc.setAttribute("DoubleTrouble", new Double[][] {
 				new Double[] { 3.1415, 2 * 3.1415 },
 				new Double[] { 2.7182, 2 * 2.7182 } });

@@ -19,62 +19,62 @@ package de.fau.cs.osr.ptk.common.test.nodes;
 
 public class CtnBuilder
 {
-	public static CtnText astText()
+	public static CtnText ctnText()
 	{
 		return new CtnText("Default text");
 	}
 	
-	public static CtnText astText(String text)
+	public static CtnText ctnText(String text)
 	{
 		return new CtnText(text);
 	}
 	
-	public static CtnNodeList astList()
+	public static CtnNodeList ctnList()
 	{
 		return new CtnNodeList();
 	}
 	
-	public static CtnNodeList astList(CtnNode... children)
+	public static CtnNodeList ctnList(CtnNode... children)
 	{
 		return new CtnNodeList(children);
 	}
 	
-	public static SectionBuilder astSection()
+	public static SectionBuilder ctnSection()
 	{
 		return new SectionBuilder();
 	}
 	
-	public static CtnTitle astTitle(CtnNode... children)
+	public static CtnTitle ctnTitle(CtnNode... children)
 	{
 		return new CtnTitle.CtnTitleImpl(children);
 	}
 	
-	public static CtnBody astBody(CtnNode... children)
+	public static CtnBody ctnBody(CtnNode... children)
 	{
 		return new CtnBody.CtnBodyImpl(children);
 	}
 	
-	public static CtnDocument astDoc(CtnNode... children)
+	public static CtnDocument ctnDoc(CtnNode... children)
 	{
 		return new CtnDocument(children);
 	}
 	
-	public static CtnIdNode astId(int i)
+	public static CtnIdNode ctnId(int i)
 	{
 		return new CtnIdNode(i);
 	}
 	
-	public static UrlBuilder astUrl()
+	public static UrlBuilder ctnUrl()
 	{
 		return new UrlBuilder();
 	}
 	
-	public static CtnNodeWithObjProp astObjProp(Object prop)
+	public static CtnNodeWithObjProp ctnObjProp(Object prop)
 	{
 		return new CtnNodeWithObjProp(prop);
 	}
 	
-	public static CtnNodeWithPropAndContent astPropContent(
+	public static CtnNodeWithPropAndContent ctnPropContent(
 			Object prop,
 			String content)
 	{
@@ -87,9 +87,9 @@ public class CtnBuilder
 	{
 		private int level = 0;
 		
-		private CtnTitle title = new CtnTitle.CtnTitleImpl(astText("Default section title"));
+		private CtnTitle title = new CtnTitle.CtnTitleImpl(ctnText("Default section title"));
 		
-		private CtnBody body = new CtnBody.CtnBodyImpl(astText("Default section body"));
+		private CtnBody body = new CtnBody.CtnBodyImpl(ctnText("Default section body"));
 		
 		public SectionBuilder withLevel(int level)
 		{

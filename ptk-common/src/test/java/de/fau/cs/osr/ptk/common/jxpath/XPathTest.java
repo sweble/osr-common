@@ -42,13 +42,13 @@ public class XPathTest
 	// =========================================================================
 	
 	private static final CtnSection AST1 =
-			astSection()
+			ctnSection()
 					.withLevel(0)
-					.withTitle(astText("1st"))
+					.withTitle(ctnText("1st"))
 					.withBody(
-							astText("2nd"),
-							astId(3),
-							astSection()
+							ctnText("2nd"),
+							ctnId(3),
+							ctnSection()
 									.withLevel(1)
 									.withTitle()
 									.withBody()
@@ -56,22 +56,22 @@ public class XPathTest
 					.build();
 	
 	private static final CtnNode AST2 =
-			astDoc(
-					astSection()
+			ctnDoc(
+					ctnSection()
 							.withLevel(1)
 							.withTitle()
 							.withBody()
 							.build(),
-					astSection()
+					ctnSection()
 							.withLevel(2)
 							.withTitle()
 							.withBody()
 							.build());
 	
 	private static final CtnNode AST3 =
-			astDoc(
-					astText("1"),
-					astId(2));
+			ctnDoc(
+					ctnText("1"),
+					ctnId(2));
 	
 	// =========================================================================
 	

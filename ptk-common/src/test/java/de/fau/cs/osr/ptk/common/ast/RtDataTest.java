@@ -39,10 +39,10 @@ public class RtDataTest
 	{
 		assertEquals(2, new RtData(2).size());
 		
-		CtnText text = astText();
+		CtnText text = ctnText();
 		assertEquals(text.size() + 1, new RtData(text).size());
 		
-		CtnSection section = astSection().build();
+		CtnSection section = ctnSection().build();
 		assertEquals(section.size() + 1, new RtData(section).size());
 	}
 	
@@ -60,7 +60,7 @@ public class RtDataTest
 	@Test
 	public void testComplexCtorsHaveRightSize() throws Exception
 	{
-		CtnSection section = astSection().build();
+		CtnSection section = ctnSection().build();
 		RtData rtd = new RtData(section, "1");
 		assertEquals(3, rtd.size());
 	}
@@ -68,7 +68,7 @@ public class RtDataTest
 	@Test
 	public void testNullInCtorDoesNotMeanNullInRtd() throws Exception
 	{
-		CtnSection section = astSection().build();
+		CtnSection section = ctnSection().build();
 		RtData rtd = new RtData(section, "1", SEP, null, SEP, "3");
 		for (int i = 0; i < rtd.size(); ++i)
 			assertNotNull(rtd.getField(i));
@@ -123,7 +123,7 @@ public class RtDataTest
 	@Test
 	public void testPrependToRtDataWithObjects() throws Exception
 	{
-		RtData rtd = new RtData(2, astText("<Some Node>"));
+		RtData rtd = new RtData(2, ctnText("<Some Node>"));
 		rtd.prepend("1");
 		assertEquals("RTD[ \"1<Some Node>\" <o> \"\" ]", rtd.toString());
 	}
