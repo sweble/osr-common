@@ -18,13 +18,11 @@
 # limitations under the License.
 #
 
-#import re
-
-#hideRx = re.compile('(enter|exit).*?( ... )')
+import sys
 
 silent = -1
 indent = 0
-for line in open('trace.txt', 'r').readlines():
+for line in sys.stdin.readlines():
   if line.startswith('exit'):
     indent -= 1
 
@@ -36,9 +34,9 @@ for line in open('trace.txt', 'r').readlines():
 
   if silent == -1 or silent == indent:
     if line.startswith('enter') or line.startswith('exit') or line.startswith('lookup') or indent < 1:
-      print ' ' * (2 * indent) + line,
+      print(' ' * (2 * indent) + line, end="")
     else:
-      print '! ' + ' ' * (2 * (indent - 1)) + line,
+      print('! ' + ' ' * (2 * (indent - 1)) + line, end="")
 
   if line.startswith('enter'):
     indent += 1
