@@ -52,7 +52,7 @@
     <version.plugin.surefire>2.12</version.plugin.surefire>
     <version.plugin.archetype>2.2</version.plugin.archetype>
     <version.plugin.license>1.9.0</version.plugin.license>
-    <version.plugin.git-commit-id>2.0.3</version.plugin.git-commit-id>
+    <version.plugin.git-commit-id>2.1.4</version.plugin.git-commit-id>
     <version.plugin.gpg>1.4</version.plugin.gpg>
     <version.plugin.exec>1.2.1</version.plugin.exec>
     <version.plugin.plantuml>7232</version.plugin.plantuml>
@@ -417,22 +417,19 @@
           <inherited>true</inherited>
           <configuration>
             <verbose>false</verbose>
+            <gitDescribe>
+              <skip>false</skip>
+              <always>true</always>
+              <tags>true</tags>
+              <abbrev>7</abbrev>
+            </gitDescribe>
           </configuration>
           <executions>
-            <!-- Disabled until problem
-              https://github.com/ktoso/maven-git-commit-id-plugin/issues/19
-              is resolved -->
-            <execution>
-              <id>git-commit-info-disabled</id>
-              <phase>none</phase>
-            </execution>
-            <!--
             <execution>
               <goals>
                 <goal>revision</goal>
               </goals>
             </execution>
-            -->
           </executions>
         </plugin>
 
