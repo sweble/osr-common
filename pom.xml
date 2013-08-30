@@ -48,7 +48,6 @@
 
     <!-- Plugin dependency versions -->
     <version.plugin.rats>1.3.0.1</version.plugin.rats>
-    <version.plugin.nodegen>1.0.0.1</version.plugin.nodegen>
 
   </properties>
 
@@ -198,30 +197,6 @@
             </execution>
           </executions>
         </plugin>
-
-        <!-- Maven NodeGen Plugin -->
-        <!-- This plugin is part of the Parser Toolkit and would cause a hen or
-          the egg problem  if actually used by submodules of the Parser Toolkit.
-          Therefore, it is only used once and then the generated files are moved
-          to the source folder. The plugin is disabled immediately afterwards.
-          The configuration, however, is kept to ease its use next time.
-         -->
-        <!--
-        <plugin>
-          <groupId>de.fau.cs.osr.ptk</groupId>
-          <artifactId>ptk-nodegen-maven-plugin</artifactId>
-          <version>${version.plugin.nodegen}</version>
-          <executions>
-            <execution>
-              <id>nodegen-generate</id>
-              <phase>generate-sources</phase>
-              <goals>
-                <goal>generate</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        -->
 
       </plugins>
     </pluginManagement>
