@@ -134,10 +134,24 @@ public class NamedParametrized
 		@Override
 		protected String testName(final FrameworkMethod method)
 		{
-			return String.format(
-					"%s with { %s, ... }",
-					method.getName(),
-					parameterSetName);
+			TestNameAnnotation nameAnnotation =
+					method.getAnnotation(TestNameAnnotation.class);
+			
+			if (nameAnnotation == null)
+			{
+				return String.format(
+						"%s with { %s, ... }",
+						method.getName(),
+						parameterSetName);
+			}
+			else
+			{
+				return String.format(
+						"%s with { %s, ... }; %s",
+						method.getName(),
+						parameterSetName,
+						nameAnnotation.annotation());
+			}
 		}
 		
 		@Override
