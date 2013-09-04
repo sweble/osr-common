@@ -437,9 +437,24 @@ public class RtData
 	
 	// =========================================================================
 	
+	public void prepend(Object... glue)
+	{
+		if (glue.length == 0)
+			return;
+		setField(0, glue, getField(0));
+	}
+	
+	public void append(Object... glue)
+	{
+		if (glue.length == 0)
+			return;
+		int last = size() - 1;
+		setField(last, getField(last), glue);
+	}
+	
 	public void prepend(String text)
 	{
-		if (text.isEmpty())
+		if (text == null || text.isEmpty())
 			return;
 		
 		Object[] firstField = fields[0];
