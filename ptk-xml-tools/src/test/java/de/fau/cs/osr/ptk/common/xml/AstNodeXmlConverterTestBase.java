@@ -36,7 +36,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import de.fau.cs.osr.ptk.common.comparer.AstComparer;
-import de.fau.cs.osr.ptk.common.serialization.SimpleTypeNameMapper;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnBody;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnDocument;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnFactory;
@@ -50,6 +49,7 @@ import de.fau.cs.osr.ptk.common.test.nodes.CtnText;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnTitle;
 import de.fau.cs.osr.ptk.common.test.nodes.CtnUrl;
 import de.fau.cs.osr.utils.ComparisonException;
+import de.fau.cs.osr.utils.SimpleTypeNameMapper;
 
 public class AstNodeXmlConverterTestBase
 {
