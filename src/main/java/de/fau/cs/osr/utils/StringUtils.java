@@ -613,13 +613,14 @@ public final class StringUtils
 		
 		return safe;
 	}
-
+	
 	public static String decodeUsingDefaultCharset(String url)
 	{
 		try
 		{
 			return URLDecoder.decode(url, Charset.defaultCharset().name());
-		} catch (UnsupportedEncodingException e)
+		}
+		catch (UnsupportedEncodingException e)
 		{
 			throw new WrappedException(e);
 		}
