@@ -51,6 +51,8 @@ public abstract class ParserCommon<T extends AstNode<T>>
 		return this;
 	}
 	
+	public abstract Object getConfig();
+	
 	@SuppressWarnings("unchecked")
 	protected T process(T n)
 	{
