@@ -125,13 +125,13 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final void setAttributes(Map<String, Object> attrs)
+	public void setAttributes(Map<String, Object> attrs)
 	{
 		this.attributes = new HashMap<String, Object>(attrs);
 	}
 	
 	@Override
-	public final void clearAttributes()
+	public void clearAttributes()
 	{
 		this.attributes = null;
 	}
@@ -155,7 +155,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final Object setAttribute(String name, Object value)
+	public Object setAttribute(String name, Object value)
 	{
 		if (attributes == null)
 			attributes = new HashMap<String, Object>();
@@ -164,7 +164,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final Object removeAttribute(String name)
+	public Object removeAttribute(String name)
 	{
 		if (attributes == null)
 			return null;
@@ -186,7 +186,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final Integer setIntAttribute(String name, Integer value)
+	public Integer setIntAttribute(String name, Integer value)
 	{
 		if (attributes == null)
 			attributes = new HashMap<String, Object>();
@@ -209,7 +209,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final boolean setBooleanAttribute(String name, boolean value)
+	public boolean setBooleanAttribute(String name, boolean value)
 	{
 		if (attributes == null)
 			attributes = new HashMap<String, Object>();
@@ -232,7 +232,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final String setStringAttribute(String name, String value)
+	public String setStringAttribute(String name, String value)
 	{
 		if (attributes == null)
 			attributes = new HashMap<String, Object>();
@@ -356,13 +356,13 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final void setLocation(Location location)
+	public void setLocation(Location location)
 	{
 		setNativeLocation(new AstLocation(location));
 	}
 	
 	@Override
-	public final void setLocation(Locatable locatable)
+	public void setLocation(Locatable locatable)
 	{
 		if (locatable.hasLocation())
 			setLocation(locatable.getLocation());
@@ -377,7 +377,7 @@ public abstract class AstNodeImpl<T extends AstNode<T>>
 	}
 	
 	@Override
-	public final void setNativeLocation(AstLocation location)
+	public void setNativeLocation(AstLocation location)
 	{
 		this.location = location;
 	}

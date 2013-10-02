@@ -106,7 +106,7 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		}
 		
 		@Override
-		public int size()
+		public final int size()
 		{
 			return 1;
 		}
@@ -191,7 +191,7 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		}
 		
 		@Override
-		public int size()
+		public final int size()
 		{
 			return 2;
 		}
@@ -290,7 +290,7 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		}
 		
 		@Override
-		public int size()
+		public final int size()
 		{
 			return 3;
 		}
@@ -401,7 +401,7 @@ public abstract class AstAbstractInnerNode<T extends AstNode<T>>
 		}
 		
 		@Override
-		public int size()
+		public final int size()
 		{
 			return 4;
 		}
