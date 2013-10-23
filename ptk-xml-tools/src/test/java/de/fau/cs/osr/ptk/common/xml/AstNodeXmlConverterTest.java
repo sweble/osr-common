@@ -89,7 +89,6 @@ public class AstNodeXmlConverterTest
 		assertNotNull(queryNode(root, xmlDoc));
 		
 		// Has one explicit element as root?
-		printSerialized(doc);
 		assertEquals(1, queryNodeSet(root + "/document", xmlDoc).getLength());
 		
 		// Explicit root has no other children?
