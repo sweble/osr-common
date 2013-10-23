@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2011 The Open Source Research Group,
+                   University of Erlangen-Nürnberg
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -28,51 +46,68 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.java>1.6</version.java>
 
-    <!-- Dependency versions -->
-    <version.dep.junit>4.7</version.dep.junit>
-    <version.dep.mockito>1.9.0</version.dep.mockito>
-    <version.dep.commons-io>1.4</version.dep.commons-io>
-    <version.dep.commons-lang>2.5</version.dep.commons-lang>
+    <!-- Configuration of plugins to be modified by child POMs -->
+    <maven-site-plugin.skip>false</maven-site-plugin.skip>
+
+    <!-- Dependencies -->
+    <version.dep.aspectjrt>1.6.7</version.dep.aspectjrt>
     <version.dep.commons-codec>1.6</version.dep.commons-codec>
     <version.dep.commons-collections>3.2.1</version.dep.commons-collections>
+    <verison.dep.commons-compress>1.0</verison.dep.commons-compress>
+    <version.dep.commons-io>1.4</version.dep.commons-io>
+    <version.dep.commons-jxpath>1.3</version.dep.commons-jxpath>
+    <version.dep.commons-lang>2.5</version.dep.commons-lang>
+    <version.dep.joda-time>2.3</version.dep.joda-time>
+    <version.dep.junit>4.7</version.dep.junit>
+    <version.dep.log4j>1.2.14</version.dep.log4j>
+    <version.dep.lombok>1.12.2</version.dep.lombok>
 
-    <!-- Plugin dependency versions -->
-    <version.plugin.compiler>2.3.2</version.plugin.compiler>
-    <version.plugin.jar>2.3.1</version.plugin.jar>
-    <version.plugin.war>2.1.1</version.plugin.war>
-    <version.plugin.assembly>2.2</version.plugin.assembly>
-    <version.plugin.eclipse>2.9</version.plugin.eclipse>
-    <version.plugin.release>2.1</version.plugin.release>
-    <version.plugin.javadoc>2.8</version.plugin.javadoc>
-    <version.plugin.source>2.1.2</version.plugin.source>
-    <version.plugin.jar>2.3.1</version.plugin.jar>
-    <version.plugin.site>3.0</version.plugin.site>
-    <version.plugin.deploy>2.7</version.plugin.deploy>
-    <version.plugin.build-helper>1.5</version.plugin.build-helper>
-    <version.plugin.surefire>2.12</version.plugin.surefire>
+    <!-- Maven plugins: http://maven.apache.org/plugins/ -->
+
+    <!-- Core plugins -->
+    <!-- clean -->
+    <version.plugin.compiler>3.1</version.plugin.compiler>
+    <version.plugin.deploy>2.8.1</version.plugin.deploy>
+    <!-- failsafe, install, resources -->
+    <version.plugin.site>3.3</version.plugin.site>
+    <version.plugin.surefire>2.16</version.plugin.surefire>
+    <!-- verifier -->
+
+    <!-- Packaging types / tools -->
+    <version.plugin.jar>2.4</version.plugin.jar>
+    <version.plugin.war>2.4</version.plugin.war>
+
+    <!-- Reporting plugins -->
+    <version.plugin.changes>2.9</version.plugin.changes>
+    <version.plugin.javadoc>2.9.1</version.plugin.javadoc>
+    <version.plugin.jxr>2.3</version.plugin.jxr>
+    <version.plugin.project-info-reports>2.7</version.plugin.project-info-reports>
+    <version.plugin.surefire-report>2.16</version.plugin.surefire-report>
+
+    <!-- Tools -->
     <version.plugin.archetype>2.2</version.plugin.archetype>
-    <version.plugin.license>1.9.0</version.plugin.license>
-    <version.plugin.git-commit-id>2.1.4</version.plugin.git-commit-id>
+    <version.plugin.assembly>2.4</version.plugin.assembly>
     <version.plugin.gpg>1.4</version.plugin.gpg>
+    <version.plugin.release>2.4.1</version.plugin.release>
+    <version.plugin.source>2.2.1</version.plugin.source>
+
+    <!-- IDEs -->
+    <version.plugin.eclipse>2.9</version.plugin.eclipse>
+
+    <!-- Mojo plugins @ Codehaus: http://mojo.codehaus.org/plugins.html -->
+    <version.plugin.build-helper>1.8</version.plugin.build-helper>
     <version.plugin.exec>1.2.1</version.plugin.exec>
-    <version.plugin.plantuml>7232</version.plugin.plantuml>
 
-    <!-- Site plugin versions-->
-    <version.site-plugin.project-info-reports>2.4</version.site-plugin.project-info-reports>
-    <version.site-plugin.surefire-report>2.12</version.site-plugin.surefire-report>
-    <version.site-plugin.cobertura>2.5.1</version.site-plugin.cobertura>
-    <version.site-plugin.taglist>2.4</version.site-plugin.taglist>
-    <version.site-plugin.jxr>2.3</version.site-plugin.jxr>
-    <version.site-plugin.pmd>2.7.1</version.site-plugin.pmd>
-    <version.site-plugin.plugin>2.9</version.site-plugin.plugin>
-    <version.site-plugin.changes>2.7.1</version.site-plugin.changes>
-
-    <!-- Extension versions -->
-    <version.wagon.ssh-external>2.2</version.wagon.ssh-external>
+    <!-- Other -->
+    <version.plugin.git-commit-id>2.1.4</version.plugin.git-commit-id>
+    <version.plugin.license>2.5</version.plugin.license>
+    <version.plugin.aspectj>1.3</version.plugin.aspectj>
 
   </properties>
 
   <!-- ==[ Dependencies ]=================================================== -->
+
+    <!-- Should be configured in each project individually! -->
 
   <dependencies>
   </dependencies>
@@ -86,6 +121,52 @@
   <dependencyManagement>
     <dependencies>
 
+      <!-- AspectJ -->
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>${version.dep.aspectjrt}</version>
+      </dependency>
+
+      <!-- Apache Commons -->
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${version.dep.commons-codec}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>${version.dep.commons-collections}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>${verison.dep.commons-compress}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${version.dep.commons-io}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-jxpath</groupId>
+        <artifactId>commons-jxpath</artifactId>
+        <version>${version.dep.commons-jxpath}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${version.dep.commons-lang}</version>
+      </dependency>
+
+      <!-- Joda-Time - Java date and time API -->
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${version.dep.joda-time}</version>
+      </dependency>
+
       <!-- JUnit -->
       <dependency>
         <groupId>junit</groupId>
@@ -94,34 +175,19 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- Mockito -->
+      <!-- Log4j -->
       <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-all</artifactId>
-        <version>${version.dep.mockito}</version>
-        <scope>test</scope>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${version.dep.log4j}</version>
       </dependency>
 
-      <!-- Apache Commons -->
+      <!-- Project Lombok -->
       <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>${version.dep.commons-io}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${version.dep.commons-lang}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-collections</groupId>
-        <artifactId>commons-collections</artifactId>
-        <version>${version.dep.commons-collections}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>${version.dep.commons-codec}</version>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${version.dep.lombok}</version>
+        <scope>provided</scope>
       </dependency>
 
     </dependencies>
@@ -132,7 +198,11 @@
     <!-- ==[ Resource Configuration ]======================================= -->
 
     <resources>
-      <!-- Doesn't work at least until maven-eclipse-plugin 2.8
+      <!-- Make sure variable subsitution work in "*.buildinfo.properties" files -->
+      <!--
+        This doesn't work with the eclipse:eclipse goal.
+        It will exclude resources when run in eclipse.
+
       <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
@@ -147,91 +217,20 @@
           <exclude>**/*.buildinfo.properties</exclude>
         </excludes>
       </resource>
-       -->
+
+        So we have to filter all resources and hope that nothing goes wrong...
+      -->
       <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
       </resource>
-      <resource>
-        <filtering>false</filtering>
-        <directory>src/main/schema</directory>
-      </resource>
-      <resource>
-        <filtering>false</filtering>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>**</include>
-        </includes>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
     </resources>
-    <testResources>
-      <testResource>
-        <filtering>false</filtering>
-        <directory>src/test/resources</directory>
-      </testResource>
-      <testResource>
-        <filtering>false</filtering>
-        <directory>src/main/schema</directory>
-      </testResource>
-      <testResource>
-        <filtering>false</filtering>
-        <directory>src/test/java</directory>
-        <includes>
-          <include>**</include>
-        </includes>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </testResource>
-    </testResources>
 
     <!-- ==[ Plugin Configuration ]========================================= -->
 
-    <!-- Should be done in each project individually! -->
+    <!-- Should be configured in each project individually! -->
 
     <plugins>
-
-      <!-- Check and format license headers -->
-      <plugin>
-        <groupId>com.mycila.maven-license-plugin</groupId>
-        <artifactId>maven-license-plugin</artifactId>
-        <inherited>true</inherited>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-
-      <!-- Maven site generation -->
-      <plugin>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <reportPlugins>
-
-            <plugin>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-              <artifactId>maven-changes-plugin</artifactId>
-              <configuration>
-                <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
-              </configuration>
-              <reportSets>
-                <reportSet>
-                  <reports>
-                    <report>changes-report</report>
-                  </reports>
-                </reportSet>
-              </reportSets>
-            </plugin>
-
-          </reportPlugins>
-        </configuration>
-      </plugin>
-
     </plugins>
 
     <!-- ==[ Plugin Management ]============================================ -->
@@ -239,11 +238,12 @@
     <pluginManagement>
       <plugins>
 
+        <!-- Core plugins  - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
         <!-- Java Maven Compiler Plugin -->
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${version.plugin.compiler}</version>
-          <inherited>true</inherited>
           <configuration>
             <source>${version.java}</source>
             <target>${version.java}</target>
@@ -253,12 +253,34 @@
           </configuration>
         </plugin>
 
+        <!-- Maven Deploy Plugin -->
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${version.plugin.deploy}</version>
+        </plugin>
+
+        <!-- Maven Site Plugin -->
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${version.plugin.site}</version>
+          <configuration>
+            <skip>${maven-site-plugin.skip}</skip>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Surefire Plugin -->
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${version.plugin.surefire}</version>
+        </plugin>
+
+        <!-- Packaging types / tools - - - - - - - - - - - - - - - - - - - - -->
+
         <!-- Make sure MANIFEST files contain version information -->
         <!-- Maven Jar Plugin -->
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>${version.plugin.jar}</version>
-          <inherited>true</inherited>
           <configuration>
             <archive>
               <manifest>
@@ -267,17 +289,6 @@
               </manifest>
             </archive>
           </configuration>
-          <!--
-          <executions>
-            <execution>
-              <inherited>true</inherited>
-              <phase>package</phase>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
-          -->
         </plugin>
 
         <!-- Make sure MANIFEST files contain version information -->
@@ -285,7 +296,6 @@
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
           <version>${version.plugin.war}</version>
-          <inherited>true</inherited>
           <configuration>
             <archive>
               <manifest>
@@ -296,96 +306,42 @@
           </configuration>
         </plugin>
 
-        <!-- Maven Assembly Plugin -->
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>${version.plugin.assembly}</version>
-          <inherited>true</inherited>
-        </plugin>
+        <!-- Reporting plugins - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <!-- Maven Eclipse Plugin -->
+        <!-- Maven Changes Plugin -->
         <plugin>
-          <artifactId>maven-eclipse-plugin</artifactId>
-          <version>${version.plugin.eclipse}</version>
-          <inherited>true</inherited>
-          <configuration>
-            <downloadSources>true</downloadSources>
-            <downloadJavadocs>true</downloadJavadocs>
-          </configuration>
-        </plugin>
-
-        <!-- Maven Release Plugin -->
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>${version.plugin.release}</version>
-          <inherited>true</inherited>
-          <configuration>
-            <!-- Don't do site-deploy! -->
-            <goals>deploy</goals>
-          </configuration>
+          <artifactId>maven-changes-plugin</artifactId>
+          <version>${version.plugin.changes}</version>
         </plugin>
 
         <!-- Maven Javadoc Plugin -->
         <plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${version.plugin.javadoc}</version>
-          <inherited>true</inherited>
-          <!-- confuses release plugin
-          <executions>
-            <execution>
-              <inherited>true</inherited>
-              <id>javadoc-jar</id>
-              <phase>package</phase>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
-          -->
           <configuration>
             <quiet>true</quiet>
           </configuration>
         </plugin>
 
-        <!-- Maven Source Plugin -->
+        <!-- Maven JXR Plugin -->
         <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${version.plugin.source}</version>
-          <inherited>true</inherited>
-          <!-- confuses release plugin
-          <executions>
-            <execution>
-              <inherited>true</inherited>
-              <phase>package</phase>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-            </execution>
-          </executions>
-          -->
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>${version.plugin.jxr}</version>
         </plugin>
 
-        <!-- Maven Deploy Plugin -->
+        <!-- Maven Project Info Report Plugin -->
         <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>${version.plugin.deploy}</version>
-          <inherited>true</inherited>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>${version.plugin.project-info-reports}</version>
         </plugin>
 
-        <!-- Build Helper Maven Plugin -->
+        <!-- Maven Surefire Report Plugin -->
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>${version.plugin.build-helper}</version>
-          <inherited>true</inherited>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>${version.plugin.surefire-report}</version>
         </plugin>
 
-        <!-- Maven Surefire Plugin -->
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${version.plugin.surefire}</version>
-          <inherited>true</inherited>
-        </plugin>
+        <!-- Tools - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <!-- Maven Archetype Plugin -->
         <plugin>
@@ -393,15 +349,75 @@
           <version>${version.plugin.archetype}</version>
         </plugin>
 
+        <!-- Maven Assembly Plugin -->
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${version.plugin.assembly}</version>
+        </plugin>
+
+        <!-- Maven GPG Plugin -->
+        <plugin>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${version.plugin.gpg}</version>
+          <configuration>
+            <useAgent>true</useAgent>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Release Plugin -->
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${version.plugin.release}</version>
+          <configuration>
+            <!-- Don't do site-deploy! -->
+            <goals>deploy</goals>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Source Plugin -->
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${version.plugin.source}</version>
+        </plugin>
+
+        <!-- IDEs  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Maven Eclipse Plugin -->
+        <plugin>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>${version.plugin.eclipse}</version>
+          <configuration>
+            <downloadSources>true</downloadSources>
+            <downloadJavadocs>true</downloadJavadocs>
+          </configuration>
+        </plugin>
+
+        <!-- Mojo plugins @ Codehaus - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Build Helper Maven Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${version.plugin.build-helper}</version>
+        </plugin>
+
+        <!-- Execute system and Java programs -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${version.plugin.exec}</version>
+        </plugin>
+
+        <!-- Other - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
         <!-- Check and format license headers -->
         <plugin>
-          <groupId>com.mycila.maven-license-plugin</groupId>
-          <artifactId>maven-license-plugin</artifactId>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
           <version>${version.plugin.license}</version>
-          <inherited>true</inherited>
           <executions>
             <execution>
-              <inherited>true</inherited>
+              <id>check-licenses</id>
               <goals>
                 <goal>check</goal>
               </goals>
@@ -414,7 +430,6 @@
           <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
           <version>${version.plugin.git-commit-id}</version>
-          <inherited>true</inherited>
           <configuration>
             <verbose>false</verbose>
             <gitDescribe>
@@ -426,6 +441,7 @@
           </configuration>
           <executions>
             <execution>
+              <id>gather-git-information</id>
               <goals>
                 <goal>revision</goal>
               </goals>
@@ -433,173 +449,36 @@
           </executions>
         </plugin>
 
+        <!-- Maven AspectJ Plugin -->
         <plugin>
-          <groupId>com.github.jeluard</groupId>
-          <artifactId>maven-plantuml-plugin</artifactId>
-          <version>${version.plugin.plantuml}</version>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>aspectj-maven-plugin</artifactId>
+          <version>${version.plugin.aspectj}</version>
           <configuration>
-            <sourceFiles>
-              <directory>${basedir}</directory>
-              <includes>
-                <include>
-                  src/main/java/**/*.java
-                </include>
-              </includes>
-            </sourceFiles>
-            <outputDirectory>
-              ${basedir}/target/documentation/plantuml
-            </outputDirectory>
-            <format>svg</format>
+            <source>${version.java}</source>
+            <target>${version.java}</target>
           </configuration>
           <executions>
-            <!-- Don't execute automatically
             <execution>
               <goals>
-                <goal>revision</goal>
+                <goal>compile</goal>
               </goals>
             </execution>
-            -->
           </executions>
         </plugin>
+        <!--
+          When using the AspectJ plugin one must disable the Maven Compilier 
+          Plugin in favor of the AspectJ plugin:
 
-        <!-- Maven GPG Plugin -->
-        <plugin>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>${version.plugin.gpg}</version>
-          <inherited>true</inherited>
-          <configuration>
-            <useAgent>true</useAgent>
-          </configuration>
-        </plugin>
-
-        <!-- Execute system and Java programs -->
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>${version.plugin.exec}</version>
-        </plugin>
-
-        <!-- Maven Site Plugin -->
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>${version.plugin.site}</version>
-          <inherited>true</inherited>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.maven.wagon</groupId>
-              <artifactId>wagon-ssh-external</artifactId>
-              <version>${version.wagon.ssh-external}</version>
-            </dependency>
-          </dependencies>
-        </plugin>
-
-        <!-- Maven Project Info Report Plugin -->
-        <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>${version.site-plugin.project-info-reports}</version>
-          <inherited>true</inherited>
-          <!-- This is not inherited to the report plugin in other modules
-          <reportSets>
-            <reportSet>
-              <reports>
-                <report>dependencies</report>
-                <report>dependency-convergence</report>
-                <report>dependency-management</report>
-                <report>distribution-management</report>
-                <report>index</report>
-                <report>issue-tracking</report>
-                <report>license</report>
-                <report>mailing-list</report>
-                <report>modules</report>
-                <report>plugin-management</report>
-                <report>plugins</report>
-                <report>project-team</report>
-                <report>scm</report>
-                <report>summary</report>
-              </reports>
-            </reportSet>
-          </reportSets>
-          -->
-        </plugin>
-
-        <!-- Maven Plugin Plugin -->
-        <plugin>
-          <artifactId>maven-plugin-plugin</artifactId>
-          <version>${version.site-plugin.plugin}</version>
-        </plugin>
-
-        <!-- Maven Surefire Report Plugin -->
-        <plugin>
-          <artifactId>maven-surefire-report-plugin</artifactId>
-          <version>${version.site-plugin.surefire-report}</version>
-          <inherited>true</inherited>
-        </plugin>
-
-        <!-- Maven Java Cross Reference Plugin -->
-        <plugin>
-          <artifactId>maven-jxr-plugin</artifactId>
-          <version>${version.site-plugin.jxr}</version>
-          <inherited>true</inherited>
-        </plugin>
-
-        <!-- Maven PMD (source code analyzer) Plugin -->
-        <plugin>
-          <artifactId>maven-pmd-plugin</artifactId>
-          <version>${version.site-plugin.pmd}</version>
-          <configuration>
-            <targetJdk>${version.java}</targetJdk>
-          </configuration>
-        </plugin>
-
-        <!-- Maven Cobertura Report Plugin -->
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>cobertura-maven-plugin</artifactId>
-          <version>${version.site-plugin.cobertura}</version>
-          <inherited>true</inherited>
-        </plugin>
-
-        <!-- Maven Taglist Report Plugin -->
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>taglist-maven-plugin</artifactId>
-          <version>${version.site-plugin.taglist}</version>
-          <inherited>true</inherited>
-          <!-- This is not inherited to the report plugin in other modules
-          <configuration>
-            <encoding>UTF-8</encoding>
-            <sourceFileLocale>en</sourceFileLocale>
-            <emptyComments>true</emptyComments>
-            <tagListOptions>
-              <tagClasses>
-                <tagClass>
-                  <displayName>Code Work</displayName>
-                  <tags>
-                    <tag>
-                      <matchString>fixme</matchString>
-                      <matchType>ignoreCase</matchType>
-                    </tag>
-                    <tag>
-                      <matchString>todo</matchString>
-                      <matchType>ignoreCase</matchType>
-                    </tag>
-                    <tag>
-                      <matchString>@todo</matchString>
-                      <matchType>ignoreCase</matchType>
-                    </tag>
-                  </tags>
-                </tagClass>
-              </tagClasses>
-            </tagListOptions>
-          </configuration>
-          -->
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-changes-plugin</artifactId>
-          <version>${version.site-plugin.changes}</version>
-          <inherited>true</inherited>
-        </plugin>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/*</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        -->
 
       </plugins>
     </pluginManagement>
@@ -615,13 +494,59 @@
     -->
 
     <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-ssh-external</artifactId>
-        <version>${version.wagon.ssh-external}</version>
-      </extension>
     </extensions>
+
   </build>
+
+  <!-- ==[ Reporting ]==================================================== -->
+
+  <reporting>
+    <excludeDefaults>true</excludeDefaults>
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-changes-plugin</artifactId>
+        <configuration>
+          <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <quiet>true</quiet>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <id>site-javadoc</id>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-jxr-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+
+    </plugins>
+  </reporting>
 
   <!-- ==[ More Project Information ]======================================= -->
 
@@ -775,92 +700,107 @@
 
     <profile>
       <id>quick</id>
+
+      <properties>
+        <maven.test.skip>true</maven.test.skip>
+      </properties>
+
       <build>
         <plugins>
 
-          <!-- Skip assembly generation -->
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>${version.plugin.assembly}</version>
-            <inherited>true</inherited>
-            <configuration>
-              <skipAssembly>true</skipAssembly>
-            </configuration>
-          </plugin>
-
-          <!-- Skip javadoc generation -->
-          <plugin>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>${version.plugin.javadoc}</version>
-            <inherited>true</inherited>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </plugin>
-
-          <!-- Skip source generation -->
-          <plugin>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>${version.plugin.source}</version>
-            <inherited>true</inherited>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </plugin>
-
           <!-- Don't check and format license headers -->
           <plugin>
-            <groupId>com.mycila.maven-license-plugin</groupId>
-            <artifactId>maven-license-plugin</artifactId>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>check-licenses</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
           </plugin>
 
-          <!-- Only generate minimal site -->
+          <!-- Don't get Git commit information -->
           <plugin>
-            <artifactId>maven-site-plugin</artifactId>
-            <configuration>
-              <reportPlugins>
-                <plugin>
-                  <artifactId>maven-project-info-reports-plugin</artifactId>
-                  <reportSets>
-                    <reportSet>
-                      <reports>
-                        <!-- cim, dependencies, dependency-convergence -->
-                        <report>dependency-management</report>
-                        <report>distribution-management</report>
-                        <report>index</report>
-                        <report>issue-tracking</report>
-                        <report>license</report>
-                        <report>mailing-list</report>
-                        <report>modules</report>
-                        <report>plugin-management</report>
-                        <report>plugins</report>
-                        <report>project-team</report>
-                        <report>scm</report>
-                        <report>summary</report>
-                      </reports>
-                    </reportSet>
-                  </reportSets>
-                </plugin>
-              </reportPlugins>
-            </configuration>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>gather-git-information</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
           </plugin>
 
         </plugins>
       </build>
+
+      <!--
+        Only generate minimal site.
+        Only relevant if the site phase is invoked.
+      -->
+      <reporting>
+        <excludeDefaults>true</excludeDefaults>
+        <plugins>
+
+          <plugin>
+            <artifactId>maven-changes-plugin</artifactId>
+            <!-- it's not possible to disable this report :( -->
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-jxr-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>index</report>
+                  <report>summary</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+            </plugin>
+
+          <plugin>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <configuration>
+              <skipSurefireReport>true</skipSurefireReport>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </reporting>
     </profile>
 
+    <!--
+      This profile is used to release artifacts to Maven Central. Each module
+      has to build its main artifacts including javadoc and source. Signing of
+      the artifacts is also required (see "sign" profile).
+    -->
     <profile>
       <id>release</id>
       <build>
         <plugins>
 
-          <!-- Maven Javadoc Plugin -->
+          <!--
+            Maven Javadoc Plugin.
+            Build a javadoc JAR archive for each individual module.
+          -->
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <inherited>true</inherited>
             <executions>
               <execution>
                 <id>javadoc-jar</id>
@@ -868,7 +808,6 @@
                 <goals>
                   <goal>jar</goal>
                 </goals>
-                <inherited>true</inherited>
               </execution>
             </executions>
             <configuration>
@@ -876,10 +815,12 @@
             </configuration>
           </plugin>
 
-          <!-- Maven Source Plugin -->
+          <!--
+            Maven Source Plugin.
+            Build a source JAR archive for each individual module.
+          -->
           <plugin>
             <artifactId>maven-source-plugin</artifactId>
-            <inherited>true</inherited>
             <executions>
               <execution>
                 <id>sources-jar</id>
@@ -887,7 +828,6 @@
                 <goals>
                   <goal>jar-no-fork</goal>
                 </goals>
-                <inherited>true</inherited>
               </execution>
             </executions>
           </plugin>
@@ -896,6 +836,12 @@
       </build>
     </profile>
 
+    <!--
+      Sign the generated artifacts. Usually used in conjunction with the
+      "release" profile to deploy artifacts to Maven Central. The key name has
+      to be given as option on the command line and the key should be unlocked
+      and held by the gpg agent (-Dgpg.keyname=...).
+    -->
     <profile>
       <id>sign</id>
       <build>
@@ -904,10 +850,6 @@
           <!-- Maven GPG Plugin -->
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
-            <configuration>
-              <!-- Sweble <info@sweble.org> -->
-              <keyname>D17B20AF</keyname>
-            </configuration>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -924,4 +866,5 @@
     </profile>
 
   </profiles>
+
 </project>
