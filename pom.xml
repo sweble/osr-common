@@ -272,6 +272,10 @@
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${version.plugin.surefire}</version>
+          <configuration>
+            <printSummary>false</printSummary>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          </configuration>
         </plugin>
 
         <!-- Packaging types / tools - - - - - - - - - - - - - - - - - - - - -->
