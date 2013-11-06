@@ -31,6 +31,8 @@ public class RtData
 {
 	public static final String SEP = new String();
 	
+	public static final RtData SUPPRESS = new RtDataSuppressSingleton();
+	
 	// =========================================================================
 	
 	private static final long serialVersionUID = 1L;
@@ -40,6 +42,14 @@ public class RtData
 	private final Object[][] fields;
 	
 	// =========================================================================
+	
+	/**
+	 * Constructor for SUPPRESS singleton.
+	 */
+	protected RtData()
+	{
+		this.fields = new Object[0][];
+	}
 	
 	/**
 	 * Instantiates an RtData object and initializes its size to match that of
@@ -337,6 +347,11 @@ public class RtData
 	
 	// =========================================================================
 	
+	public boolean isSuppress()
+	{
+		return this == SUPPRESS;
+	}
+	
 	public int size()
 	{
 		return this.fields.length;
@@ -522,6 +537,82 @@ public class RtData
 		catch (CloneNotSupportedException e)
 		{
 			throw new WrappedException(e);
+		}
+	}
+	
+	// =========================================================================
+	
+	protected static class RtDataSuppressSingleton
+			extends
+				RtData
+	{
+		private static final long serialVersionUID = 1L;
+		
+		@Override
+		public void set(Object... glue)
+		{
+			notSupported();
+		}
+		
+		@Override
+		public void set(String... glue)
+		{
+			notSupported();
+		}
+		
+		@Override
+		public void setField(int field, Object... glue)
+		{
+			notSupported();
+		}
+		
+		@Override
+		public void setField(int field, String glue)
+		{
+			notSupported();
+		}
+		
+		@Override
+		public void setField(int field, String... glue)
+		{
+			notSupported();
+		}
+		
+		@Override
+		public void prepend(String text)
+		{
+			notSupported();
+		}
+		
+		@Override
+		public void append(Object... glue)
+		{
+			notSupported();
+		}
+		
+		@Override
+		public void prepend(Object... glue)
+		{
+			notSupported();
+		}
+		
+		private void notSupported()
+		{
+			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			return false;
+		}
+		
+		@Override
+		public Object clone() throws CloneNotSupportedException
+		{
+			throw new CloneNotSupportedException();
 		}
 	}
 }
