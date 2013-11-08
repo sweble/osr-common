@@ -25,6 +25,8 @@ import org.junit.Assert;
 
 public class FileCompare
 {
+	private static final Object IGNORE_TEST = "IGNORE THIS TEST";
+	
 	private static Pattern inputPathToRefPathSearch;
 	
 	private static String inputPathToRefPathReplaceWith;
@@ -144,6 +146,16 @@ public class FileCompare
 	public void assertEquals(File expectedFile, String actual) throws IOException
 	{
 		FileContent reftext = new FileContent(expectedFile);
+		
+		String trimmed = reftext.getContent().trim();
+		int i = trimmed.indexOf('\n');
+		int j = trimmed.indexOf('\r');
+		if ((i == -1) || (j != -1 && j < i))
+			i = j;
+		if (i != -1)
+			trimmed = trimmed.substring(0, i);
+		if (trimmed.equals(IGNORE_TEST))
+			return;
 		
 		// We always operate with UNIX line end '\n':
 		String reference = FileUtils.lineEndToUnix(reftext.getContent());
