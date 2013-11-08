@@ -357,6 +357,11 @@ public class RtData
 		return this.fields.length;
 	}
 	
+	public Object[][] getFields()
+	{
+		return fields;
+	}
+	
 	/**
 	 * Returns the glue field that can be found between two child nodes or in
 	 * front of the first or after the last child node.
