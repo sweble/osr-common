@@ -92,7 +92,7 @@ public abstract class VisitorBase<T>
 	 * @return The result of the visitation. If the visit() method for the given
 	 *         node doesn't return a value, <code>null</code> is returned.
 	 */
-	public final Object go(T node)
+	public Object go(T node)
 	{
 		if (!before(node))
 			return null;
