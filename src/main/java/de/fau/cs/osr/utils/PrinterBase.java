@@ -415,6 +415,9 @@ public class PrinterBase
 		needNewlines = Math.max(min, Math.min(max, needNewlines));
 	}
 	
+	/**
+	 * Are we at the "Beginning Of a Line".
+	 */
 	public boolean atBol()
 	{
 		return needNewlines > eatNewlines || hadNewlines > 0;
