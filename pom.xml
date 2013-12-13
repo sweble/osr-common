@@ -570,14 +570,14 @@
 
   <organization>
     <name>University of Erlangen-Nürnberg - Open Source Research Group</name>
-    <url>http://osr.informatik.uni-erlangen.de</url>
+    <url>http://osr.cs.fau.de</url>
   </organization>
 
   <developers>
     <developer>
       <id>driehle</id>
       <name>Dirk Riehle</name>
-      <email>dirk.riehle@informatik.uni-erlangen.de</email>
+      <email>dirk.riehle@fau.de</email>
       <roles>
         <role>Director</role>
       </roles>
@@ -587,7 +587,7 @@
     <developer>
       <id>hdohrn</id>
       <name>Hannes Dohrn</name>
-      <email>hannes.dohrn@informatik.uni-erlangen.de</email>
+      <email>hannes.dohrn@fau.de</email>
       <roles>
         <role>Developer</role>
       </roles>
@@ -664,7 +664,7 @@
     <snapshotRepository>
       <id>osr-public-snapshots-deployment</id>
       <name>OSR Public Snapshots Deployment</name>
-      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public-snapshots</url>
+      <url>http://mojo.cs.fau.de/nexus/content/repositories/public-snapshots</url>
     </snapshotRepository>
     <site>
       <id>sweble.org</id>
@@ -684,7 +684,7 @@
       </snapshots>
       <id>osr-public-snapshots-repo</id>
       <name>OSR Public Snapshots Repository</name>
-      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
+      <url>http://mojo.cs.fau.de/nexus/content/repositories/public</url>
     </repository>
   </repositories>
 
@@ -700,7 +700,7 @@
       </snapshots>
       <id>osr-public-plugin-snapshots-repo</id>
       <name>OSR Public Plugin Snapshots Repository</name>
-      <url>http://mojo.informatik.uni-erlangen.de/nexus/content/repositories/public</url>
+      <url>http://mojo.cs.fau.de/nexus/content/repositories/public</url>
     </pluginRepository>
   </pluginRepositories>
 
