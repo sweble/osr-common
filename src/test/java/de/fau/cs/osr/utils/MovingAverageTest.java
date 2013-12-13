@@ -14,7 +14,7 @@ public class MovingAverageTest
 		long ms2ns = 1000 * 1000;
 		MovingAverage ma = new MovingAverage(2 * 1000, 500);
 		assertEquals(0., ma.getAverage(), 0.01);
-		ma.update(00 * ms2ns, 10);
+		ma.update(0 * ms2ns, 10);
 		assertEquals(10., ma.getAverage(), 0.01);
 		
 		ma.update(200 * ms2ns, 20);
@@ -24,6 +24,6 @@ public class MovingAverageTest
 		assertEquals(30., ma.getAverage(), 0.01);
 		
 		ma.update(2600 * ms2ns, 5);
-		assertEquals(10., ma.getAverage(), 0.01);
+		assertEquals(25., ma.getAverage(), 0.01);
 	}
 }
