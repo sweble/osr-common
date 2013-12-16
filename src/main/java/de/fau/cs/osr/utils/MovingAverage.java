@@ -16,7 +16,6 @@
  */
 package de.fau.cs.osr.utils;
 
-
 public class MovingAverage
 {
 	private int movingAvgBucketSizeMs;
@@ -59,10 +58,15 @@ public class MovingAverage
 		update(now, delta(startTimeNs, now));
 	}
 	
-	public void stopTime(long startTimeNs, double factor)
+	/**
+	 * @return Delta in milliseconds times factor.
+	 */
+	public double stopTime(long startTimeNs, double factor)
 	{
 		long now = System.nanoTime();
-		update(now, (long) (delta(startTimeNs, now) * factor));
+		double delta = delta(startTimeNs, now) * factor;
+		update(now, (long) delta);
+		return delta / (1000. * 1000.);
 	}
 	
 	public double getAverageInSec()
