@@ -814,8 +814,8 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <executions>
               <execution>
-                <id>javadoc-jar</id>
-                <phase>package</phase>
+                <id>attach-javadoc-jar</id>
+                <phase>deploy</phase>
                 <goals>
                   <goal>jar</goal>
                 </goals>
@@ -834,13 +834,30 @@
             <artifactId>maven-source-plugin</artifactId>
             <executions>
               <execution>
-                <id>sources-jar</id>
-                <phase>package</phase>
+                <id>attach-sources-jar</id>
+                <phase>deploy</phase>
                 <goals>
                   <goal>jar-no-fork</goal>
                 </goals>
               </execution>
             </executions>
+          </plugin>
+
+          <!--
+            Maven Deploy Plugin.
+            We have to explicitly define it here to force the right execution order of plugins
+          -->
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId> 
+            <executions> 
+              <execution> 
+                <id>deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals> 
+              </execution> 
+            </executions> 
           </plugin>
 
         </plugins>
