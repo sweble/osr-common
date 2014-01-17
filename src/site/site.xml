@@ -34,8 +34,8 @@
     <breadcrumbs>
       <item name="Sweble" href="http://sweble.org" />
       <item name="Documentation" href="http://sweble.org/doc" img="" />
-      <item name="Tooling" href="http://sweble.org/sites/swc-devel/latest/tooling" img="" />
-      <item name="Parser Toolkit" href="http://sweble.org/sites/swc-devel/latest/tooling/parser-toolkit" img="" />
+      <item name="Tooling" href="http://sweble.org/sites/swc-devel/develop-latest/tooling" img="" />
+      <item name="Parser Toolkit" href="http://sweble.org/sites/swc-devel/develop-latest/tooling/parser-toolkit" img="" />
     </breadcrumbs>
 
     <menu ref="parent"/>
