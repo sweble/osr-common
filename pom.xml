@@ -158,12 +158,9 @@
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
           <header>${parser-toolkit.etc}/license-header.txt</header>
-          <headerDefinitions>
-            <headerDefinition>${parser-toolkit.etc}/license-header-apt-style.xml</headerDefinition>
-          </headerDefinitions>
           <mapping>
              <rats>JAVADOC_STYLE</rats>
-             <apt>PTK_APT_STYLE</apt>
+             <apt>DOUBLETILDE_STYLE</apt>
           </mapping>
           <strictCheck>true</strictCheck>
           <failIfMissing>true</failIfMissing>
