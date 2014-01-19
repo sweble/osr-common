@@ -28,7 +28,7 @@
   <packaging>pom</packaging>
 
   <name>Tooling</name>
-  <url>http://sweble.org/sites/swc-devel/latest/tooling</url>
+  <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling</url>
   <inceptionYear>2011</inceptionYear>
   <description>
     This is a pure POM project that serves as basis for projects developed at
@@ -669,7 +669,7 @@
     </snapshotRepository>
     <site>
       <id>sweble.org</id>
-      <url>http://sweble.org/sites/swc-devel/latest/tooling</url>
+      <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling</url>
     </site>
   </distributionManagement>
 
