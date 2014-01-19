@@ -37,7 +37,7 @@
   <packaging>jar</packaging>
 
   <name>Utils</name>
-  <url>http://sweble.org/sites/swc-devel/latest/tooling/utils</url>
+  <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling/utils</url>
   <inceptionYear>2009</inceptionYear>
   <description>
     A couple of utility classes in one comprehensive package.
