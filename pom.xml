@@ -48,6 +48,7 @@
 
     <!-- Configuration of plugins to be modified by child POMs -->
     <maven-site-plugin.skip>false</maven-site-plugin.skip>
+    <maven-eclipse-plugin.wtp.version>none</maven-eclipse-plugin.wtp.version>
 
     <!-- Dependencies -->
     <version.dep.aspectjrt>1.6.7</version.dep.aspectjrt>
@@ -397,6 +398,7 @@
           <artifactId>maven-eclipse-plugin</artifactId>
           <version>${version.plugin.eclipse}</version>
           <configuration>
+            <wtpversion>${maven-eclipse-plugin.wtp.version}</wtpversion>
             <downloadSources>true</downloadSources>
             <downloadJavadocs>true</downloadJavadocs>
           </configuration>
