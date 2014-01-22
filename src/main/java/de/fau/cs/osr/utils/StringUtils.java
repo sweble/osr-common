@@ -58,8 +58,6 @@ public final class StringUtils
 					sb.append("&lt;");
 					break;
 				case '>':
-					if (!forAttribute)
-						break;
 					sb.append(forAttribute ? "&gt;" : ">");
 					break;
 				case '&':
@@ -70,8 +68,6 @@ public final class StringUtils
 					sb.append("&#39;");
 					break;
 				case '"':
-					if (!forAttribute)
-						break;
 					sb.append(forAttribute ? "&quot;" : "\"");
 					break;
 				default:
