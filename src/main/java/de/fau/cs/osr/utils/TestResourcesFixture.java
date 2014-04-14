@@ -45,17 +45,24 @@ public class TestResourcesFixture
 	 */
 	public TestResourcesFixture(File baseDirectory) throws FileNotFoundException
 	{
-		if (!baseDirectory.exists())
-			throw new FileNotFoundException(String.format(
-					"Given base directory `%s' does not exist",
-					baseDirectory));
-		
-		if (!baseDirectory.isDirectory())
-			throw new FileNotFoundException(String.format(
-					"Given base directory `%s' is not a directory",
-					baseDirectory));
-		
-		this.baseDirectory = baseDirectory;
+		if (baseDirectory != null)
+		{
+			if (!baseDirectory.exists())
+				throw new FileNotFoundException(String.format(
+						"Given base directory `%s' does not exist",
+						baseDirectory));
+			
+			if (!baseDirectory.isDirectory())
+				throw new FileNotFoundException(String.format(
+						"Given base directory `%s' is not a directory",
+						baseDirectory));
+			
+			this.baseDirectory = baseDirectory;
+		}
+		else
+		{
+			this.baseDirectory = null;
+		}
 	}
 	
 	/**
@@ -368,8 +375,9 @@ public class TestResourcesFixture
 	public static File resourceNameToFile(Class<?> clazz, String testFile)
 	{
 		URL wmUrl = clazz.getResource(testFile);
-		String path = StringUtils.decodeUsingDefaultCharset(wmUrl.getFile());
-		return new File(path);
+		if (wmUrl != null)
+			return new File(StringUtils.decodeUsingDefaultCharset(wmUrl.getFile()));
+		return null;
 	}
 	
 	/**
