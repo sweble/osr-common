@@ -721,6 +721,7 @@
     <profile>
       <id>quick</id>
 
+      <!-- Disable tests -->
       <properties>
         <maven.test.skip>true</maven.test.skip>
       </properties>
