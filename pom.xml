@@ -62,7 +62,6 @@
     <version.dep.joda-time>2.3</version.dep.joda-time>
     <version.dep.junit>4.7</version.dep.junit>
     <version.dep.log4j>1.2.14</version.dep.log4j>
-    <version.dep.lombok>1.12.2</version.dep.lombok>
 
     <!-- Maven plugins: http://maven.apache.org/plugins/ -->
 
@@ -188,14 +187,6 @@
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
         <version>${version.dep.log4j}</version>
-      </dependency>
-
-      <!-- Project Lombok -->
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${version.dep.lombok}</version>
-        <scope>provided</scope>
       </dependency>
 
     </dependencies>
