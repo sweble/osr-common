@@ -25,14 +25,14 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - XML Tools -->
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>ptk-xml-tools</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.1</version>
   <packaging>jar</packaging>
 
   <name>PTK - XML Tools</name>
@@ -149,6 +149,7 @@
     <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
+    <tag>parser-toolkit-1.1.1</tag>
   </scm>
 
   <!--

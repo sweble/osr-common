@@ -25,7 +25,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -33,7 +33,7 @@
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>parser-toolkit</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.1</version>
   <packaging>pom</packaging>
 
   <name>Parser Toolkit</name>
@@ -126,7 +126,7 @@
         <groupId>de.fau.cs.osr.utils</groupId>
         <artifactId>utils</artifactId>
         <!-- Version is given directly so the release plugin can see it -->
-        <version>0.3.1-SNAPSHOT</version>
+        <version>0.3.1</version>
       </dependency>
 
       <!-- Parser Toolkit - Common -->
@@ -134,7 +134,7 @@
         <groupId>de.fau.cs.osr.ptk</groupId>
         <artifactId>ptk-common</artifactId>
         <!-- Version is given directly so the release plugin can see it -->
-        <version>1.1.1-SNAPSHOT</version>
+        <version>1.1.1</version>
       </dependency>
 
     </dependencies>
@@ -302,6 +302,7 @@
     <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
+    <tag>parser-toolkit-1.1.1</tag>
   </scm>
 
   <!--
