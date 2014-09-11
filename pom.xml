@@ -33,7 +33,7 @@
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>parser-toolkit</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Parser Toolkit</name>
@@ -134,7 +134,7 @@
         <groupId>de.fau.cs.osr.ptk</groupId>
         <artifactId>ptk-common</artifactId>
         <!-- Version is given directly so the release plugin can see it -->
-        <version>1.1.1</version>
+        <version>1.1.2-SNAPSHOT</version>
       </dependency>
 
     </dependencies>
@@ -302,7 +302,7 @@
     <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
-    <tag>parser-toolkit-1.1.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <!--
