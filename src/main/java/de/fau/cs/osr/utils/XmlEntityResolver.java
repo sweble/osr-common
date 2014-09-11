@@ -17,17 +17,17 @@
 
 package de.fau.cs.osr.utils;
 
-/**
- * @deprecated Use WrappedException instead!
- */
-public class ExceptionWrapper
-		extends
-			WrappedException
+public interface XmlEntityResolver
 {
-	private static final long serialVersionUID = 1L;
-	
-	public ExceptionWrapper(String message, Exception cause)
-	{
-		super(message, cause);
-	}
+	/**
+	 * Resolve an XML entity reference like <code>&amp;amp;</code>. The
+	 * implementation must recursivly fully resolve the given entity.
+	 * 
+	 * @param name
+	 *            The name of the XML entity reference to resolve. For
+	 *            <code>&amp;amp;</code> this would be <code>amp</code>.
+	 * @return A string containing the resolved text of the entity or
+	 *         <code>null</code> if the entity name is unknown.
+	 */
+	String resolveXmlEntity(String name);
 }

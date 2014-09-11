@@ -15,35 +15,29 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils.exceptions;
+package de.fau.cs.osr.utils;
 
-import de.fau.cs.osr.utils.FmtIllegalArgumentException;
-
-/**
- * @deprecated
- */
-public class FormattedIllegalArgumentException
-        extends
-            FmtIllegalArgumentException
+public class MissingTypeInformationException
+		extends
+			RuntimeException
 {
-	private static final long serialVersionUID = -3527691839598455338L;
+	private static final long serialVersionUID = 1L;
 	
-	public FormattedIllegalArgumentException()
+	public MissingTypeInformationException()
 	{
-		super();
 	}
 	
-	public FormattedIllegalArgumentException(String message, Object... arguments)
+	public MissingTypeInformationException(String message, Throwable cause)
 	{
-		super(message, arguments);
+		super(message, cause);
 	}
 	
-	public FormattedIllegalArgumentException(Throwable cause, String message, Object... arguments)
+	public MissingTypeInformationException(String message)
 	{
-		super(cause, message, arguments);
+		super(message);
 	}
 	
-	public FormattedIllegalArgumentException(Throwable cause)
+	public MissingTypeInformationException(Throwable cause)
 	{
 		super(cause);
 	}

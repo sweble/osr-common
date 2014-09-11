@@ -273,7 +273,7 @@ public final class Options
 	/**
 	 * Print a help message after specifying all possible property keys.
 	 * 
-	 * @param sink
+	 * @param out
 	 *            Where to print the help message to.
 	 */
 	public void propertiesHelp(PrintStream out)
@@ -284,7 +284,7 @@ public final class Options
 	/**
 	 * Print a help message after specifying all possible fixed options.
 	 * 
-	 * @param sink
+	 * @param out
 	 *            Where to print the help message to.
 	 */
 	public void fixedOptionsHelp(PrintStream out)

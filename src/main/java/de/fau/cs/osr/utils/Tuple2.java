@@ -17,7 +17,13 @@
 
 package de.fau.cs.osr.utils;
 
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
 public final class Tuple2<T1, T2>
+		implements
+			Cloneable,
+			Serializable
 {
 	public T1 _1;
 	

@@ -25,7 +25,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>1.1.1</version>
+    <version>2.0.0</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -33,11 +33,11 @@
 
   <groupId>de.fau.cs.osr.utils</groupId>
   <artifactId>utils</artifactId>
-  <version>0.3.1</version>
+  <!-- Same version as parent -->
   <packaging>jar</packaging>
 
   <name>Utils</name>
-  <url>http://sweble.org/sites/swc-devel/develop-latest/tooling/utils</url>
+  <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling/utils</url>
   <inceptionYear>2009</inceptionYear>
   <description>
     A couple of utility classes in one comprehensive package.
@@ -64,6 +64,14 @@
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
     </dependency>
 
     <!-- JOpt Simple -->
@@ -112,9 +120,6 @@
           <failIfMissing>true</failIfMissing>
           <excludes>
             <exclude>**/.gitignore</exclude>
-            <exclude>**/src/site/site.xml</exclude>
-            <exclude>**/src/site/changes.xml</exclude>
-            <exclude>**/src/site/resources/css/site.css</exclude>
             <exclude>**/LICENSE</exclude>
             <exclude>**/NOTICE</exclude>
           </excludes>
@@ -206,7 +211,7 @@
     <connection>scm:git://sweble.org/git/utils.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/utils.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=utils.git;a=summary</url>
-    <tag>utils-0.3.1</tag>
+    <tag>utils-2.0.0</tag>
   </scm>
 
   <!--

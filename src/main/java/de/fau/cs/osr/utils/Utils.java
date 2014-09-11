@@ -28,22 +28,62 @@ public final class Utils
 		catch (InstantiationException e)
 		{
 			throw new FmtRuntimeException(
-			        e,
-			        "The given class `%s' is either a class which cannot be " +
-			                "instantiated this way (abstract class, " +
-			                "interface, array class, primitive type, void), " +
-			                "or the class has no nullary constructor. The " +
-			                "instantiation could also have failed for " +
-			                "another reason.",
-			        clazz.getName());
+					e,
+					"The given class `%s' is either a class which cannot be " +
+							"instantiated this way (abstract class, " +
+							"interface, array class, primitive type, void), " +
+							"or the class has no nullary constructor. The " +
+							"instantiation could also have failed for " +
+							"another reason.",
+					clazz.getName());
 		}
 		catch (IllegalAccessException e)
 		{
 			throw new FmtRuntimeException(
-			        e,
-			        "The specified class `%s' is not accessible or its " +
-			                "nullary constructor is not accessible.",
-			        clazz.getName());
+					e,
+					"The specified class `%s' is not accessible or its " +
+							"nullary constructor is not accessible.",
+					clazz.getName());
+		}
+	}
+	
+	// =========================================================================
+	
+	public static <T> boolean isOneOf(T[] textAlignExpected, T value)
+	{
+		for (T v : textAlignExpected)
+		{
+			if (value.equals(v))
+				return true;
+		}
+		return false;
+	}
+	
+	public static <T extends Enum<T>> T fromString(Class<T> clazz, String name)
+	{
+		try
+		{
+			return Enum.valueOf(clazz, name);
+		}
+		catch (IllegalArgumentException e)
+		{
+			return null;
+		}
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static boolean hasConstant(
+			Class<? extends Enum<?>> enumClazz,
+			String name)
+	{
+		try
+		{
+			Enum.valueOf((Class) enumClazz, name);
+			return true;
+		}
+		catch (IllegalArgumentException e)
+		{
+			return false;
 		}
 	}
 }

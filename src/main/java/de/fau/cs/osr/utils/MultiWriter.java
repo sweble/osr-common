@@ -14,27 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package de.fau.cs.osr.utils;
 
 import java.io.IOException;
+import java.io.Writer;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-public class TestBuildInfo
+public class MultiWriter
+		extends
+			Writer
 {
-	// FIXME: This test is useless in this form!
-	@Test
-	@Ignore
-	public void test() throws IOException
+	
+	private final Writer[] writers;
+	
+	public MultiWriter(Writer... writers)
 	{
-		ClassLoader cl;
-		
-		cl = getClass().getClassLoader();
-		
-		System.out.println(BuildInfo.build(
-				"de.fau.cs.osr.utils",
-				"utils",
-				cl));
+		this.writers = writers;
 	}
+	
+	@Override
+	public void write(char[] cbuf, int off, int len) throws IOException
+	{
+		for (Writer w : writers)
+			w.write(cbuf, off, len);
+	}
+	
+	@Override
+	public void flush() throws IOException
+	{
+		for (Writer w : writers)
+			w.flush();
+	}
+	
+	@Override
+	public void close() throws IOException
+	{
+		for (Writer w : writers)
+			w.close();
+	}
+	
 }
