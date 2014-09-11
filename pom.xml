@@ -839,7 +839,7 @@
             <executions>
               <execution>
                 <id>attach-javadoc-jar</id>
-                <phase>deploy</phase>
+                <phase>package</phase>
                 <goals>
                   <goal>jar</goal>
                 </goals>
@@ -859,7 +859,7 @@
             <executions>
               <execution>
                 <id>attach-sources-jar</id>
-                <phase>deploy</phase>
+                <phase>package</phase>
                 <goals>
                   <goal>jar-no-fork</goal>
                 </goals>
@@ -905,7 +905,7 @@
             <executions>
               <execution>
                 <id>sign-artifacts</id>
-                <phase>verify</phase>
+                <phase>package</phase>
                 <goals>
                   <goal>sign</goal>
                 </goals>
