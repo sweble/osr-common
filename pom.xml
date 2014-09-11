@@ -25,7 +25,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>2.0.0-alpha-4-SNAPSHOT</version>
+    <version>2.0.0</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -99,7 +99,7 @@
       <dependency>
         <groupId>de.fau.cs.osr.utils</groupId>
         <artifactId>utils</artifactId>
-        <version>${project.version}</version>
+        <version>2.0.0</version>
       </dependency>
 
       <!-- Parser Toolkit - Common -->
@@ -244,6 +244,7 @@
     <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
+    <tag>parser-toolkit-2.0.0</tag>
   </scm>
 
   <!--
