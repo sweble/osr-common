@@ -33,7 +33,7 @@
 
   <groupId>de.fau.cs.osr.utils</groupId>
   <artifactId>utils</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Utils</name>
@@ -206,7 +206,7 @@
     <connection>scm:git://sweble.org/git/utils.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/utils.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=utils.git;a=summary</url>
-    <tag>utils-0.3.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <!--
