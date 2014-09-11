@@ -22,12 +22,12 @@ import java.io.PrintStream;
 public class ConsoleProgressBar
 {
 	/** 0% */
-	private int from;
+	private long from;
 	
 	/** 100% */
-	private int to;
+	private long to;
 	
-	private int cur;
+	private long cur;
 	
 	private float progress;
 	
@@ -47,7 +47,7 @@ public class ConsoleProgressBar
 	
 	// =========================================================================
 	
-	public ConsoleProgressBar(int from, int to, int barLength)
+	public ConsoleProgressBar(long from, long to, int barLength)
 	{
 		this.lineLength = -1;
 		
@@ -71,7 +71,7 @@ public class ConsoleProgressBar
 		update();
 	}
 	
-	public void setBounds(int from, int to, int cur)
+	public void setBounds(long from, long to, long cur)
 	{
 		checkBounds(from, to);
 		this.from = from;
@@ -80,42 +80,42 @@ public class ConsoleProgressBar
 		update();
 	}
 	
-	public int getFrom()
+	public long getFrom()
 	{
 		return from;
 	}
 	
-	public void setFrom(int from)
+	public void setFrom(long from)
 	{
 		checkBounds(from, this.to);
 		this.from = from;
 		update();
 	}
 	
-	public int getTo()
+	public long getTo()
 	{
 		return to;
 	}
 	
-	public void setTo(int to)
+	public void setTo(long to)
 	{
 		checkBounds(this.from, to);
 		this.to = to;
 		update();
 	}
 	
-	public int getCur()
+	public long getCur()
 	{
 		return cur;
 	}
 	
-	public void setCur(int cur)
+	public void setCur(long cur)
 	{
 		this.cur = cur;
 		update();
 	}
 	
-	protected void checkBounds(int from, int to)
+	protected void checkBounds(long from, long to)
 	{
 		if (to <= from)
 			throw new FmtIllegalArgumentException("Illegal bounds!");
@@ -183,12 +183,12 @@ public class ConsoleProgressBar
 		advance(1);
 	}
 	
-	public void advance(int step)
+	public void advance(long step)
 	{
 		goTo(this.cur + step);
 	}
 	
-	public void goTo(int cur)
+	public void goTo(long cur)
 	{
 		setCur(cur);
 		internalRedraw();
@@ -233,14 +233,14 @@ public class ConsoleProgressBar
 		}
 		
 		int indPos =
-		        (this.numRedraw / this.indicatorStep) % this.indicator.length;
+				(this.numRedraw / this.indicatorStep) % this.indicator.length;
 		
 		bar = String.format(
-		        "|%s%s|%s " + this.percentageFormatString,
-		        done,
-		        space,
-		        this.indicator[indPos],
-		        this.progress * 100.f);
+				"|%s%s|%s " + this.percentageFormatString,
+				done,
+				space,
+				this.indicator[indPos],
+				this.progress * 100.f);
 		
 		int len = bar.length();
 		if (len < this.lineLength)

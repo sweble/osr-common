@@ -18,9 +18,62 @@
 package de.fau.cs.osr.utils;
 
 import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ReflectionUtils
 {
+	private static final Map<Class<?>, Class<?>> lcToUcTypeMap = new HashMap<Class<?>, Class<?>>();
+	
+	private static final Map<Class<?>, Class<?>> ucToLcTypeMap = new HashMap<Class<?>, Class<?>>();
+	
+	private static final Map<Class<?>, String> typeToAbbrev = new HashMap<Class<?>, String>();
+	
+	private static final Map<String, Class<?>> abbrevToType = new HashMap<String, Class<?>>();
+	
+	// =========================================================================
+	
+	static
+	{
+		lcToUcTypeMap.put(byte.class, Byte.class);
+		lcToUcTypeMap.put(short.class, Short.class);
+		lcToUcTypeMap.put(int.class, Integer.class);
+		lcToUcTypeMap.put(long.class, Long.class);
+		lcToUcTypeMap.put(float.class, Float.class);
+		lcToUcTypeMap.put(double.class, Double.class);
+		lcToUcTypeMap.put(boolean.class, Boolean.class);
+		lcToUcTypeMap.put(char.class, Character.class);
+		
+		for (Entry<Class<?>, Class<?>> e : lcToUcTypeMap.entrySet())
+			ucToLcTypeMap.put(e.getValue(), e.getKey());
+		
+		typeToAbbrev.put(byte.class, "byte");
+		typeToAbbrev.put(short.class, "short");
+		typeToAbbrev.put(int.class, "int");
+		typeToAbbrev.put(long.class, "long");
+		typeToAbbrev.put(float.class, "float");
+		typeToAbbrev.put(double.class, "double");
+		typeToAbbrev.put(boolean.class, "boolean");
+		typeToAbbrev.put(char.class, "char");
+		
+		typeToAbbrev.put(Byte.class, "Byte");
+		typeToAbbrev.put(Short.class, "Short");
+		typeToAbbrev.put(Integer.class, "Integer");
+		typeToAbbrev.put(Long.class, "Long");
+		typeToAbbrev.put(Float.class, "Float");
+		typeToAbbrev.put(Double.class, "Double");
+		typeToAbbrev.put(Boolean.class, "Boolean");
+		typeToAbbrev.put(Character.class, "Character");
+		
+		typeToAbbrev.put(String.class, "String");
+		
+		for (Entry<Class<?>, String> e : typeToAbbrev.entrySet())
+			abbrevToType.put(e.getValue(), e.getKey());
+	}
+	
+	// =========================================================================
+	
 	/**
 	 * Class.forName() cannot instantiate Class objects for primitive data types
 	 * like `int'. This method considers these cases too.
@@ -33,39 +86,39 @@ public class ReflectionUtils
 	 */
 	public static Class<?> classForName(String className) throws ClassNotFoundException
 	{
-		if (className == "byte")
+		if (className.equals("byte"))
 		{
 			return byte.class;
 		}
-		else if (className == "short")
+		else if (className.equals("short"))
 		{
 			return short.class;
 		}
-		else if (className == "int")
+		else if (className.equals("int"))
 		{
 			return int.class;
 		}
-		else if (className == "long")
+		else if (className.equals("long"))
 		{
 			return long.class;
 		}
-		else if (className == "float")
+		else if (className.equals("float"))
 		{
 			return float.class;
 		}
-		else if (className == "double")
+		else if (className.equals("double"))
 		{
 			return double.class;
 		}
-		else if (className == "boolean")
+		else if (className.equals("boolean"))
 		{
 			return boolean.class;
 		}
-		else if (className == "char")
+		else if (className.equals("char"))
 		{
 			return char.class;
 		}
-		else if (className == "void")
+		else if (className.equals("void"))
 		{
 			return void.class;
 		}
@@ -87,15 +140,52 @@ public class ReflectionUtils
 	 */
 	public static boolean isExtPrimitive(Class<?> clazz)
 	{
-		return (clazz == Byte.class
-				|| clazz == Short.class
-				|| clazz == Integer.class
-				|| clazz == Long.class
-				|| clazz == Float.class
-				|| clazz == Double.class
-				|| clazz == Boolean.class
-				|| clazz == Character.class
-				|| clazz == Void.class);
+		return ucToLcTypeMap.containsKey(clazz);
+	}
+	
+	/**
+	 * Tells whether a data type is a primitive an "ext" primitive (see
+	 * isExtPrimitive) or a String.
+	 * 
+	 * @param clazz
+	 *            The class of the type to query.
+	 * @return True if it's a primitive an "ext" primitive or a String, false
+	 *         otherwise.
+	 */
+	public static boolean isBasicDataType(Class<?> clazz)
+	{
+		return (clazz.isPrimitive()
+				|| isExtPrimitive(clazz)
+				|| clazz == String.class);
+	}
+	
+	public static boolean isBasicDataType(String name)
+	{
+		return abbrevToType.containsKey(name);
+	}
+	
+	public static Class<?> mapPrimitiveToUcType(Class<?> clazz)
+	{
+		Class<?> ucType = lcToUcTypeMap.get(clazz);
+		if (ucType == null)
+			throw new IllegalArgumentException("Not a primitive data type!");
+		return ucType;
+	}
+	
+	public static String abbreviateBasicDataTypeName(Class<?> clazz)
+	{
+		String abbrev = typeToAbbrev.get(clazz);
+		if (abbrev == null)
+			throw new IllegalArgumentException("Not a basic data type!");
+		return abbrev;
+	}
+	
+	public static Class<?> getTypeFromAbbreviation(String abbrev)
+	{
+		Class<?> type = abbrevToType.get(abbrev);
+		if (type == null)
+			throw new IllegalArgumentException("Not the abbreviation of a basic data type!");
+		return type;
 	}
 	
 	/**
@@ -141,6 +231,8 @@ public class ReflectionUtils
 		}
 		return new ArrayInfo(cClass, dim);
 	}
+	
+	// =========================================================================
 	
 	public static final class ArrayInfo
 	{

@@ -16,25 +16,14 @@
  */
 package de.fau.cs.osr.utils;
 
-import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-public class TestBuildInfo
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface TestNameAnnotation
 {
-	// FIXME: This test is useless in this form!
-	@Test
-	@Ignore
-	public void test() throws IOException
-	{
-		ClassLoader cl;
-		
-		cl = getClass().getClassLoader();
-		
-		System.out.println(BuildInfo.build(
-				"de.fau.cs.osr.utils",
-				"utils",
-				cl));
-	}
+	String annotation();
 }

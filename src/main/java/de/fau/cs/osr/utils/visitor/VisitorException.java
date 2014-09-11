@@ -15,26 +15,28 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils.exceptions;
-
-import de.fau.cs.osr.utils.FmtFileNotFoundException;
+package de.fau.cs.osr.utils.visitor;
 
 /**
- * @deprecated
+ * Thrown when an exception occurs during visitation but not inside a visit()
+ * method.
  */
-public class FormattedFileNotFoundException
+public class VisitorException
         extends
-            FmtFileNotFoundException
+            RuntimeException
 {
-	private static final long serialVersionUID = -838535884389837008L;
+	private static final long serialVersionUID = 1L;
 	
-	public FormattedFileNotFoundException()
+	private final Object node;
+	
+	public VisitorException(Object node, Throwable cause)
 	{
-		super();
+		super(cause);
+		this.node = node;
 	}
 	
-	public FormattedFileNotFoundException(String message, Object... arguments)
+	public Object getNode()
 	{
-		super(message, arguments);
+		return node;
 	}
 }

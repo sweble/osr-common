@@ -16,25 +16,30 @@
  */
 package de.fau.cs.osr.utils;
 
-import java.io.IOException;
+import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-public class TestBuildInfo
+import de.fau.cs.osr.utils.MovingAverage;
+
+public class MovingAverageTest
 {
-	// FIXME: This test is useless in this form!
 	@Test
-	@Ignore
-	public void test() throws IOException
+	public void testName() throws Exception
 	{
-		ClassLoader cl;
+		long ms2ns = 1000 * 1000;
+		MovingAverage ma = new MovingAverage(2 * 1000, 500);
+		assertEquals(0., ma.getAverage(), 0.01);
+		ma.update(0 * ms2ns, 10);
+		assertEquals(10., ma.getAverage(), 0.01);
 		
-		cl = getClass().getClassLoader();
+		ma.update(200 * ms2ns, 20);
+		assertEquals(15., ma.getAverage(), 0.01);
 		
-		System.out.println(BuildInfo.build(
-				"de.fau.cs.osr.utils",
-				"utils",
-				cl));
+		ma.update(750 * ms2ns, 45);
+		assertEquals(30., ma.getAverage(), 0.01);
+		
+		ma.update(2600 * ms2ns, 5);
+		assertEquals(25., ma.getAverage(), 0.01);
 	}
 }

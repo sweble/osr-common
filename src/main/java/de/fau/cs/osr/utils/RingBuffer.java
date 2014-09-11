@@ -21,34 +21,45 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class RingBuffer<T>
-        implements
-            Iterable<T>
+		implements
+			Iterable<T>
 {
-	private final Object[] buffer;
+	private final T[] buffer;
 	
 	private int fill = 0;
 	
 	private int start = 0;
 	
+	@SuppressWarnings("unchecked")
 	public RingBuffer(int capacity)
 	{
-		this.buffer = new Object[capacity];
+		this.buffer = (T[]) new Object[capacity];
 	}
 	
 	public void add(T x)
 	{
-		if (fill == buffer.length)
+		buffer[(start + fill) % buffer.length] = x;
+		if (willOverwrite())
 		{
-			start = (start + 1) % buffer.length;
-			
-			buffer[(start + fill) % buffer.length] = x;
+			++start;
+			start %= buffer.length;
 		}
 		else
 		{
-			buffer[(start + fill) % buffer.length] = x;
-			
 			++fill;
 		}
+	}
+	
+	public boolean willOverwrite()
+	{
+		return fill == buffer.length;
+	}
+	
+	public T getOldest()
+	{
+		if (fill == 0)
+			throw new UnsupportedOperationException();
+		return buffer[start];
 	}
 	
 	@Override
@@ -64,7 +75,6 @@ public class RingBuffer<T>
 				return i < fill;
 			}
 			
-			@SuppressWarnings("unchecked")
 			@Override
 			public T next()
 			{
@@ -85,5 +95,16 @@ public class RingBuffer<T>
 	public int size()
 	{
 		return fill;
+	}
+	
+	public int getCapacity()
+	{
+		return buffer.length;
+	}
+	
+	public void clear()
+	{
+		start = 0;
+		fill = 0;
 	}
 }

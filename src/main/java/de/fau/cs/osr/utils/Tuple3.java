@@ -17,7 +17,13 @@
 
 package de.fau.cs.osr.utils;
 
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
 public final class Tuple3<T1, T2, T3>
+		implements
+			Cloneable,
+			Serializable
 {
 	public T1 _1;
 	
@@ -54,7 +60,7 @@ public final class Tuple3<T1, T2, T3>
 		if (getClass() != obj.getClass())
 			return false;
 		Tuple3<Object, Object, Object> other =
-		        (Tuple3<Object, Object, Object>) obj;
+				(Tuple3<Object, Object, Object>) obj;
 		if (_1 == null)
 		{
 			if (other._1 != null)

@@ -15,36 +15,15 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils.exceptions;
-
-import de.fau.cs.osr.utils.FmtRuntimeException;
+package de.fau.cs.osr.utils;
 
 /**
- * @deprecated
+ * Interface for a service that bijectively maps types to names and those names
+ * back to types.
  */
-public class FormattedRuntimeException
-        extends
-            FmtRuntimeException
+public interface TypeNameMapper
 {
-	private static final long serialVersionUID = 647896008546620823L;
+	String nameForType(Class<?> n);
 	
-	public FormattedRuntimeException()
-	{
-		super();
-	}
-	
-	public FormattedRuntimeException(String message, Object... arguments)
-	{
-		super(message, arguments);
-	}
-	
-	public FormattedRuntimeException(Throwable cause, String message, Object... arguments)
-	{
-		super(cause, message, arguments);
-	}
-	
-	public FormattedRuntimeException(Throwable cause)
-	{
-		super(cause);
-	}
+	Class<?> typeForName(String name);
 }

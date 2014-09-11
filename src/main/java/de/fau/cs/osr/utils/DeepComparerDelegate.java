@@ -15,36 +15,17 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils.exceptions;
+package de.fau.cs.osr.utils;
 
-import de.fau.cs.osr.utils.FmtInternalLogicError;
-
-/**
- * @deprecated
- */
-public class FormattedInternalLogicError
-        extends
-            FmtInternalLogicError
+public interface DeepComparerDelegate
 {
-	private static final long serialVersionUID = -6495020862608442225L;
-	
-	public FormattedInternalLogicError()
-	{
-		super();
-	}
-	
-	public FormattedInternalLogicError(String message, Object... arguments)
-	{
-		super(message, arguments);
-	}
-	
-	public FormattedInternalLogicError(Throwable cause, String message, Object... arguments)
-	{
-		super(cause, message, arguments);
-	}
-	
-	public FormattedInternalLogicError(Throwable cause)
-	{
-		super(cause);
-	}
+	/**
+	 * @return Returns false if the two objects cannot be compared by this
+	 *         delegate. Returns true if the two objects were compared and
+	 *         turned out to be equal. Otherwise an exception is thrown.
+	 * @throws ComparisonException
+	 *             Thrown if the two objects could be compared by this delegate
+	 *             and turned out to be different.
+	 */
+	public boolean compare(Object a, Object b, DeepComparer comparer) throws ComparisonException;
 }

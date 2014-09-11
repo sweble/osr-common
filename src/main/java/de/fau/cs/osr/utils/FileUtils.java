@@ -17,6 +17,8 @@
 
 package de.fau.cs.osr.utils;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -34,5 +36,32 @@ public final class FileUtils
 		out.close();
 		
 		return resultFile;
+	}
+	
+	/**
+	 * Convert non-UNIX line endings into UNIX line endings '\n'.
+	 */
+	public static String lineEndToUnix(String result)
+	{
+		result = result.replace("\r\n", "\n");
+		result = result.replace("\r", "\n");
+		return result;
+	}
+	
+	/**
+	 * Convert non-UNIX file separators to UNIX file separators '/'.
+	 */
+	public static String fileSeparatorToUnix(String path)
+	{
+		if (File.separatorChar != '/')
+		{
+			assertTrue(
+					"Test code doesn't work properly if path conatins a '/'.",
+					path.indexOf('/') == -1);
+			
+			path = path.replace(File.separatorChar, '/');
+		}
+		
+		return path;
 	}
 }

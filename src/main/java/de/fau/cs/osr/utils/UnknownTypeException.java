@@ -15,26 +15,30 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils.exceptions;
+package de.fau.cs.osr.utils;
 
-import de.fau.cs.osr.utils.FmtNotYetImplementedError;
-
-/**
- * @deprecated
- */
-public class FormattedNotYetImplementedError
-        extends
-            FmtNotYetImplementedError
+public class UnknownTypeException
+		extends
+			RuntimeException
 {
-	private static final long serialVersionUID = -6495020862608442225L;
+	private static final long serialVersionUID = 1L;
 	
-	public FormattedNotYetImplementedError()
+	public UnknownTypeException()
 	{
-		super();
 	}
 	
-	public FormattedNotYetImplementedError(String message, Object... arguments)
+	public UnknownTypeException(String message, Throwable cause)
 	{
-		super(message, arguments);
+		super(message, cause);
+	}
+	
+	public UnknownTypeException(String message)
+	{
+		super(message);
+	}
+	
+	public UnknownTypeException(Throwable cause)
+	{
+		super(cause);
 	}
 }
