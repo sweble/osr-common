@@ -25,7 +25,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -33,7 +33,7 @@
 
   <groupId>de.fau.cs.osr.utils</groupId>
   <artifactId>utils</artifactId>
-  <version>0.3.1-SNAPSHOT</version>
+  <version>0.3.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Utils</name>
@@ -206,6 +206,7 @@
     <connection>scm:git://sweble.org/git/utils.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/utils.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=utils.git;a=summary</url>
+    <tag>HEAD</tag>
   </scm>
 
   <!--
