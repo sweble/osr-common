@@ -26,8 +26,8 @@ import org.apache.commons.jxpath.ri.model.NodePointerFactory;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
 public class AstNodePointerFactory
-        implements
-            NodePointerFactory
+		implements
+			NodePointerFactory
 {
 	// We have to beat Collection (order == 10)
 	public static final int AST_NODE_POINTER_FACTORY_ORDER = 9;
@@ -40,19 +40,19 @@ public class AstNodePointerFactory
 	
 	@Override
 	public NodePointer createNodePointer(
-	        QName name,
-	        Object bean,
-	        Locale locale)
+			QName name,
+			Object bean,
+			Locale locale)
 	{
-		return bean instanceof AstNode ? new AstNodePointer((AstNode) bean) : null;
+		return bean instanceof AstNode ? new AstNodePointer((AstNode<?>) bean) : null;
 	}
 	
 	@Override
 	public NodePointer createNodePointer(
-	        NodePointer parent,
-	        QName name,
-	        Object bean)
+			NodePointer parent,
+			QName name,
+			Object bean)
 	{
-		return bean instanceof AstNode ? new AstNodePointer(parent, (AstNode) bean) : null;
+		return bean instanceof AstNode ? new AstNodePointer(parent, (AstNode<?>) bean) : null;
 	}
 }

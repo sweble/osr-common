@@ -25,18 +25,18 @@
   <parent>
     <groupId>de.fau.cs.osr.ptk</groupId>
     <artifactId>parser-toolkit</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>2.0.0-alpha-4-SNAPSHOT</version>
   </parent>
 
   <!-- This POM: Parser Toolkit - Common -->
 
-  <groupId>de.fau.cs.osr.ptk</groupId>
+  <!-- Same groupId as parent -->
   <artifactId>ptk-common</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <!-- Same version as parent -->
   <packaging>jar</packaging>
 
   <name>PTK - Common</name>
-  <url>http://sweble.org/sites/swc-devel/develop-latest/tooling/parser-toolkit/ptk-common</url>
+  <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling/parser-toolkit/ptk-common</url>
   <inceptionYear>2009</inceptionYear>
   <description>
     The parser toolkit common module provides the basic facilities for AST
@@ -161,7 +161,6 @@
     <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
-    <tag>HEAD</tag>
   </scm>
 
   <!--

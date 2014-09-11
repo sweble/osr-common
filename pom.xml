@@ -25,7 +25,7 @@
   <parent>
     <groupId>de.fau.cs.osr</groupId>
     <artifactId>tooling</artifactId>
-    <version>1.1.1</version>
+    <version>2.0.0-alpha-4-SNAPSHOT</version>
     <relativePath>../tooling/pom.xml</relativePath>
   </parent>
 
@@ -33,11 +33,11 @@
 
   <groupId>de.fau.cs.osr.ptk</groupId>
   <artifactId>parser-toolkit</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <!-- Same version as parent -->
   <packaging>pom</packaging>
 
   <name>Parser Toolkit</name>
-  <url>http://sweble.org/sites/swc-devel/develop-latest/tooling/parser-toolkit</url>
+  <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling/parser-toolkit</url>
   <inceptionYear>2009</inceptionYear>
   <description>
     The parser toolkit provides basic facilities for AST building, traversal, 
@@ -48,8 +48,6 @@
 
   <modules>
     <module>ptk-common</module>
-    <module>ptk-printergen-maven-plugin</module>
-    <module>ptk-nodegen-maven-plugin</module>
     <module>ptk-json-tools</module>
     <module>ptk-xml-tools</module>
   </modules>
@@ -62,16 +60,12 @@
     <parser-toolkit.etc>${parser-toolkit.basedir}/etc</parser-toolkit.etc>
 
     <!-- Dependency versions -->
-    <version.dep.maven-plugin-api>2.0</version.dep.maven-plugin-api>
-    <version.dep.maven-project>2.0.4</version.dep.maven-project>
-    <version.dep.commons-jxpath>1.3</version.dep.commons-jxpath>
     <version.dep.rats>1.15.0</version.dep.rats>
     <version.dep.gson>2.1</version.dep.gson>
-    <version.dep.hamcrest>1.1</version.dep.hamcrest>
+    <version.dep.xstream>1.4.4</version.dep.xstream>
 
     <!-- Plugin dependency versions -->
     <version.plugin.rats>1.3.0.1</version.plugin.rats>
-    <version.plugin.nodegen>1.0.0.1</version.plugin.nodegen>
 
   </properties>
 
@@ -79,25 +73,6 @@
 
   <dependencyManagement>
     <dependencies>
-
-      <!-- Apache Commons -->
-      <dependency>
-        <groupId>commons-jxpath</groupId>
-        <artifactId>commons-jxpath</artifactId>
-        <version>${version.dep.commons-jxpath}</version>
-      </dependency>
-
-      <!-- Maven Plugin API -->
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-plugin-api</artifactId>
-        <version>${version.dep.maven-plugin-api}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-project</artifactId>
-        <version>${version.dep.maven-project}</version>
-      </dependency>
 
       <!-- Rats! -->
       <dependency>
@@ -113,28 +88,25 @@
         <version>${version.dep.gson}</version>
       </dependency>
 
-      <!-- Hamcrest -->
+      <!-- XStream -->
       <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-all</artifactId>
-        <version>${version.dep.hamcrest}</version>
-        <scope>test</scope>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>${version.dep.xstream}</version>
       </dependency>
 
       <!-- Utils -->
       <dependency>
         <groupId>de.fau.cs.osr.utils</groupId>
         <artifactId>utils</artifactId>
-        <!-- Version is given directly so the release plugin can see it -->
-        <version>0.3.1</version>
+        <version>${project.version}</version>
       </dependency>
 
       <!-- Parser Toolkit - Common -->
       <dependency>
         <groupId>de.fau.cs.osr.ptk</groupId>
         <artifactId>ptk-common</artifactId>
-        <!-- Version is given directly so the release plugin can see it -->
-        <version>1.1.2-SNAPSHOT</version>
+        <version>${project.version}</version>
       </dependency>
 
     </dependencies>
@@ -158,17 +130,10 @@
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
           <header>${parser-toolkit.etc}/license-header.txt</header>
-          <mapping>
-             <rats>JAVADOC_STYLE</rats>
-             <apt>DOUBLETILDE_STYLE</apt>
-          </mapping>
           <strictCheck>true</strictCheck>
           <failIfMissing>true</failIfMissing>
           <excludes>
             <exclude>**/.gitignore</exclude>
-            <exclude>src/site/site.xml</exclude>
-            <exclude>src/site/changes.xml</exclude>
-            <exclude>src/site/resources/css/site.css</exclude>
             <exclude>LICENSE</exclude>
             <exclude>NOTICE</exclude>
           </excludes>
@@ -204,30 +169,6 @@
           </executions>
         </plugin>
 
-        <!-- Maven NodeGen Plugin -->
-        <!-- This plugin is part of the Parser Toolkit and would cause a hen or
-          the egg problem  if actually used by submodules of the Parser Toolkit.
-          Therefore, it is only used once and then the generated files are moved
-          to the source folder. The plugin is disabled immediately afterwards.
-          The configuration, however, is kept to ease its use next time.
-         -->
-        <!--
-        <plugin>
-          <groupId>de.fau.cs.osr.ptk</groupId>
-          <artifactId>ptk-nodegen-maven-plugin</artifactId>
-          <version>${version.plugin.nodegen}</version>
-          <executions>
-            <execution>
-              <id>nodegen-generate</id>
-              <phase>generate-sources</phase>
-              <goals>
-                <goal>generate</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        -->
-
       </plugins>
     </pluginManagement>
 
@@ -249,6 +190,7 @@
   <!--
     see parent: <reporting>
   -->
+
   <!-- ==[ More Project Information ]======================================= -->
 
   <licenses>
@@ -302,7 +244,6 @@
     <connection>scm:git://sweble.org/git/parser-toolkit.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/parser-toolkit.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=parser-toolkit.git;a=summary</url>
-    <tag>HEAD</tag>
   </scm>
 
   <!--

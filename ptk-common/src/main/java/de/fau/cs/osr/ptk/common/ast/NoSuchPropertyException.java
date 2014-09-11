@@ -18,8 +18,8 @@
 package de.fau.cs.osr.ptk.common.ast;
 
 public class NoSuchPropertyException
-        extends
-            RuntimeException
+		extends
+			RuntimeException
 {
 	private static final long serialVersionUID = 1L;
 	

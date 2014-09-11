@@ -22,8 +22,8 @@ import de.fau.cs.osr.utils.ArrayStack;
 import de.fau.cs.osr.utils.Utils;
 
 public class ParserState<C extends ParserContext>
-        implements
-            State
+		implements
+			State
 {
 	private final Class<C> contextClass;
 	

@@ -23,42 +23,45 @@ import java.util.List;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
-public abstract class ParserCommon
-        implements
-            ParserInterface
+public abstract class ParserCommon<T extends AstNode<T>>
+		implements
+			ParserInterface<T>
 {
-	private final List<AstVisitor> visitors = new LinkedList<AstVisitor>();
+	private final List<AstVisitor<T>> visitors = new LinkedList<AstVisitor<T>>();
 	
 	// =========================================================================
 	
 	@Override
-	public List<AstVisitor> getVisitors()
+	public List<AstVisitor<T>> getVisitors()
 	{
 		return visitors;
 	}
 	
 	@Override
-	public ParserInterface addVisitor(AstVisitor v)
+	public ParserInterface<T> addVisitor(AstVisitor<T> v)
 	{
 		visitors.add(v);
 		return this;
 	}
 	
 	@Override
-	public ParserInterface addVisitors(Collection<? extends AstVisitor> v)
+	public ParserInterface<T> addVisitors(Collection<? extends AstVisitor<T>> v)
 	{
 		visitors.addAll(v);
 		return this;
 	}
 	
-	protected AstNode process(AstNode n)
+	public abstract Object getConfig();
+	
+	@SuppressWarnings("unchecked")
+	protected T process(T n)
 	{
-		AstNode result = n;
-		for (AstVisitor v : getVisitors())
+		T result = n;
+		for (AstVisitor<T> v : getVisitors())
 		{
 			Object o = v.go(result);
 			if (o instanceof AstNode)
-				result = (AstNode) o;
+				result = (T) o;
 		}
 		return result;
 	}
