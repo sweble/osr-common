@@ -19,54 +19,55 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.Serializable;
 
+import xtc.tree.Location;
 import de.fau.cs.osr.utils.StringUtils;
 
 public final class Span
-        implements
-            Serializable
+		implements
+			Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
 	private final String content;
 	
-	private final Location from;
+	private final AstLocation from;
 	
-	private final Location to;
+	private final AstLocation to;
 	
 	// =========================================================================
 	
 	public Span()
 	{
 		content = null;
-		from = new Location("Unknown file", -1, -1);
+		from = new AstLocation("Unknown file", -1, -1);
 		to = from;
 	}
 	
-	public Span(Location from, Location to, String content)
+	public Span(AstLocation from, AstLocation to, String content)
 	{
 		this.content = content;
 		this.from = from;
 		this.to = to;
 	}
 	
-	public Span(Location from, String content)
+	public Span(AstLocation from, String content)
 	{
 		this.content = content;
 		this.from = from;
 		this.to = from;
 	}
 	
-	public Span(xtc.tree.Location from, xtc.tree.Location to, String content)
+	public Span(Location from, Location to, String content)
 	{
 		this.content = content;
-		this.from = new Location(from);
-		this.to = new Location(to);
+		this.from = new AstLocation(from);
+		this.to = new AstLocation(to);
 	}
 	
-	public Span(xtc.tree.Location from, String content)
+	public Span(Location from, String content)
 	{
 		this.content = content;
-		this.from = new Location(from);
+		this.from = new AstLocation(from);
 		this.to = this.from;
 	}
 	
@@ -77,12 +78,12 @@ public final class Span
 		return content;
 	}
 	
-	public Location getFrom()
+	public AstLocation getFrom()
 	{
 		return from;
 	}
 	
-	public Location getTo()
+	public AstLocation getTo()
 	{
 		return to;
 	}
@@ -152,7 +153,7 @@ public final class Span
 			buf.append(from.getLine());
 			buf.append(':');
 			buf.append(from.getColumn());
-			if (to != null && to != from)
+			if (to != null && !to.equals(from))
 			{
 				buf.append(" - ");
 				if (from.getLine() != to.getLine())

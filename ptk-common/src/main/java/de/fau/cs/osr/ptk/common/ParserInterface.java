@@ -24,13 +24,13 @@ import java.util.List;
 import xtc.parser.ParseException;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
 
-public interface ParserInterface
+public interface ParserInterface<T extends AstNode<T>>
 {
-	public AstNode parseArticle(String src, String title) throws IOException, ParseException;
+	public Object parseArticle(String src, String title) throws IOException, ParseException;
 	
-	public List<AstVisitor> getVisitors();
+	public List<AstVisitor<T>> getVisitors();
 	
-	public ParserInterface addVisitor(AstVisitor v);
+	public ParserInterface<T> addVisitor(AstVisitor<T> v);
 	
-	public ParserInterface addVisitors(Collection<? extends AstVisitor> v);
+	public ParserInterface<T> addVisitors(Collection<? extends AstVisitor<T>> v);
 }

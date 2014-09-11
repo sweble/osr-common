@@ -29,25 +29,25 @@ import de.fau.cs.osr.ptk.common.ast.AstNode;
 import de.fau.cs.osr.utils.FmtInternalLogicError;
 
 public class AstNodePointer
-        extends
-            NodePointer
+		extends
+			NodePointer
 {
 	private static final long serialVersionUID = 1L;
 	
 	/** The node this pointer points to. */
-	private AstNode node;
+	private AstNode<?> node;
 	
 	// =========================================================================
 	
-	public AstNodePointer(AstNode node)
+	public AstNodePointer(AstNode<?> node)
 	{
 		super(null);
 		this.node = node;
-		//debug("AstNodePointer(AstNode node)");
+		//debug("AstNodePointer(AstNodeInterface<?> node)");
 		
 	}
 	
-	public AstNodePointer(NodePointer parent, AstNode node)
+	public AstNodePointer(NodePointer parent, AstNode<?> node)
 	{
 		// Usually called by an AstNodeIterator. In this case, `parent' would
 		// point to the node that we iterated over and `node' would be the 
@@ -55,7 +55,7 @@ public class AstNodePointer
 		
 		super(parent);
 		this.node = node;
-		//debug("AstNodePointer(NodePointer parent, AstNode node)");
+		//debug("AstNodePointer(NodePointer parent, AstNodeInterface<?> node)");
 	}
 	
 	// =========================================================================
@@ -72,7 +72,10 @@ public class AstNodePointer
 	}
 	
 	@Override
-	public NodeIterator childIterator(NodeTest test, boolean reverse, NodePointer startWith)
+	public NodeIterator childIterator(
+			NodeTest test,
+			boolean reverse,
+			NodePointer startWith)
 	{
 		//debug("childIterator");
 		
@@ -94,7 +97,7 @@ public class AstNodePointer
 		if (!isEmpty)
 		{
 			isEmpty = true;
-			for (AstNode child : node)
+			for (AstNodeInterface<?> child : node)
 				if (child != null)
 				{
 					isEmpty = false;
@@ -105,7 +108,7 @@ public class AstNodePointer
 		
 		return isEmpty;
 		*/
-
+		
 		return node.isEmpty();
 	}
 	
@@ -143,9 +146,9 @@ public class AstNodePointer
 	{
 		// Since we don't handle namespaces, we probably should return 
 		// `null' as namespace prefix in names.
-		return new QName(null, getName2());
+		return new QName(null, getSimpleName());
 		
-		//Class<? extends AstNode> clazz = node.getClass();
+		//Class<? extends AstNodeInterface<?>> clazz = node.getClass();
 		//return new QName(
 		//        clazz.getPackage().getName(),
 		//        clazz.getSimpleName());
@@ -170,7 +173,9 @@ public class AstNodePointer
 	}
 	
 	@Override
-	public int compareChildNodePointers(NodePointer pointer1, NodePointer pointer2)
+	public int compareChildNodePointers(
+			NodePointer pointer1,
+			NodePointer pointer2)
 	{
 		//debug("compareChildNodePointers");
 		
@@ -200,10 +205,10 @@ public class AstNodePointer
 		}
 		else
 		{
-			AstNode node1 = (AstNode) pointer1.getBaseValue();
-			AstNode node2 = (AstNode) pointer2.getBaseValue();
+			AstNode<?> node1 = (AstNode<?>) pointer1.getBaseValue();
+			AstNode<?> node2 = (AstNode<?>) pointer2.getBaseValue();
 			
-			for (AstNode child : node)
+			for (AstNode<?> child : node)
 			{
 				if (child == node1)
 				{
@@ -236,7 +241,7 @@ public class AstNodePointer
 				if (buffer.length() == 0 || buffer.charAt(buffer.length() - 1) != '/')
 					buffer.append('/');
 				
-				buffer.append(getName2());
+				buffer.append(getSimpleName());
 				if (parent != null)
 				{
 					buffer.append('[');
@@ -261,10 +266,10 @@ public class AstNodePointer
 			{
 				NodePointer p = (NodePointer) parent;
 				
-				AstNode thisNode = (AstNode) getImmediateNode();
+				AstNode<?> thisNode = (AstNode<?>) getImmediateNode();
 				
 				int i = 1;
-				for (AstNode n : (AstNode) p.getImmediateNode())
+				for (AstNode<?> n : (AstNode<?>) p.getImmediateNode())
 				{
 					if (n == thisNode)
 						return i;
@@ -279,7 +284,7 @@ public class AstNodePointer
 				AstNodeFieldPointer p = (AstNodeFieldPointer) parent;
 				
 				int i = 1;
-				for (AstNode n : (AstNode) p.getImmediateNode())
+				for (AstNodeInterface<?> n : (AstNodeInterface<?>) p.getImmediateNode())
 				{
 					if (n == node)
 						return i;
@@ -346,7 +351,7 @@ public class AstNodePointer
 				return true;
 			
 			// Perform actual name check
-			String s1 = getName2();
+			String s1 = getSimpleName();
 			String s2 = testName.getName();
 			
 			// s1 cannot be `null'
@@ -370,7 +375,7 @@ public class AstNodePointer
 		else
 		{
 			// Unhandled: ProcessingInstructionTest
-			//   An AstNode can never be a PI.
+			//   An AstNodeInterface<?> can never be a PI.
 			
 			return false;
 		}
@@ -378,7 +383,7 @@ public class AstNodePointer
 	
 	// =========================================================================
 	
-	private String getName2()
+	private String getSimpleName()
 	{
 		return node.getClass().getSimpleName();
 	}

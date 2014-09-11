@@ -17,451 +17,406 @@
 
 package de.fau.cs.osr.ptk.common;
 
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
+import de.fau.cs.osr.ptk.common.ast.AstLeafNode;
 import de.fau.cs.osr.ptk.common.ast.AstNode;
+import de.fau.cs.osr.ptk.common.ast.AstNodeList;
 import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
-import de.fau.cs.osr.ptk.common.ast.ContentNode;
-import de.fau.cs.osr.ptk.common.ast.NodeList;
-import de.fau.cs.osr.ptk.common.ast.StringContentNode;
+import de.fau.cs.osr.ptk.common.ast.AstStringNode;
+import de.fau.cs.osr.ptk.common.ast.AstText;
+import de.fau.cs.osr.utils.PrinterBase;
+import de.fau.cs.osr.utils.PrinterBase.Memoize;
+import de.fau.cs.osr.utils.PrinterBase.OutputBuffer;
 import de.fau.cs.osr.utils.StringUtils;
 
-public class AstPrinter
-        extends
-            AstVisitor
+public class AstPrinter<T extends AstNode<T>>
+		extends
+			AstVisitor<T>
 {
-	protected PrintWriter out;
+	public void visit(AstNode<T> n)
+	{
+		Memoize m = p.memoizeStart(n);
+		if (m != null)
+		{
+			if (n.isEmpty() && !hasVisibleProperties(n))
+			{
+				p.indent(n.getNodeName());
+				p.println("()");
+			}
+			else
+			{
+				printNode(n);
+			}
+			p.memoizeStop(m);
+		}
+	}
 	
-	private String indentStr = new String();
+	public void visit(AstLeafNode<T> n)
+	{
+		if (n.isEmpty() && !hasVisibleProperties(n))
+		{
+			p.indent(n.getNodeName());
+			p.println("()");
+		}
+		else
+		{
+			printNode(n);
+		}
+	}
 	
-	private boolean legacyIndentation;
+	public void visit(AstText<T> n)
+	{
+		if (!hasVisibleProperties(n))
+		{
+			p.indent('"');
+			p.print(StringUtils.escJava(n.getContent()));
+			p.println('"');
+		}
+		else
+		{
+			printNode(n);
+		}
+	}
+	
+	public void visit(AstStringNode<T> n)
+	{
+		if (!hasVisibleProperties(n))
+		{
+			p.indent(n.getNodeName());
+			p.print("(\"");
+			p.print(StringUtils.escJava(n.getContent()));
+			p.println("\")");
+		}
+		else
+		{
+			printNode(n);
+		}
+	}
+	
+	public void visit(AstNodeList<T> n)
+	{
+		Memoize m = p.memoizeStart(n);
+		if (m != null)
+		{
+			String name = "";
+			if (n.getNodeType() != AstNode.NT_NODE_LIST)
+				name = n.getNodeName();
+			
+			if (hasVisibleProperties(n))
+			{
+				printNode(n);
+			}
+			else if (n.isEmpty())
+			{
+				p.indent(name);
+				p.println("[]");
+			}
+			else
+			{
+				boolean singleLine = false;
+				if (isCompact() && n.size() <= 1)
+				{
+					OutputBuffer b = p.outputBufferStart();
+					printListOfNodes(n);
+					b.stop();
+					
+					String output = b.getBuffer().trim();
+					if (isSingleLine(output))
+					{
+						p.indent(name);
+						p.print("[ ");
+						p.print(output);
+						p.println(" ]");
+						singleLine = true;
+					}
+				}
+				
+				if (!singleLine)
+				{
+					p.indent(name);
+					p.println('[');
+					
+					p.incIndent();
+					printListOfNodes(n);
+					p.decIndent();
+					
+					p.indentln(']');
+				}
+			}
+			p.memoizeStop(m);
+		}
+	}
 	
 	// =========================================================================
 	
-	public AstPrinter(Writer writer)
+	protected boolean hasVisibleProperties(AstNode<T> n)
 	{
-		this.out = new PrintWriter(writer);
-		this.legacyIndentation = false;
+		if (n.hasAttributes())
+		{
+			return true;
+		}
+		else
+		{
+			// Shortcuts
+			int count = n.getPropertyCount();
+			if (count > 2)
+				return true;
+			if (count == 0)
+				return false;
+			
+			AstNodePropertyIterator i = n.propertyIterator();
+			while (i.next())
+			{
+				if (i.getName().equals("rtd"))
+				{
+					if (i.getValue() != null)
+						return true;
+				}
+				else if (!i.getName().equals("content") || !(n instanceof AstStringNode))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 	}
 	
-	@Override
-	protected Object after(AstNode node, Object result)
+	protected void printNode(AstNode<T> n)
 	{
-		this.out.close();
-		return super.after(node, result);
+		p.indent(n.getNodeName());
+		p.println('(');
+		
+		p.incIndent();
+		printNodeContent(n);
+		p.decIndent();
+		
+		p.indentln(')');
 	}
 	
-	public void setLegacyIndentation(boolean legacyIndentation)
+	protected void printNodeContent(AstNode<T> n)
 	{
-		this.legacyIndentation = legacyIndentation;
+		if (hasVisibleProperties(n))
+			printProperties(n);
+		
+		printListOfNodes(n);
 	}
 	
-	public boolean isLegacyIndentation()
+	protected void printProperties(AstNode<T> n)
 	{
-		return legacyIndentation;
+		Map<String, Object> props = new TreeMap<String, Object>();
+		
+		for (Entry<String, Object> entry : n.getAttributes().entrySet())
+			props.put("{A} " + entry.getKey(), entry.getValue());
+		
+		AstNodePropertyIterator i = n.propertyIterator();
+		while (i.next())
+		{
+			if (i.getValue() != null || !i.getName().equals("rtd"))
+				props.put("{P} " + i.getName(), i.getValue());
+		}
+		
+		for (Entry<String, Object> entry : props.entrySet())
+		{
+			p.indent(entry.getKey());
+			p.print(" = ");
+			p.eatNewlinesAndIndents(1);
+			printPropertyValue(entry.getValue());
+			p.clearEatNewlinesAndIndents();
+		}
+	}
+	
+	protected void printPropertyValue(Object value)
+	{
+		if (value == null)
+		{
+			p.indentln("null");
+		}
+		else if (value instanceof String)
+		{
+			p.indent('"');
+			p.print(StringUtils.escJava((String) value));
+			p.println('"');
+		}
+		else if (value instanceof AstNode)
+		{
+			p.incIndent();
+			@SuppressWarnings("unchecked")
+			T node = (T) value;
+			dispatch(node);
+			p.decIndent();
+		}
+		else if (value instanceof AstEntityMap)
+		{
+			@SuppressWarnings("unchecked")
+			AstEntityMap<T> map = (AstEntityMap<T>) value;
+			printEntityMap(map);
+		}
+		else if (value instanceof Collection)
+		{
+			printCollection((Collection<?>) value);
+		}
+		else
+		{
+			p.indentln(value.toString());
+		}
+	}
+	
+	protected void printEntityMap(AstEntityMap<T> entityMap)
+	{
+		if (entityMap.getMap().isEmpty())
+		{
+			p.indentln("-");
+		}
+		else
+		{
+			Map<Integer, T> map = new TreeMap<Integer, T>(entityMap.getMap());
+			
+			p.indentln("{");
+			
+			p.incIndent();
+			for (Iterator<Entry<Integer, T>> k = map.entrySet().iterator(); k.hasNext();)
+			{
+				Entry<Integer, T> entry = k.next();
+				p.indent('[');
+				p.print(entry.getKey().toString());
+				p.print("] = ");
+				p.eatNewlinesAndIndents(1);
+				printPropertyValue(entry.getValue());
+				p.clearEatNewlinesAndIndents();
+				p.ignoreNewlines();
+				p.println(k.hasNext() ? "," : "");
+			}
+			p.decIndent();
+			
+			p.indentln('}');
+		}
+	}
+	
+	protected void printCollection(Collection<?> c)
+	{
+		if (c.isEmpty())
+		{
+			p.indentln("C[]");
+		}
+		else
+		{
+			boolean singleLine = false;
+			if (isCompact() && c.size() == 1)
+			{
+				OutputBuffer b = p.outputBufferStart();
+				printPropertyValue(c.toArray()[0]);
+				b.stop();
+				
+				String output = b.getBuffer().trim();
+				if (isSingleLine(output))
+				{
+					p.indent("C[ ");
+					p.print(output);
+					p.println(" ]");
+					singleLine = true;
+				}
+			}
+			
+			if (!singleLine)
+			{
+				p.indentln("C[");
+				
+				p.incIndent();
+				for (Iterator<?> k = c.iterator(); k.hasNext();)
+				{
+					printPropertyValue(k.next());
+					p.ignoreNewlines();
+					p.println(k.hasNext() ? "," : "");
+				}
+				p.decIndent();
+				
+				p.indentln(']');
+			}
+		}
+	}
+	
+	protected void printListOfNodes(AstNode<T> n)
+	{
+		int j = 0;
+		String[] childNames = n.getChildNames();
+		for (Iterator<T> i = n.iterator(); i.hasNext();)
+		{
+			if (!n.isList())
+			{
+				p.indent(childNames[j++]);
+			}
+			else
+			{
+				p.indent('[');
+				p.print(String.valueOf(j++));
+				p.print(']');
+			}
+			p.print(" = ");
+			p.eatNewlinesAndIndents(1);
+			dispatch(i.next());
+			p.clearEatNewlinesAndIndents();
+			p.ignoreNewlines();
+			p.println(i.hasNext() ? "," : "");
+		}
 	}
 	
 	// =========================================================================
 	
-	public static String print(AstNode node)
+	protected boolean isSingleLine(String text)
 	{
-		StringWriter writer = new StringWriter();
-		new AstPrinter(writer).go(node);
-		return writer.toString();
+		return (text.indexOf('\n') == -1) && (text.indexOf('\r') == -1);
 	}
 	
-	public static Writer print(Writer writer, AstNode node)
+	// =========================================================================
+	
+	public static <T extends AstNode<T>> String print(T node)
 	{
-		new AstPrinter(writer).go(node);
+		return print(new StringWriter(), node).toString();
+	}
+	
+	public static <T extends AstNode<T>> Writer print(Writer writer, T node)
+	{
+		new AstPrinter<T>(writer).go(node);
 		return writer;
 	}
 	
 	// =========================================================================
 	
-	public void visit(AstNode n)
+	protected final PrinterBase p;
+	
+	public AstPrinter(Writer writer)
 	{
-		if (!replay(n))
-		{
-			Memoize m = memoizeStart(n);
-			
-			if (n.isEmpty() && !n.hasAttributes() && !n.hasProperties())
-			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "()");
-			}
-			else
-			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "(");
-				
-				incIndent();
-				printNodeContent(n);
-				decIndent();
-				
-				indent();
-				out.println(")");
-			}
-			
-			memoizeStop(m);
-		}
+		this.p = new PrinterBase(writer);
+		this.p.setMemoize(true);
+		this.setCompact(true);
 	}
 	
-	public void visit(NodeList n)
+	@Override
+	protected Object after(T node, Object result)
 	{
-		if (!replay(n))
-		{
-			Memoize m = memoizeStart(n);
-			
-			if (n.hasAttributes() || n.hasProperties())
-			{
-				visit((AstNode) n);
-			}
-			else if (n.isEmpty())
-			{
-				indent();
-				out.println("[ ]");
-			}
-			else
-			{
-				incIndent();
-				String singleLine = printNodeContentToString(n);
-				decIndent();
-				
-				if (singleLine != null)
-				{
-					indent();
-					out.println("[ " + singleLine + " ]");
-				}
-				else
-				{
-					indent();
-					out.println("[");
-					
-					incIndent();
-					printNodeContent(n);
-					decIndent();
-					
-					indent();
-					out.println("]");
-				}
-			}
-			
-			memoizeStop(m);
-		}
-	}
-	
-	public void visit(ContentNode n)
-	{
-		if (!replay(n))
-		{
-			Memoize m = memoizeStart(n);
-			
-			if (n.hasAttributes() || n.hasProperties())
-			{
-				visit((AstNode) n);
-			}
-			else if (n.getContent().isEmpty())
-			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "([ ])");
-			}
-			else
-			{
-				incIndent();
-				String singleLine = printNodeContentToString(n.getContent());
-				decIndent();
-				
-				if (singleLine != null)
-				{
-					indent();
-					out.println(n.getClass().getSimpleName() + "([ " + singleLine + " ])");
-				}
-				else
-				{
-					indent();
-					out.println(n.getClass().getSimpleName() + "([");
-					
-					incIndent();
-					printNodeContent(n.getContent());
-					decIndent();
-					
-					indent();
-					out.println("])");
-				}
-			}
-			
-			memoizeStop(m);
-		}
-	}
-	
-	public void visit(StringContentNode n)
-	{
-		if (!replay(n))
-		{
-			Memoize m = memoizeStart(n);
-			
-			if (n.hasAttributes()/* || n.hasProperties()*/)
-			{
-				visit((AstNode) n);
-			}
-			else
-			{
-				indent();
-				out.println(n.getClass().getSimpleName() + "(" + mkStr(n.getContent()) + ")");
-			}
-			
-			memoizeStop(m);
-		}
+		p.flush();
+		return result;
 	}
 	
 	// =========================================================================
 	
-	protected static final class Memoize
+	private boolean compact = true;
+	
+	public void setCompact(boolean compact)
 	{
-		private final AstNode node;
-		
-		private final int indent;
-		
-		private final PrintWriter oldOut;
-		
-		private final StringWriter writer;
-		
-		public Memoize(int indent, AstNode node)
-		{
-			this.indent = indent;
-			this.node = node;
-			this.oldOut = null;
-			this.writer = null;
-		}
-		
-		public Memoize(int indent, AstNode node, PrintWriter oldOut, StringWriter writer)
-		{
-			this.indent = indent;
-			this.node = node;
-			this.oldOut = oldOut;
-			this.writer = writer;
-		}
-		
-		public PrintWriter getOldOut()
-		{
-			return oldOut;
-		}
-		
-		public String getText()
-		{
-			return writer.toString();
-		}
-		
-		@Override
-		public int hashCode()
-		{
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + indent;
-			result = prime * result + System.identityHashCode(node);
-			return result;
-		}
-		
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Memoize other = (Memoize) obj;
-			if (indent != other.indent)
-				return false;
-			if (node != other.node)
-				return false;
-			return true;
-		}
+		this.compact = compact;
 	}
 	
-	private final HashMap<Memoize, Memoize> cache = new HashMap<Memoize, Memoize>();
-	
-	protected boolean replay(AstNode n)
+	public boolean isCompact()
 	{
-		Memoize m = cache.get(new Memoize(indentStr.length(), n));
-		if (m == null)
-			return false;
-		
-		play(m);
-		return true;
-	}
-	
-	protected Memoize memoizeStart(AstNode n)
-	{
-		StringWriter w = new StringWriter();
-		Memoize m = new Memoize(indentStr.length(), n, out, w);
-		
-		out = new PrintWriter(w);
-		
-		return m;
-	}
-	
-	protected void memoizeStop(Memoize m)
-	{
-		out = m.getOldOut();
-		cache.put(m, m);
-		play(m);
-	}
-	
-	private void play(Memoize m)
-	{
-		out.write(m.getText());
-	}
-	
-	// =========================================================================
-	
-	protected void printNodeContent(AstNode n)
-	{
-		Map<String, Object> attrs = n.getAttributes();
-		
-		Map<String, Object> props = new HashMap<String, Object>();
-		props.putAll(attrs);
-		
-		AstNodePropertyIterator i = n.propertyIterator();
-		while (i.next())
-			props.put(i.getName(), i.getValue());
-		
-		if (!props.isEmpty())
-		{
-			indent();
-			out.println("Properties:");
-		}
-		
-		List<String> keys = new ArrayList<String>(props.keySet());
-		Collections.sort(keys);
-		
-		incIndent();
-		for (String name : keys)
-		{
-			Object value = props.get(name);
-			
-			if (attrs.containsKey(name))
-			{
-				indent();
-				if (!legacyIndentation)
-					out.print("    ");
-				out.print(name + " = ");
-			}
-			else
-			{
-				indent();
-				out.print("{N} " + name + " = ");
-			}
-			
-			if (value instanceof String)
-			{
-				out.println(mkStr((String) value));
-			}
-			else if (value instanceof AstNode)
-			{
-				out.println();
-				incIndent();
-				dispatch((AstNode) value);
-				decIndent();
-			}
-			else if (value instanceof Collection)
-			{
-				Collection<?> c = (Collection<?>) value;
-				if (c.isEmpty())
-				{
-					out.println("[]");
-				}
-				else
-				{
-					out.println();
-					indent();
-					out.println('[');
-					incIndent();
-					{
-						Iterator<?> k = c.iterator();
-						int last = c.size() - 1;
-						for (int j = 0; k.hasNext(); ++j)
-						{
-							Object o = k.next();
-							indent();
-							String s = "null";
-							if (o != null)
-								s = o.toString();
-							out.println((j != last) ? s + ',' : s);
-						}
-					}
-					decIndent();
-					indent();
-					out.println(']');
-				}
-			}
-			else
-			{
-				out.println(value);
-			}
-		}
-		decIndent();
-		
-		if (!props.isEmpty() && !n.isEmpty())
-			out.println();
-		
-		for (AstNode c : n)
-			dispatch(c);
-	}
-	
-	protected String printNodeContentToString(AstNode n)
-	{
-		String singleLine = null;
-		
-		if (n.size() == 1)
-		{
-			PrintWriter oldOut = out;
-			StringWriter w = new StringWriter();
-			out = new PrintWriter(w);
-			
-			printNodeContent(n);
-			
-			out = oldOut;
-			singleLine = w.toString().trim();
-			if (singleLine.indexOf('\n') != -1 ||
-			        singleLine.indexOf('\r') != -1)
-				singleLine = null;
-		}
-		
-		return singleLine;
-	}
-	
-	protected void incIndent()
-	{
-		this.indentStr += "  ";
-	}
-	
-	protected void decIndent()
-	{
-		this.indentStr =
-		        this.indentStr.substring(0, this.indentStr.length() - 2);
-	}
-	
-	protected void indent()
-	{
-		out.print(this.indentStr);
-	}
-	
-	private String mkStr(String str)
-	{
-		if (str == null)
-			return "null";
-		else
-			return '"' + StringUtils.escJava(str) + '"';
+		return compact;
 	}
 }

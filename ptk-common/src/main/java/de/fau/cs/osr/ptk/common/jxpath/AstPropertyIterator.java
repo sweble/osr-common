@@ -29,8 +29,8 @@ import de.fau.cs.osr.ptk.common.ast.AstNodePropertyIterator;
 import de.fau.cs.osr.ptk.common.ast.NoSuchPropertyException;
 
 public class AstPropertyIterator
-        implements
-            NodeIterator
+		implements
+			NodeIterator
 {
 	private NodePointer parent;
 	
@@ -44,7 +44,7 @@ public class AstPropertyIterator
 	{
 		this.parent = parent;
 		
-		AstNode node = (AstNode) parent.getNode();
+		AstNode<?> node = (AstNode<?>) parent.getNode();
 		
 		properties = null;
 		if (qname.getPrefix() == null)
@@ -140,20 +140,20 @@ public class AstPropertyIterator
 	
 	public static final class Property
 	{
-		private final AstNode owner;
+		private final AstNode<?> owner;
 		
 		private final String name;
 		
 		private final Object value;
 		
-		public Property(AstNode owner, String name, Object value)
+		public Property(AstNode<?> owner, String name, Object value)
 		{
 			this.owner = owner;
 			this.name = name;
 			this.value = value;
 		}
 		
-		public Property(AstNode owner, Entry<String, Object> entry)
+		public Property(AstNode<?> owner, Entry<String, Object> entry)
 		{
 			this.owner = owner;
 			this.name = entry.getKey();

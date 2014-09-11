@@ -26,8 +26,8 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 import de.fau.cs.osr.ptk.common.jxpath.AstPropertyIterator.Property;
 
 public class AstPropertyPointer
-        extends
-            NodePointer
+		extends
+			NodePointer
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -153,10 +153,12 @@ public class AstPropertyPointer
 	}
 	
 	@Override
-	public int compareChildNodePointers(NodePointer pointer1, NodePointer pointer2)
+	public int compareChildNodePointers(
+			NodePointer pointer1,
+			NodePointer pointer2)
 	{
 		throw new UnsupportedOperationException(
-		        "Should not happen! Attributes don't have children.");
+				"Should not happen! Attributes don't have children.");
 	}
 	
 	String getName2()
