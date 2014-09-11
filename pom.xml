@@ -24,7 +24,7 @@
 
   <groupId>de.fau.cs.osr</groupId>
   <artifactId>tooling</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Tooling</name>
@@ -570,7 +570,7 @@
     <connection>scm:git://sweble.org/git/tooling.git</connection>
     <developerConnection>scm:git:ssh://gitosis@sweble.org/tooling.git</developerConnection>
     <url>http://sweble.org/gitweb/?p=tooling.git;a=summary</url>
-    <tag>tooling-1.1.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
