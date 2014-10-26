@@ -129,7 +129,7 @@ public class VisitorLogic<T>
 		}
 	}
 	
-	private static Target findVisit(Target key) throws SecurityException
+	private static Target findVisit(Target key) throws SecurityException, NoSuchMethodException
 	{
 		Method method = null;
 		
@@ -186,14 +186,7 @@ public class VisitorLogic<T>
 				}
 			});
 			
-			try
-			{
-				method = vClass.getMethod("visit", candidates.get(0));
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new InternalError("This cannot happen");
-			}
+			method = vClass.getMethod("visit", candidates.get(0));
 		}
 		
 		Target target = new Target(key, method);
