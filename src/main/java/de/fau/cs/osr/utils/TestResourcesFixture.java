@@ -338,6 +338,12 @@ public class TestResourcesFixture
 		String rebased = unixPath.replace(base, rebase);
 		
 		int i = rebased.lastIndexOf('.');
+		
+		// Fixed bug: only remove extension if dot occurs in last path segment
+		int j = rebased.lastIndexOf('/');
+		if ((j != -1) && (i < j))
+			i = -1;
+		
 		rebased = i < 0 ?
 				rebased + "." + ext :
 				rebased.substring(0, i + 1) + ext;
