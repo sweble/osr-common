@@ -60,7 +60,7 @@
     <version.dep.commons-lang>2.5</version.dep.commons-lang>
     <version.dep.commons-math3>3.2</version.dep.commons-math3>
     <version.dep.joda-time>2.3</version.dep.joda-time>
-    <version.dep.junit>4.7</version.dep.junit>
+    <version.dep.junit>4.12</version.dep.junit>
     <version.dep.log4j>1.2.14</version.dep.log4j>
 
     <!-- Maven plugins: http://maven.apache.org/plugins/ -->
