@@ -100,7 +100,7 @@
     <version.plugin.exec>1.2.1</version.plugin.exec>
 
     <!-- Other -->
-    <version.plugin.git-commit-id>2.1.7</version.plugin.git-commit-id>
+    <version.plugin.git-commit-id>2.1.12</version.plugin.git-commit-id>
     <version.plugin.license>2.5</version.plugin.license>
     <version.plugin.aspectj>1.6</version.plugin.aspectj>
     <version.plugin.maven-replacer-plugin>1.3.2</version.plugin.maven-replacer-plugin>
