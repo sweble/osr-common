@@ -192,7 +192,7 @@ public abstract class VisitorStackProcessor<T>
 	{
 		for (int i = 0; i < visitorStack.length; ++i)
 		{
-			if (isVisitorEnabled(i) && !getEnabledVisitor(i).before(node))
+			if (isVisitorEnabled(i) && getEnabledVisitor(i).before(node)!=null)
 				disableVisitor(i);
 		}
 	}

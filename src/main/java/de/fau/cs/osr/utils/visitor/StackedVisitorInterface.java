@@ -18,6 +18,7 @@ package de.fau.cs.osr.utils.visitor;
 
 public abstract class StackedVisitorInterface<T>
 {
+	private Object context = null; //by Manuel
 	/**
 	 * Called before the visitation starts.
 	 * 
@@ -27,9 +28,9 @@ public abstract class StackedVisitorInterface<T>
 	 *         this method returns <code>false</code> the visitation will be
 	 *         aborted.
 	 */
-	protected boolean before(T node)
+	protected T before(T node)
 	{
-		return true;
+		return node;
 	}
 	
 	/**
@@ -48,4 +49,14 @@ public abstract class StackedVisitorInterface<T>
 	{
 		return result;
 	}
+	
+	//by Manuel, why is this a interface when it has a method body?
+	public void setContext(Object context) {
+		this.context = context;
+	}
+	
+	protected Object getContext() {
+		return context;
+	}
+	
 }
