@@ -60,7 +60,7 @@ public class VisitorLogic<T>
 	 */
 	public final Object go(T node)
 	{
-		if (!visitorImpl.before(node))
+		if (visitorImpl.before(node)==null)
 			return null;
 		
 		Object result = visitorImpl.dispatch(node);

@@ -25,15 +25,15 @@ public abstract class VisitorInterface<T>
 	 * 
 	 * @param node
 	 *            The node at which the visitation will start.
-	 * @return Always returns <code>true</code>. If an overridden version of
-	 *         this method returns <code>false</code> the visitation will be
+	 * @return Always returns the node. If an overridden version of
+	 *         this method returns <code>null</code> the visitation will be
 	 *         aborted.
 	 */
-	protected abstract boolean before(T node);
+	protected abstract T before(T node);
 	
 	/**
 	 * Called after the visitation has finished. This method will not be called
-	 * if before() returned false.
+	 * if before() returned <code>null</code>.
 	 * 
 	 * @param node
 	 *            The node at which the visitation started.

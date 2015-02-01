@@ -47,14 +47,14 @@ public abstract class VisitorBase<T>
 	 *         this method returns <code>false</code> the visitation will be
 	 *         aborted.
 	 */
-	protected boolean before(T node)
+	protected T before(T node)
 	{
-		return true;
+		return node;
 	}
 	
 	/**
 	 * Called after the visitation has finished. This method will not be called
-	 * if before() returned false.
+	 * if before() returned <code>null</code>.
 	 * 
 	 * @param node
 	 *            The node at which the visitation started.
@@ -94,7 +94,8 @@ public abstract class VisitorBase<T>
 	 */
 	public Object go(T node)
 	{
-		if (!before(node))
+		node = before(node);
+		if (node==null)
 			return null;
 		
 		Object result = dispatch(node);

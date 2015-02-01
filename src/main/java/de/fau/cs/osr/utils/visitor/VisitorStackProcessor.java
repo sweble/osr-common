@@ -188,13 +188,20 @@ public abstract class VisitorStackProcessor<T>
 		return after(node, result);
 	}
 	
-	protected void before(T node)
+	protected T before(T node)
 	{
 		for (int i = 0; i < visitorStack.length; ++i)
 		{
-			if (isVisitorEnabled(i) && getEnabledVisitor(i).before(node)!=null)
-				disableVisitor(i);
+			if (isVisitorEnabled(i)) {
+				T transformed = getEnabledVisitor(i).before(node);
+				if (transformed==null) {
+					disableVisitor(i);
+				} else {
+					node = transformed;
+				}
+			}
 		}
+		return node;
 	}
 	
 	protected Object after(T node, Object result)

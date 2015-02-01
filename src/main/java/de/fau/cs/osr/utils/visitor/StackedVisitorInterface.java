@@ -35,7 +35,7 @@ public abstract class StackedVisitorInterface<T>
 	
 	/**
 	 * Called after the visitation has finished. This method will not be called
-	 * if before() returned false.
+	 * if before() returned null.
 	 * 
 	 * @param node
 	 *            The node at which the visitation started.
