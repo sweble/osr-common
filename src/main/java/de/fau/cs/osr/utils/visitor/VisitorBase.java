@@ -36,6 +36,7 @@ public abstract class VisitorBase<T>
 	
 	// =========================================================================
 	
+	@Override
 	protected abstract Object dispatch(T node);
 	
 	/**
@@ -47,6 +48,7 @@ public abstract class VisitorBase<T>
 	 *         this method returns <code>false</code> the visitation will be
 	 *         aborted.
 	 */
+	@Override
 	protected boolean before(T node)
 	{
 		return true;
@@ -64,6 +66,7 @@ public abstract class VisitorBase<T>
 	 *            returned.
 	 * @return Returns the result parameter.
 	 */
+	@Override
 	protected Object after(T node, Object result)
 	{
 		return result;
@@ -77,9 +80,16 @@ public abstract class VisitorBase<T>
 	 *            The node that should have been visited.
 	 * @return The result of the visitation.
 	 */
+	@Override
 	protected Object visitNotFound(T node)
 	{
 		throw new VisitNotFoundException(this, node);
+	}
+	
+	@Override
+	protected Object handleVisitingException(T node, Throwable cause)
+	{
+		throw new VisitingException(node, cause);
 	}
 	
 	// =========================================================================
