@@ -21,41 +21,43 @@ public abstract class VisitorBase<T>
 			VisitorInterface<T>
 {
 	private final VisitorLogic<T> logic;
-	
+
 	// =========================================================================
-	
+
 	public VisitorBase()
 	{
 		this.logic = new VisitorLogic<T>(this);
 	}
-	
+
 	public VisitorBase(VisitorLogic<T> logic)
 	{
 		this.logic = logic;
 	}
-	
+
 	// =========================================================================
-	
+
+	@Override
 	protected abstract Object dispatch(T node);
-	
+
 	/**
 	 * Called before the visitation starts.
-	 * 
+	 *
 	 * @param node
 	 *            The node at which the visitation will start.
 	 * @return Always returns <code>true</code>. If an overridden version of
 	 *         this method returns <code>false</code> the visitation will be
 	 *         aborted.
 	 */
+	@Override
 	protected T before(T node)
 	{
 		return node;
 	}
-	
+
 	/**
 	 * Called after the visitation has finished. This method will not be called
 	 * if before() returned <code>null</code>.
-	 * 
+	 *
 	 * @param node
 	 *            The node at which the visitation started.
 	 * @param result
@@ -64,29 +66,37 @@ public abstract class VisitorBase<T>
 	 *            returned.
 	 * @return Returns the result parameter.
 	 */
+	@Override
 	protected Object after(T node, Object result)
 	{
 		return result;
 	}
-	
+
 	/**
 	 * This method is called if no suitable visit() method could be found. If
 	 * not overridden, this method will throw an UnvisitableException.
-	 * 
+	 *
 	 * @param node
 	 *            The node that should have been visited.
 	 * @return The result of the visitation.
 	 */
+	@Override
 	protected Object visitNotFound(T node)
 	{
 		throw new VisitNotFoundException(this, node);
 	}
-	
+
+	@Override
+	protected Object handleVisitingException(T node, Throwable cause)
+	{
+		throw new VisitingException(node, cause);
+	}
+
 	// =========================================================================
-	
+
 	/**
 	 * Start visitation at the given node.
-	 * 
+	 *
 	 * @param node
 	 *            The node at which the visitation will start.
 	 * @return The result of the visitation. If the visit() method for the given
@@ -97,13 +107,13 @@ public abstract class VisitorBase<T>
 		node = before(node);
 		if (node==null)
 			return null;
-		
+
 		Object result = dispatch(node);
 		return after(node, result);
 	}
-	
+
 	// =========================================================================
-	
+
 	protected final Object resolveAndVisit(T node)
 	{
 		return logic.resolveAndVisit(node);

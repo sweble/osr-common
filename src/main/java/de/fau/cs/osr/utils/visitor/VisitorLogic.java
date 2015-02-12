@@ -113,7 +113,8 @@ public class VisitorLogic<T>
 			Throwable cause = e.getCause();
 			if (cause instanceof VisitingException)
 				throw (VisitingException) cause;
-			throw new VisitingException(node, cause);
+			
+			return visitorImpl.handleVisitingException(node, cause);
 		}
 		catch (VisitingException e)
 		{

@@ -54,4 +54,17 @@ public abstract class VisitorInterface<T>
 	 * @return The result of the visitation.
 	 */
 	protected abstract Object visitNotFound(T node);
+	
+	/**
+	 * This method is called if a visit() method throws an exception. If not
+	 * overriden, this method will wrap the thrown exception in tot a
+	 * VisitingException.
+	 * 
+	 * @param node
+	 *            The node that was visited when the exception was thrown.
+	 * @param cause
+	 *            The exception that was thrown.
+	 * @return The result of the visitation.
+	 */
+	protected abstract Object handleVisitingException(T node, Throwable cause);
 }

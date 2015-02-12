@@ -31,9 +31,15 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class VisitorStackProcessor<T>
+import org.apache.commons.lang.StringUtils;
+
+public abstract class VisitorStackController<T>
 {
+	public static boolean DEBUG = false;
+	
 	private static final String VISIT_METHOD_NAME = "visit";
+	
+	private static final Class<?> BATON_CLASS = Baton.class;
 	
 	private static final Map<String, Cache> CACHES = new HashMap<String, Cache>();
 	
@@ -79,16 +85,18 @@ public abstract class VisitorStackProcessor<T>
 	
 	private StackedVisitorInterface<T>[] enabledVisitors;
 	
+	private Baton baton;
+	
 	// =========================================================================
 	
-	protected VisitorStackProcessor(
+	protected VisitorStackController(
 			String cacheName,
 			List<? extends StackedVisitorInterface<T>> visitorStack)
 	{
 		this(getOrRegisterCache(cacheName, visitorStack), visitorStack);
 	}
 	
-	protected VisitorStackProcessor(
+	protected VisitorStackController(
 			Cache cache,
 			List<? extends StackedVisitorInterface<T>> visitorStack)
 	{
@@ -183,6 +191,7 @@ public abstract class VisitorStackProcessor<T>
 	{
 		before(node);
 		
+		this.baton = new Baton();
 		Object result = resolveAndVisit(node);
 		
 		return after(node, result);
@@ -245,7 +254,7 @@ public abstract class VisitorStackProcessor<T>
 			}
 			else
 			{
-				return visiChain.invokeChain(enabledVisitors, node);
+				return visiChain.invokeChain(baton, this, node);
 			}
 		}
 		catch (InvocationTargetException e)
@@ -302,7 +311,7 @@ public abstract class VisitorStackProcessor<T>
 			Class<?> workItem = work.remove();
 			try
 			{
-				method = vClass.getMethod(VISIT_METHOD_NAME, workItem);
+				method = vClass.getMethod(VISIT_METHOD_NAME, BATON_CLASS, workItem);
 				candidates.add(workItem);
 			}
 			catch (NoSuchMethodException e)
@@ -342,7 +351,7 @@ public abstract class VisitorStackProcessor<T>
 				}
 			});
 			
-			method = vClass.getMethod(VISIT_METHOD_NAME, candidates.get(0));
+			method = vClass.getMethod(VISIT_METHOD_NAME, BATON_CLASS, candidates.get(0));
 		}
 		
 		return method;
@@ -365,7 +374,7 @@ public abstract class VisitorStackProcessor<T>
 		public VisitChain(Class<?> nClass)
 		{
 			this.nodeClass = nClass;
-			this.chain = new Link[0];
+			this.chain = null;
 		}
 		
 		public VisitChain(VisitChain chain, List<Link> links)
@@ -384,8 +393,10 @@ public abstract class VisitorStackProcessor<T>
 			return (chain.length == 0);
 		}
 		
+		@SuppressWarnings({ "rawtypes" })
 		public Object invokeChain(
-				StackedVisitorInterface<?>[] enabledVisitorStack,
+				Baton baton,
+				VisitorStackController controller,
 				Object node) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
 		{
 			touch();
@@ -394,25 +405,111 @@ public abstract class VisitorStackProcessor<T>
 			if (isEmpty())
 				throw new AssertionError();
 			
+			Object visitNext = node;
+			// If there are no enabled visitors just return the node itself
 			Object result = node;
 			
+			StackedVisitorInterface[] enabledVisitors = controller.enabledVisitors;
+			
 			int i = 0;
-			while (true)
+			chainIter: while (true)
 			{
-				StackedVisitorInterface<?> visitor = enabledVisitorStack[chain[i].visitorIndex];
+				StackedVisitorInterface visitor = enabledVisitors[chain[i].visitorIndex];
 				if (visitor != null)
 				{
-					result = chain[i].method.invoke(visitor, result);
+					if (DEBUG)
+						System.err.println(chain[i].method + ": " + StringUtils.abbreviate(visitNext.toString(), 32));
+					result = chain[i].method.invoke(visitor, baton, visitNext);
+					
+					// We must always query the code to reset it, even if result == null
+					int batonCode = baton.queryAndResetCode();
 					
 					if (result == null)
-						break;
+						break chainIter;
+					
+					switch (batonCode)
+					{
+						case Baton.CONTINUE_SAME_TYPE_OR_REDISPATCH:
+							if (node.getClass() != result.getClass())
+							{
+								// Re-dispatch if instance of nodeClass
+								if (nodeClass.isInstance(result))
+									result = redispatch(controller, result);
+								
+								// Leave chain
+								break chainIter;
+							}
+							else
+							{
+								// Continue to next visitor
+								break;
+							}
+							
+						case Baton.CONTINUE_ASSIGNABLE_TYPE_OR_REDISPATCH:
+							if (!node.getClass().isInstance(result))
+							{
+								// Re-dispatch if instance of nodeClass
+								if (nodeClass.isInstance(result))
+									result = redispatch(controller, result);
+								
+								// Leave chain
+								break chainIter;
+							}
+							else
+							{
+								// Continue to next visitor
+								break;
+							}
+							
+						case Baton.CONTINUE_SAME_REF:
+							if (visitNext != result)
+							{
+								// Leave chain
+								break chainIter;
+							}
+							else
+							{
+								// Continue to next visitor
+								break;
+							}
+							
+						case Baton.CONTINUE_SAME_TYPE:
+							if (node.getClass() != result.getClass())
+							{
+								// Leave chain
+								break chainIter;
+							}
+							else
+							{
+								// Continue to next visitor
+								break;
+							}
+							
+						case Baton.CONTINUE_ASSIGNABLE_TYPE:
+							if (!node.getClass().isInstance(result))
+							{
+								// Leave chain
+								break chainIter;
+							}
+							else
+							{
+								// Continue to next visitor
+								break;
+							}
+							
+						case Baton.SKIP:
+							// Leave chain
+							break chainIter;
+						
+						default:
+							throw new AssertionError(batonCode);
+					}
 					
 					++i;
 					if (i >= chain.length)
-						break;
+						break chainIter;
 					
-					if (!nodeClass.isInstance(result))
-						break;
+					visitNext = result;
 				}
 				else
 				{
@@ -423,6 +520,16 @@ public abstract class VisitorStackProcessor<T>
 			}
 			
 			return result;
+		}
+		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		private Object redispatch(
+				VisitorStackController controller,
+				Object visitNext)
+		{
+			if (DEBUG)
+				System.err.println(StringUtils.abbreviate(visitNext.toString(), 32));
+			return controller.resolveAndVisit(visitNext);
 		}
 		
 		public void touch()
@@ -466,7 +573,6 @@ public abstract class VisitorStackProcessor<T>
 		
 		public Link(int visitorIndex, Method method)
 		{
-			super();
 			this.visitorIndex = visitorIndex;
 			this.method = method;
 		}
