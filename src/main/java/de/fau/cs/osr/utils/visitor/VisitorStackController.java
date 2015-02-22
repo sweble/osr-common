@@ -189,10 +189,10 @@ public abstract class VisitorStackController<T>
 	 */
 	public Object go(T node)
 	{
-		before(node);
-		
+		T newNode = (T)before(node);
+		//System.out.println(newNode);
 		this.baton = new Baton();
-		Object result = resolveAndVisit(node);
+		Object result = resolveAndVisit(newNode, newNode);
 		
 		return after(node, result);
 	}
@@ -234,7 +234,7 @@ public abstract class VisitorStackController<T>
 	
 	// =========================================================================
 	
-	protected Object resolveAndVisit(T node)
+	protected Object resolveAndVisit(T node, Object result)
 	{
 		Class<?> nClass = node.getClass();
 		
@@ -254,7 +254,7 @@ public abstract class VisitorStackController<T>
 			}
 			else
 			{
-				return visiChain.invokeChain(baton, this, node);
+				return visiChain.invokeChain(baton, this, node, result);
 			}
 		}
 		catch (InvocationTargetException e)
@@ -397,7 +397,8 @@ public abstract class VisitorStackController<T>
 		public Object invokeChain(
 				Baton baton,
 				VisitorStackController controller,
-				Object node) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+				Object node,
+				Object result) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
 		{
 			touch();
 			
@@ -407,7 +408,6 @@ public abstract class VisitorStackController<T>
 			
 			Object visitNext = node;
 			// If there are no enabled visitors just return the node itself
-			Object result = node;
 			
 			StackedVisitorInterface[] enabledVisitors = controller.enabledVisitors;
 			
@@ -529,7 +529,7 @@ public abstract class VisitorStackController<T>
 		{
 			if (DEBUG)
 				System.err.println(StringUtils.abbreviate(visitNext.toString(), 32));
-			return controller.resolveAndVisit(visitNext);
+			return controller.resolveAndVisit(visitNext, visitNext);
 		}
 		
 		public void touch()

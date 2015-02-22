@@ -37,7 +37,7 @@ public abstract class VisitorBase<T>
 	// =========================================================================
 
 	@Override
-	protected abstract Object dispatch(T node);
+	protected abstract Object dispatch(T node, Object result);
 
 	/**
 	 * Called before the visitation starts.
@@ -104,18 +104,18 @@ public abstract class VisitorBase<T>
 	 */
 	public Object go(T node)
 	{
-		node = before(node);
+		Object result = before(node);
 		if (node==null)
 			return null;
 
-		Object result = dispatch(node);
+		result = dispatch(node, result);
 		return after(node, result);
 	}
 
 	// =========================================================================
 
-	protected final Object resolveAndVisit(T node)
+	protected final Object resolveAndVisit(T node, Object result)
 	{
-		return logic.resolveAndVisit(node);
+		return logic.resolveAndVisit(node, result);
 	}
 }
