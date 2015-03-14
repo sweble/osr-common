@@ -47,7 +47,7 @@ public abstract class VisitorStackController<T>
 	
 	public static <S> Cache getOrRegisterCache(
 			String name,
-			List<? extends StackedVisitorInterface<S>> visitorStack)
+			List<? extends StackedVisitorInterface<S>> visitorStack) throws IncompatibleVisitorStackDefinition
 	{
 		return getOrRegisterCache(name, visitorStack, .6f, 256, 384);
 	}
@@ -57,7 +57,7 @@ public abstract class VisitorStackController<T>
 			List<? extends StackedVisitorInterface<S>> visitorStack,
 			float loadFactor,
 			int lowerCapacity,
-			int upperCapacity)
+			int upperCapacity) throws IncompatibleVisitorStackDefinition
 	{
 		Cache cache = CACHES.get(name);
 		if (cache == null)
@@ -91,14 +91,14 @@ public abstract class VisitorStackController<T>
 	
 	protected VisitorStackController(
 			String cacheName,
-			List<? extends StackedVisitorInterface<T>> visitorStack)
+			List<? extends StackedVisitorInterface<T>> visitorStack) throws IncompatibleVisitorStackDefinition
 	{
 		this(getOrRegisterCache(cacheName, visitorStack), visitorStack);
 	}
 	
 	protected VisitorStackController(
 			Cache cache,
-			List<? extends StackedVisitorInterface<T>> visitorStack)
+			List<? extends StackedVisitorInterface<T>> visitorStack) throws IncompatibleVisitorStackDefinition
 	{
 		for (StackedVisitorInterface<T> visitor : visitorStack)
 		{
@@ -595,10 +595,10 @@ public abstract class VisitorStackController<T>
 		}
 		
 		private void verifyDefinition(
-				List<? extends StackedVisitorInterface<?>> visitorStack)
+				List<? extends StackedVisitorInterface<?>> visitorStack) throws IncompatibleVisitorStackDefinition
 		{
 			if (!new CacheDefinition(visitorStack).equals(cacheDef))
-				throw new IllegalArgumentException("Incompatible visitor stack");
+				throw new IncompatibleVisitorStackDefinition("Incompatible visitor stack");
 		}
 		
 		private VisitChain get(VisitChain key)
