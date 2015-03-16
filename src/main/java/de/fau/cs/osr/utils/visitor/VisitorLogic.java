@@ -60,12 +60,11 @@ public class VisitorLogic<T>
 	 */
 	public final Object go(T node)
 	{
-		T transformed=visitorImpl.before(node);
-		if (transformed==null)
-		{
+		T startNode = visitorImpl.before(node);
+		if (startNode == null)
 			return null;
-		}
-		Object result = visitorImpl.dispatch(node, transformed);
+		
+		Object result = visitorImpl.dispatch(startNode);
 		return visitorImpl.after(node, result);
 	}
 	
@@ -79,22 +78,21 @@ public class VisitorLogic<T>
 		return this.visitorImpl;
 	}
 	
-	public static <T> Object dispatchTo(VisitorInterface<T> modeImpl, T n, Object result)
+	public static <T> Object dispatchTo(VisitorInterface<T> modeImpl, T n)
 	{
-		return resolveAndVisit(modeImpl, n, result);
+		return resolveAndVisit(modeImpl, n);
 	}
 	
 	// =========================================================================
 	
-	protected final Object resolveAndVisit(T node, Object result)
+	protected final Object resolveAndVisit(T node)
 	{
-		return resolveAndVisit(visitorImpl, node, result);
+		return resolveAndVisit(visitorImpl, node);
 	}
 	
 	protected static <T> Object resolveAndVisit(
 			VisitorInterface<T> visitorImpl,
-			T node, 
-			Object result)
+			T node)
 	{
 		Class<?> vClass = visitorImpl.getClass();
 		Class<?> nClass = node.getClass();

@@ -18,7 +18,7 @@ package de.fau.cs.osr.utils.visitor;
 
 public abstract class VisitorInterface<T>
 {
-	protected abstract Object dispatch(T node, Object result);
+	protected abstract Object dispatch(T node);
 	
 	/**
 	 * Called before the visitation starts.

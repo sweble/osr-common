@@ -21,24 +21,24 @@ public abstract class VisitorBase<T>
 			VisitorInterface<T>
 {
 	private final VisitorLogic<T> logic;
-
+	
 	// =========================================================================
-
+	
 	public VisitorBase()
 	{
 		this.logic = new VisitorLogic<T>(this);
 	}
-
+	
 	public VisitorBase(VisitorLogic<T> logic)
 	{
 		this.logic = logic;
 	}
-
+	
 	// =========================================================================
-
+	
 	@Override
-	protected abstract Object dispatch(T node, Object result);
-
+	protected abstract Object dispatch(T node);
+	
 	/**
 	 * Called before the visitation starts.
 	 *
@@ -53,7 +53,7 @@ public abstract class VisitorBase<T>
 	{
 		return node;
 	}
-
+	
 	/**
 	 * Called after the visitation has finished. This method will not be called
 	 * if before() returned <code>null</code>.
@@ -71,7 +71,7 @@ public abstract class VisitorBase<T>
 	{
 		return result;
 	}
-
+	
 	/**
 	 * This method is called if no suitable visit() method could be found. If
 	 * not overridden, this method will throw an UnvisitableException.
@@ -85,15 +85,15 @@ public abstract class VisitorBase<T>
 	{
 		throw new VisitNotFoundException(this, node);
 	}
-
+	
 	@Override
 	protected Object handleVisitingException(T node, Throwable cause)
 	{
 		throw new VisitingException(node, cause);
 	}
-
+	
 	// =========================================================================
-
+	
 	/**
 	 * Start visitation at the given node.
 	 *
@@ -104,18 +104,18 @@ public abstract class VisitorBase<T>
 	 */
 	public Object go(T node)
 	{
-		Object result = before(node);
-		if (node==null)
+		T startNode = before(node);
+		if (startNode == null)
 			return null;
-
-		result = dispatch(node, result);
+		
+		Object result = dispatch(startNode);
 		return after(node, result);
 	}
-
+	
 	// =========================================================================
-
-	protected final Object resolveAndVisit(T node, Object result)
+	
+	protected final Object resolveAndVisit(T node)
 	{
-		return logic.resolveAndVisit(node, result);
+		return logic.resolveAndVisit(node);
 	}
 }

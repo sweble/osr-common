@@ -189,28 +189,33 @@ public abstract class VisitorStackController<T>
 	 */
 	public Object go(T node)
 	{
-		T newNode = (T)before(node);
-		//System.out.println(newNode);
+		T startNode = (T) before(node);
+		
 		this.baton = new Baton();
-		Object result = resolveAndVisit(newNode, newNode);
+		Object result = resolveAndVisit(startNode);
 		
 		return after(node, result);
 	}
 	
 	protected T before(T node)
 	{
+		T transformed = node;
 		for (int i = 0; i < visitorStack.length; ++i)
 		{
-			if (isVisitorEnabled(i)) {
-				T transformed = getEnabledVisitor(i).before(node);
-				if (transformed==null) {
+			if (isVisitorEnabled(i))
+			{
+				T result = getEnabledVisitor(i).before(transformed);
+				if (result == null)
+				{
 					disableVisitor(i);
-				} else {
-					node = transformed;
+				}
+				else
+				{
+					transformed = result;
 				}
 			}
 		}
-		return node;
+		return transformed;
 	}
 	
 	protected Object after(T node, Object result)
@@ -234,7 +239,7 @@ public abstract class VisitorStackController<T>
 	
 	// =========================================================================
 	
-	protected Object resolveAndVisit(T node, Object result)
+	protected Object resolveAndVisit(T node)
 	{
 		Class<?> nClass = node.getClass();
 		
@@ -254,7 +259,7 @@ public abstract class VisitorStackController<T>
 			}
 			else
 			{
-				return visiChain.invokeChain(baton, this, node, result);
+				return visiChain.invokeChain(baton, this, node);
 			}
 		}
 		catch (InvocationTargetException e)
@@ -397,8 +402,7 @@ public abstract class VisitorStackController<T>
 		public Object invokeChain(
 				Baton baton,
 				VisitorStackController controller,
-				Object node,
-				Object result) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+				Object node) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
 		{
 			touch();
 			
@@ -408,6 +412,7 @@ public abstract class VisitorStackController<T>
 			
 			Object visitNext = node;
 			// If there are no enabled visitors just return the node itself
+			Object result = node;
 			
 			StackedVisitorInterface[] enabledVisitors = controller.enabledVisitors;
 			
@@ -529,7 +534,7 @@ public abstract class VisitorStackController<T>
 		{
 			if (DEBUG)
 				System.err.println(StringUtils.abbreviate(visitNext.toString(), 32));
-			return controller.resolveAndVisit(visitNext, visitNext);
+			return controller.resolveAndVisit(visitNext);
 		}
 		
 		public void touch()
