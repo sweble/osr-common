@@ -49,18 +49,11 @@ public class AstVisitor<T extends AstNode<T>>
 	 * the visitation. If the given node is <code>null</code> this method
 	 * returns immediately with <code>null</code> as result.
 	 */
-	protected Object dispatch(T node, Object result)
-	{
-		if (node == null)
-			throw new NullPointerException();
-		return resolveAndVisit(node, result);
-	}
-	
 	protected Object dispatch(T node)
 	{
 		if (node == null)
 			throw new NullPointerException();
-		return resolveAndVisit(node, node);
+		return resolveAndVisit(node);
 	}
 	
 	// =========================================================================
