@@ -62,7 +62,7 @@
     <!-- Dependency versions -->
     <version.dep.rats>1.15.0</version.dep.rats>
     <version.dep.gson>2.1</version.dep.gson>
-    <version.dep.xstream>1.4.4</version.dep.xstream>
+    <version.dep.xstream>1.4.8</version.dep.xstream>
 
     <!-- Plugin dependency versions -->
     <version.plugin.rats>1.3.0.1</version.plugin.rats>
