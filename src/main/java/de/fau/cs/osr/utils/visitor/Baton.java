@@ -29,17 +29,19 @@ public final class Baton
 	/** A value greater than this value indicates that a code has been set. */
 	static final int CODE_SET_THRESHOLD = 0;
 	
-	static final int CONTINUE_SAME_TYPE_OR_REDISPATCH = 1;
+	static final int REDISPATCH = 1;
 	
-	static final int CONTINUE_ASSIGNABLE_TYPE_OR_REDISPATCH = 2;
+	static final int CONTINUE_SAME_TYPE_OR_REDISPATCH = 2;
 	
-	static final int CONTINUE_SAME_REF = 3;
+	static final int CONTINUE_ASSIGNABLE_TYPE_OR_REDISPATCH = 3;
 	
-	static final int CONTINUE_SAME_TYPE = 4;
+	static final int CONTINUE_SAME_REF = 4;
 	
-	static final int CONTINUE_ASSIGNABLE_TYPE = 5;
+	static final int CONTINUE_SAME_TYPE = 5;
 	
-	static final int SKIP = 6;
+	static final int CONTINUE_ASSIGNABLE_TYPE = 6;
+	
+	static final int SKIP = 7;
 	
 	// =========================================================================
 	
@@ -72,6 +74,12 @@ public final class Baton
 	}
 	
 	// =========================================================================
+	
+	public final <T> T redispatch(T returnValue)
+	{
+		setCode(REDISPATCH);
+		return returnValue;
+	}
 	
 	/**
 	 * Tell the controller to continue processing of the current object if the

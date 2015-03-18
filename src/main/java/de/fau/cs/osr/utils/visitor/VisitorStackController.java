@@ -434,6 +434,14 @@ public abstract class VisitorStackController<T>
 					
 					switch (batonCode)
 					{
+						case Baton.REDISPATCH:
+							// Re-dispatch if instance of nodeClass
+							if (nodeClass.isInstance(result))
+								result = redispatch(controller, result);
+							
+							// Leave chain
+							break chainIter;
+						
 						case Baton.CONTINUE_SAME_TYPE_OR_REDISPATCH:
 							if (node.getClass() != result.getClass())
 							{
