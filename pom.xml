@@ -695,7 +695,7 @@
     <snapshotRepository>
       <id>osr-public-snapshots-deployment</id>
       <name>OSR Public Snapshots Deployment</name>
-      <url>http://mojo.cs.fau.de/nexus/content/repositories/public-snapshots</url>
+      <url>http://mojo-maven.cs.fau.de/content/repositories/public-snapshots</url>
     </snapshotRepository>
     <site>
       <id>sweble.org</id>
@@ -713,9 +713,9 @@
         <updatePolicy>daily</updatePolicy>
         <checksumPolicy>warn</checksumPolicy>
       </snapshots>
-      <id>osr-public-snapshots-repo</id>
-      <name>OSR Public Snapshots Repository</name>
-      <url>http://mojo.cs.fau.de/nexus/content/repositories/public</url>
+      <id>osr-public-repo</id>
+      <name>OSR Public Repository</name>
+      <url>http://mojo-maven.cs.fau.de/content/repositories/public</url>
     </repository>
   </repositories>
 
@@ -729,9 +729,9 @@
         <updatePolicy>daily</updatePolicy>
         <checksumPolicy>warn</checksumPolicy>
       </snapshots>
-      <id>osr-public-plugin-snapshots-repo</id>
-      <name>OSR Public Plugin Snapshots Repository</name>
-      <url>http://mojo.cs.fau.de/nexus/content/repositories/public</url>
+      <id>osr-public-plugin-repo</id>
+      <name>OSR Public Plugin Repository</name>
+      <url>http://mojo-maven.cs.fau.de/content/repositories/public</url>
     </pluginRepository>
   </pluginRepositories>
 
