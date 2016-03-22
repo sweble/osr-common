@@ -36,26 +36,28 @@ public abstract class VisitorBase<T>
 	
 	// =========================================================================
 	
+	@Override
 	protected abstract Object dispatch(T node);
 	
 	/**
 	 * Called before the visitation starts.
-	 * 
+	 *
 	 * @param node
 	 *            The node at which the visitation will start.
 	 * @return Always returns <code>true</code>. If an overridden version of
 	 *         this method returns <code>false</code> the visitation will be
 	 *         aborted.
 	 */
-	protected boolean before(T node)
+	@Override
+	protected T before(T node)
 	{
-		return true;
+		return node;
 	}
 	
 	/**
 	 * Called after the visitation has finished. This method will not be called
-	 * if before() returned false.
-	 * 
+	 * if before() returned <code>null</code>.
+	 *
 	 * @param node
 	 *            The node at which the visitation started.
 	 * @param result
@@ -64,6 +66,7 @@ public abstract class VisitorBase<T>
 	 *            returned.
 	 * @return Returns the result parameter.
 	 */
+	@Override
 	protected Object after(T node, Object result)
 	{
 		return result;
@@ -72,21 +75,28 @@ public abstract class VisitorBase<T>
 	/**
 	 * This method is called if no suitable visit() method could be found. If
 	 * not overridden, this method will throw an UnvisitableException.
-	 * 
+	 *
 	 * @param node
 	 *            The node that should have been visited.
 	 * @return The result of the visitation.
 	 */
+	@Override
 	protected Object visitNotFound(T node)
 	{
 		throw new VisitNotFoundException(this, node);
+	}
+	
+	@Override
+	protected Object handleVisitingException(T node, Throwable cause)
+	{
+		throw new VisitingException(node, cause);
 	}
 	
 	// =========================================================================
 	
 	/**
 	 * Start visitation at the given node.
-	 * 
+	 *
 	 * @param node
 	 *            The node at which the visitation will start.
 	 * @return The result of the visitation. If the visit() method for the given
@@ -94,10 +104,11 @@ public abstract class VisitorBase<T>
 	 */
 	public Object go(T node)
 	{
-		if (!before(node))
+		T startNode = before(node);
+		if (startNode == null)
 			return null;
 		
-		Object result = dispatch(node);
+		Object result = dispatch(startNode);
 		return after(node, result);
 	}
 	

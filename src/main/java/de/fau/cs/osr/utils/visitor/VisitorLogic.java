@@ -60,10 +60,11 @@ public class VisitorLogic<T>
 	 */
 	public final Object go(T node)
 	{
-		if (!visitorImpl.before(node))
+		T startNode = visitorImpl.before(node);
+		if (startNode == null)
 			return null;
 		
-		Object result = visitorImpl.dispatch(node);
+		Object result = visitorImpl.dispatch(startNode);
 		return visitorImpl.after(node, result);
 	}
 	
@@ -113,7 +114,8 @@ public class VisitorLogic<T>
 			Throwable cause = e.getCause();
 			if (cause instanceof VisitingException)
 				throw (VisitingException) cause;
-			throw new VisitingException(node, cause);
+			
+			return visitorImpl.handleVisitingException(node, cause);
 		}
 		catch (VisitingException e)
 		{
@@ -129,7 +131,7 @@ public class VisitorLogic<T>
 		}
 	}
 	
-	private static Target findVisit(Target key) throws SecurityException
+	private static Target findVisit(Target key) throws SecurityException, NoSuchMethodException
 	{
 		Method method = null;
 		
@@ -186,14 +188,7 @@ public class VisitorLogic<T>
 				}
 			});
 			
-			try
-			{
-				method = vClass.getMethod("visit", candidates.get(0));
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new InternalError("This cannot happen");
-			}
+			method = vClass.getMethod("visit", candidates.get(0));
 		}
 		
 		Target target = new Target(key, method);

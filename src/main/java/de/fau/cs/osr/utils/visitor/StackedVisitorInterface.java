@@ -16,10 +16,8 @@
  */
 package de.fau.cs.osr.utils.visitor;
 
-public abstract class VisitorInterface<T>
+public abstract class StackedVisitorInterface<T>
 {
-	protected abstract Object dispatch(T node);
-	
 	/**
 	 * Called before the visitation starts.
 	 * 
@@ -29,11 +27,14 @@ public abstract class VisitorInterface<T>
 	 *         this method returns <code>null</code> the visitation will be
 	 *         aborted.
 	 */
-	protected abstract T before(T node);
+	protected T before(T node)
+	{
+		return node;
+	}
 	
 	/**
 	 * Called after the visitation has finished. This method will not be called
-	 * if before() returned <code>null</code>.
+	 * if before() returned false.
 	 * 
 	 * @param node
 	 *            The node at which the visitation started.
@@ -43,28 +44,8 @@ public abstract class VisitorInterface<T>
 	 *            returned.
 	 * @return Returns the result parameter.
 	 */
-	protected abstract Object after(T node, Object result);
-	
-	/**
-	 * This method is called if no suitable visit() method could be found. If
-	 * not overridden, this method will throw an UnvisitableException.
-	 * 
-	 * @param node
-	 *            The node that should have been visited.
-	 * @return The result of the visitation.
-	 */
-	protected abstract Object visitNotFound(T node);
-	
-	/**
-	 * This method is called if a visit() method throws an exception. If not
-	 * overriden, this method will wrap the thrown exception in tot a
-	 * VisitingException.
-	 * 
-	 * @param node
-	 *            The node that was visited when the exception was thrown.
-	 * @param cause
-	 *            The exception that was thrown.
-	 * @return The result of the visitation.
-	 */
-	protected abstract Object handleVisitingException(T node, Throwable cause);
+	protected Object after(T node, Object result)
+	{
+		return result;
+	}
 }
