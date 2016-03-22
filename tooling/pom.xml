@@ -1,0 +1,961 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2011 The Open Source Research Group,
+                   University of Erlangen-Nürnberg
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- This POM: Tooling -->
+
+  <groupId>de.fau.cs.osr</groupId>
+  <artifactId>tooling</artifactId>
+  <version>2.1.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Tooling</name>
+  <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling</url>
+  <inceptionYear>2011</inceptionYear>
+  <description>
+    This is a pure POM project that serves as basis for projects developed at
+    the Open Source Research Group at the Friedrich-Alexander-University of
+    Erlangen-Nürnberg. It mainly specifies plugin dependencies for derived
+    projects and tries to preconfigure all aspects of a project that stay the
+    same across most projects.
+  </description>
+
+  <!-- ==[ Properties ]===================================================== -->
+
+  <properties>
+
+    <!-- General configuration -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <version.java>1.6</version.java>
+
+    <!-- Configuration of plugins to be modified by child POMs -->
+    <maven-site-plugin.skip>false</maven-site-plugin.skip>
+    <maven-eclipse-plugin.wtp.version>none</maven-eclipse-plugin.wtp.version>
+
+    <!-- Dependencies -->
+    <version.dep.aspectjrt>1.8.5</version.dep.aspectjrt>
+    <version.dep.commons-codec>1.6</version.dep.commons-codec>
+    <version.dep.commons-collections>3.2.2</version.dep.commons-collections>
+    <version.dep.commons-compress>1.7</version.dep.commons-compress>
+    <version.dep.commons-io>1.4</version.dep.commons-io>
+    <version.dep.commons-jxpath>1.3</version.dep.commons-jxpath>
+    <version.dep.commons-lang>2.5</version.dep.commons-lang>
+    <version.dep.commons-math3>3.2</version.dep.commons-math3>
+    <version.dep.joda-time>2.3</version.dep.joda-time>
+    <version.dep.junit>4.12</version.dep.junit>
+    <version.dep.log4j>1.2.14</version.dep.log4j>
+
+    <!-- Maven plugins: http://maven.apache.org/plugins/ -->
+
+    <!-- Core plugins -->
+    <!-- clean -->
+    <version.plugin.compiler>3.1</version.plugin.compiler>
+    <version.plugin.deploy>2.8.1</version.plugin.deploy>
+    <!-- failsafe, install, resources -->
+    <version.plugin.site>3.3</version.plugin.site>
+    <version.plugin.surefire>2.16</version.plugin.surefire>
+    <!-- verifier -->
+
+    <!-- Packaging types / tools -->
+    <version.plugin.jar>2.4</version.plugin.jar>
+    <version.plugin.war>2.4</version.plugin.war>
+
+    <!-- Reporting plugins -->
+    <version.plugin.changes>2.9</version.plugin.changes>
+    <version.plugin.javadoc>2.9.1</version.plugin.javadoc>
+    <version.plugin.jxr>2.3</version.plugin.jxr>
+    <version.plugin.project-info-reports>2.7</version.plugin.project-info-reports>
+    <version.plugin.surefire-report>2.16</version.plugin.surefire-report>
+
+    <!-- Tools -->
+    <version.plugin.archetype>2.2</version.plugin.archetype>
+    <version.plugin.assembly>2.4</version.plugin.assembly>
+    <version.plugin.gpg>1.4</version.plugin.gpg>
+    <version.plugin.release>2.4.1</version.plugin.release>
+    <version.plugin.source>2.2.1</version.plugin.source>
+
+    <!-- IDEs -->
+    <version.plugin.eclipse>2.9</version.plugin.eclipse>
+
+    <!-- Mojo plugins @ Codehaus: http://mojo.codehaus.org/plugins.html -->
+    <version.plugin.build-helper>1.8</version.plugin.build-helper>
+    <version.plugin.exec>1.2.1</version.plugin.exec>
+
+    <!-- Other -->
+    <version.plugin.git-commit-id>2.1.12</version.plugin.git-commit-id>
+    <version.plugin.license>2.5</version.plugin.license>
+    <version.plugin.aspectj>1.7</version.plugin.aspectj>
+    <version.plugin.maven-replacer-plugin>1.3.2</version.plugin.maven-replacer-plugin>
+    <version.plugin.scm-provider-gitexe>1.9.4</version.plugin.scm-provider-gitexe>
+
+  </properties>
+
+  <!-- ==[ Dependencies ]=================================================== -->
+
+    <!-- Should be configured in each project individually! -->
+
+  <dependencies>
+  </dependencies>
+
+  <!-- ==[ Dependency Management ]========================================== -->
+
+  <!-- Should be done in each project individually! -->
+
+  <!-- The dependencies listed here are some basic stuff that every project
+       needs sooner or later. -->
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- AspectJ -->
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>${version.dep.aspectjrt}</version>
+      </dependency>
+
+      <!-- Apache Commons -->
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${version.dep.commons-codec}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>${version.dep.commons-collections}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>${version.dep.commons-compress}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${version.dep.commons-io}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-jxpath</groupId>
+        <artifactId>commons-jxpath</artifactId>
+        <version>${version.dep.commons-jxpath}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${version.dep.commons-lang}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-math3</artifactId>
+        <version>${version.dep.commons-math3}</version>
+      </dependency>
+
+      <!-- Joda-Time - Java date and time API -->
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${version.dep.joda-time}</version>
+      </dependency>
+
+      <!-- JUnit -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${version.dep.junit}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Log4j -->
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${version.dep.log4j}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+
+    <!-- ==[ Resource Configuration ]======================================= -->
+
+    <resources>
+      <!-- Make sure variable subsitution work in "*.buildinfo.properties" files -->
+      <!--
+        This doesn't work with the eclipse:eclipse goal.
+        It will exclude resources when run in eclipse.
+
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.buildinfo.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*.buildinfo.properties</exclude>
+        </excludes>
+      </resource>
+
+        So we have to filter all resources and hope that nothing goes wrong...
+      -->
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+
+    <!-- ==[ Plugin Configuration ]========================================= -->
+
+    <!-- Should be configured in each project individually! -->
+
+    <plugins>
+
+      <!-- Check and format license headers -->
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <configuration>
+          <header>etc/license-header.txt</header>
+          <!-- I assume the configuration is inherited from the parent -->
+          <excludes>
+            <!-- These excludes should be the same as in the parent project -->
+            <exclude>**/*.log</exclude>
+            <exclude>**/.gitignore</exclude>
+            <exclude>LICENSE</exclude>
+            <exclude>NOTICE</exclude>
+
+            <!-- Extra excludes for this project -->
+            <!-- ... -->
+          </excludes>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
+    <!-- ==[ Plugin Management ]============================================ -->
+
+    <pluginManagement>
+      <plugins>
+
+        <!-- Core plugins  - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Java Maven Compiler Plugin -->
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${version.plugin.compiler}</version>
+          <configuration>
+            <source>${version.java}</source>
+            <target>${version.java}</target>
+            <args>
+              <arg>-deprecation</arg>
+            </args>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Deploy Plugin -->
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${version.plugin.deploy}</version>
+        </plugin>
+
+        <!-- Maven Site Plugin -->
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${version.plugin.site}</version>
+          <configuration>
+            <skip>${maven-site-plugin.skip}</skip>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Surefire Plugin -->
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${version.plugin.surefire}</version>
+          <configuration>
+            <printSummary>false</printSummary>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          </configuration>
+        </plugin>
+
+        <!-- Packaging types / tools - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Make sure MANIFEST files contain version information -->
+        <!-- Maven Jar Plugin -->
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.plugin.jar}</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+
+        <!-- Make sure MANIFEST files contain version information -->
+        <!-- Maven War Plugin -->
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>${version.plugin.war}</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+
+        <!-- Reporting plugins - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Maven Changes Plugin -->
+        <plugin>
+          <artifactId>maven-changes-plugin</artifactId>
+          <version>${version.plugin.changes}</version>
+        </plugin>
+
+        <!-- Maven Javadoc Plugin -->
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${version.plugin.javadoc}</version>
+          <configuration>
+            <quiet>true</quiet>
+          </configuration>
+        </plugin>
+
+        <!-- Maven JXR Plugin -->
+        <plugin>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>${version.plugin.jxr}</version>
+        </plugin>
+
+        <!-- Maven Project Info Report Plugin -->
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>${version.plugin.project-info-reports}</version>
+        </plugin>
+
+        <!-- Maven Surefire Report Plugin -->
+        <plugin>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>${version.plugin.surefire-report}</version>
+        </plugin>
+
+        <!-- Tools - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Maven Archetype Plugin -->
+        <plugin>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>${version.plugin.archetype}</version>
+        </plugin>
+
+        <!-- Maven Assembly Plugin -->
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${version.plugin.assembly}</version>
+        </plugin>
+
+        <!-- Maven GPG Plugin -->
+        <plugin>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${version.plugin.gpg}</version>
+          <configuration>
+            <useAgent>true</useAgent>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Release Plugin -->
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${version.plugin.release}</version>
+          <configuration>
+            <!-- Don't do site-deploy! -->
+            <goals>deploy</goals>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.scm</groupId>
+              <artifactId>maven-scm-provider-gitexe</artifactId>
+              <version>${version.plugin.scm-provider-gitexe}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <!-- Maven Source Plugin -->
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${version.plugin.source}</version>
+        </plugin>
+
+        <!-- IDEs  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Maven Eclipse Plugin -->
+        <plugin>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>${version.plugin.eclipse}</version>
+          <configuration>
+            <wtpversion>${maven-eclipse-plugin.wtp.version}</wtpversion>
+            <downloadSources>true</downloadSources>
+            <downloadJavadocs>true</downloadJavadocs>
+          </configuration>
+        </plugin>
+
+        <!-- Mojo plugins @ Codehaus - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Build Helper Maven Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${version.plugin.build-helper}</version>
+        </plugin>
+
+        <!-- Execute system and Java programs -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${version.plugin.exec}</version>
+        </plugin>
+
+        <!-- Other - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!-- Check and format license headers -->
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>${version.plugin.license}</version>
+          <executions>
+            <execution>
+              <id>check-licenses</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Get Git commit information (turned off by default!) -->
+        <plugin>
+          <groupId>pl.project13.maven</groupId>
+          <artifactId>git-commit-id-plugin</artifactId>
+          <version>${version.plugin.git-commit-id}</version>
+          <configuration>
+            <verbose>false</verbose>
+            <gitDescribe>
+              <skip>false</skip>
+              <always>true</always>
+              <tags>true</tags>
+              <abbrev>7</abbrev>
+            </gitDescribe>
+          </configuration>
+          <executions>
+            <execution>
+              <id>gather-git-information</id>
+              <phase>none</phase>
+              <goals>
+                <goal>revision</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Maven AspectJ Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>aspectj-maven-plugin</artifactId>
+          <version>${version.plugin.aspectj}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.aspectj</groupId>
+              <artifactId>aspectjtools</artifactId>
+              <version>${version.dep.aspectjrt}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <complianceLevel>${version.java}</complianceLevel>
+            <source>${version.java}</source>
+            <target>${version.java}</target>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <!--
+          When using the AspectJ plugin one must disable the Maven Compilier 
+          Plugin in favor of the AspectJ plugin:
+
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/*</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        -->
+
+        <plugin>
+          <groupId>com.google.code.maven-replacer-plugin</groupId>
+          <artifactId>maven-replacer-plugin</artifactId>
+          <version>${version.plugin.maven-replacer-plugin}</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <!-- ==[ Build Element Set ]============================================ -->
+
+    <!--
+    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+    <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
+    <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
+    <outputDirectory>${basedir}/target/classes</outputDirectory>
+    <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
+    -->
+
+    <extensions>
+    </extensions>
+
+  </build>
+
+  <!-- ==[ Reporting ]==================================================== -->
+
+  <reporting>
+    <excludeDefaults>true</excludeDefaults>
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-changes-plugin</artifactId>
+        <configuration>
+          <xmlPath>${basedir}/src/site/changes.xml</xmlPath>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <quiet>true</quiet>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <id>site-javadoc</id>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-jxr-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+
+    </plugins>
+  </reporting>
+
+  <!-- ==[ More Project Information ]======================================= -->
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>University of Erlangen-Nürnberg - Open Source Research Group</name>
+    <url>http://osr.cs.fau.de</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>driehle</id>
+      <name>Dirk Riehle</name>
+      <email>dirk.riehle@fau.de</email>
+      <roles>
+        <role>Director</role>
+      </roles>
+      <organization>University of Erlangen-Nürnberg - Open Source Research Group</organization>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>hdohrn</id>
+      <name>Hannes Dohrn</name>
+      <email>hannes.dohrn@fau.de</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <organization>University of Erlangen-Nürnberg - Open Source Research Group</organization>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+
+  <!--
+  <contributors>
+    <contributor>
+      <name>Max Mustermann</name>
+      <email>max.mustermann@example.com</email>
+      <url>http://maxmustermann.com</url>
+      <organization>Example AG</organization>
+      <organizationUrl>http://example.com</organizationUrl>
+      <roles>
+        <role>tester</role>
+      </roles>
+      <timezone>+1</timezone>
+    </contributor>
+  </contributors>
+  -->
+
+  <!-- ==[ Environment Settings ]=========================================== -->
+
+  <issueManagement>
+    <system>Mantis</system>
+    <url>http://sweble.org/bugtracker</url>
+  </issueManagement>
+
+  <!--
+  <ciManagement>
+    <system>Continuum</system>
+    <url>http://example.com/continuum</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <address>max.mustermann@example.com</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  -->
+
+  <mailingLists>
+    <mailingList>
+      <name>Sweble Project - General Discussion</name>
+      <subscribe>sweble-wt-parser-subscribe@sweble.org</subscribe>
+      <unsubscribe>sweble-wt-parser-unsubscribe@sweble.org</unsubscribe>
+      <post>sweble-wt-parser@sweble.org</post>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser</archive>
+    </mailingList>
+    <mailingList>
+      <name>Sweble Project - Developer Discussion</name>
+      <subscribe>sweble-wt-parser-devel-subscribe@sweble.org</subscribe>
+      <unsubscribe>sweble-wt-parser-devel-unsubscribe@sweble.org</unsubscribe>
+      <post>sweble-wt-parser-devel@sweble.org</post>
+      <archive>http://sweble.org/pipermail/sweble-wt-parser-devel</archive>
+    </mailingList>
+  </mailingLists>
+
+  <scm>
+    <connection>scm:git://sweble.org/git/tooling.git</connection>
+    <developerConnection>scm:git:ssh://gitosis@sweble.org/tooling.git</developerConnection>
+    <url>http://sweble.org/gitweb/?p=tooling.git;a=summary</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Sonatype Nexus Staging</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+    <snapshotRepository>
+      <id>osr-public-snapshots-deployment</id>
+      <name>OSR Public Snapshots Deployment</name>
+      <url>http://mojo-maven.cs.fau.de/content/repositories/public-snapshots</url>
+    </snapshotRepository>
+    <site>
+      <id>sweble.org</id>
+      <url>http://sweble.org/sites/swc-devel/alpha-latest/tooling</url>
+    </site>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <id>osr-public-repo</id>
+      <name>OSR Public Repository</name>
+      <url>http://mojo-maven.cs.fau.de/content/repositories/public</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <id>osr-public-plugin-repo</id>
+      <name>OSR Public Plugin Repository</name>
+      <url>http://mojo-maven.cs.fau.de/content/repositories/public</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <!-- ==[ Profiles ]======================================================= -->
+
+  <profiles>
+
+    <profile>
+      <id>quick</id>
+
+      <!-- Disable tests -->
+      <properties>
+        <maven.test.skip>true</maven.test.skip>
+      </properties>
+
+      <build>
+        <plugins>
+
+          <!-- Don't check and format license headers -->
+          <plugin>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>check-licenses</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Don't get Git commit information -->
+          <plugin>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>gather-git-information</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+
+      <!--
+        Only generate minimal site.
+        Only relevant if the site phase is invoked.
+      -->
+      <reporting>
+        <excludeDefaults>true</excludeDefaults>
+        <plugins>
+
+          <plugin>
+            <artifactId>maven-changes-plugin</artifactId>
+            <!-- it's not possible to disable this report :( -->
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-jxr-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>index</report>
+                  <report>summary</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+            </plugin>
+
+          <plugin>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <configuration>
+              <skipSurefireReport>true</skipSurefireReport>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </reporting>
+    </profile>
+
+    <!--
+      This profile is used to release artifacts to Maven Central. Each module
+      has to build its main artifacts including javadoc and source. Signing of
+      the artifacts is also required (see "sign" profile).
+    -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+
+          <!--
+            Maven Javadoc Plugin.
+            Build a javadoc JAR archive for each individual module.
+          -->
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadoc-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <quiet>true</quiet>
+            </configuration>
+          </plugin>
+
+          <!--
+            Maven Source Plugin.
+            Build a source JAR archive for each individual module.
+          -->
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!--
+            Maven Deploy Plugin.
+            We have to explicitly define it here to force the right execution order of plugins
+          -->
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId> 
+            <executions> 
+              <execution> 
+                <id>deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals> 
+              </execution> 
+            </executions> 
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+    <!--
+      Sign the generated artifacts. Usually used in conjunction with the
+      "release" profile to deploy artifacts to Maven Central. The key name has
+      to be given as option on the command line and the key should be unlocked
+      and held by the gpg agent (-Dgpg.keyname=...).
+    -->
+    <profile>
+      <id>sign</id>
+      <build>
+        <plugins>
+
+          <!-- Maven GPG Plugin -->
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Turn on git information extraction -->
+    <profile>
+      <id>git-info</id>
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>gather-git-information</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>revision</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+</project>
