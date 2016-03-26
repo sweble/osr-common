@@ -51,12 +51,6 @@
 
 	<dependencies>
 
-		<!-- Apache Commons -->
-		<dependency>
-			<groupId>commons-jxpath</groupId>
-			<artifactId>commons-jxpath</artifactId>
-		</dependency>
-
 		<!-- Rats! -->
 		<dependency>
 			<groupId>xtc</groupId>

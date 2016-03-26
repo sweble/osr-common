@@ -51,10 +51,22 @@
 
 	<dependencies>
 
+		<!-- Apache commons -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
 		<!-- Gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+		</dependency>
+
+		<!-- Utils -->
+		<dependency>
+			<groupId>de.fau.cs.osr.utils</groupId>
+			<artifactId>utils</artifactId>
 		</dependency>
 
 		<!-- Parser Toolkit - Common -->
@@ -67,6 +79,7 @@
 		<!-- Testing - Testing - Testing - Testing - Testing - Testing - Tes -->
 		<!-- =============================================================== -->
 
+		<!-- JUnit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
