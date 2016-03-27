@@ -27,9 +27,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import de.fau.cs.osr.utils.FmtIllegalArgumentException;
 import joptsimple.OptionSet;
 import joptsimple.internal.ColumnarData;
-import de.fau.cs.osr.utils.FmtIllegalArgumentException;
 
 public class Configuration
 {

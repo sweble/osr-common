@@ -218,18 +218,18 @@ public class ConsoleProgressBar
 		if (this.progress <= 0.f)
 		{
 			done = "";
-			space = StringUtils.strrep(' ', this.barLength);
+			space = StringTools.strrep(' ', this.barLength);
 		}
 		else if (this.progress >= 1.f)
 		{
-			done = StringUtils.strrep('=', this.barLength);
+			done = StringTools.strrep('=', this.barLength);
 			space = "";
 		}
 		else
 		{
 			int numDone = (int) (this.barLength * this.progress);
-			done = StringUtils.strrep('=', numDone);
-			space = StringUtils.strrep(' ', this.barLength - numDone);
+			done = StringTools.strrep('=', numDone);
+			space = StringTools.strrep(' ', this.barLength - numDone);
 		}
 
 		int indPos =
@@ -244,7 +244,7 @@ public class ConsoleProgressBar
 
 		int len = bar.length();
 		if (len < this.lineLength)
-			bar += StringUtils.strrep(' ', this.lineLength - len);
+			bar += StringTools.strrep(' ', this.lineLength - len);
 
 		this.lineLength = len;
 		this.out.print(bar + '\r');
@@ -252,6 +252,6 @@ public class ConsoleProgressBar
 
 	public void clear()
 	{
-		out.print(StringUtils.strrep(' ', this.lineLength) + '\r');
+		out.print(StringTools.strrep(' ', this.lineLength) + '\r');
 	}
 }

@@ -26,8 +26,12 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
-public final class StringUtils
+/**
+ * We call the class *Tools to avoid conflicts with Apache Commons.
+ */
+public final class StringTools
 {
 	public static String escHtml(String text)
 	{
@@ -164,20 +168,20 @@ public final class StringUtils
 
 	public static String strrep(char c, int times)
 	{
-		return org.apache.commons.lang3.StringUtils.repeat(
+		return StringUtils.repeat(
 				Character.toString(c), times);
 	}
 
 	public static String strrep(String str, int times)
 	{
-		return org.apache.commons.lang3.StringUtils.repeat(str, times);
+		return StringUtils.repeat(str, times);
 	}
 
 	// =========================================================================
 
 	public static String crop(String str, int length)
 	{
-		return org.apache.commons.lang3.StringUtils.abbreviate(str, length);
+		return StringUtils.abbreviate(str, length);
 	}
 
 	// =========================================================================
@@ -443,7 +447,7 @@ public final class StringUtils
 		if (text == null)
 			throw new NullPointerException();
 
-		return org.apache.commons.lang3.StringUtils.isWhitespace(text);
+		return StringUtils.isWhitespace(text);
 	}
 
 	/**

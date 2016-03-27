@@ -88,7 +88,7 @@ public class FileCompare
 	public String fixActualText(String actual)
 	{
 		return resources.stripBaseDirectoryAndFixPath(
-				FileUtils.lineEndToUnix(actual));
+				FileTools.lineEndToUnix(actual));
 	}
 
 	private void checkReferenceFile(
@@ -103,7 +103,7 @@ public class FileCompare
 				String dir = expectedFile.getParentFile().getAbsolutePath();
 
 				// We always operate with UNIX separator '/':
-				FileUtils.fileSeparatorToUnix(dir);
+				FileTools.fileSeparatorToUnix(dir);
 
 				if (inputPathToRefPathSearch == null)
 					inputPathToRefPathSearch = Pattern.compile(
@@ -158,7 +158,7 @@ public class FileCompare
 			return;
 
 		// We always operate with UNIX line end '\n':
-		String reference = FileUtils.lineEndToUnix(reftext.getContent());
+		String reference = FileTools.lineEndToUnix(reftext.getContent());
 
 		/* UGLY DANGEROUS INTERMEDIATE EVIL HACK*
 		if (!reference.equals(actual))

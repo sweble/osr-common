@@ -16,11 +16,6 @@
  */
 package de.fau.cs.osr.ptk.common.serialization;
 
-import de.fau.cs.osr.utils.MissingTypeInformationException;
-import de.fau.cs.osr.utils.SimpleTypeNameMapper;
-import de.fau.cs.osr.utils.TypeNameMapper;
-import de.fau.cs.osr.utils.UnknownTypeException;
-
 public class AstConverterBase
 {
 	private TypeNameMapper typeNameMapper = new SimpleTypeNameMapper();

@@ -34,7 +34,7 @@ import de.fau.cs.osr.ptk.common.ast.AstText;
 import de.fau.cs.osr.utils.PrinterBase;
 import de.fau.cs.osr.utils.PrinterBase.Memoize;
 import de.fau.cs.osr.utils.PrinterBase.OutputBuffer;
-import de.fau.cs.osr.utils.StringUtils;
+import de.fau.cs.osr.utils.StringTools;
 
 public class AstPrinter<T extends AstNode<T>>
 		extends
@@ -76,7 +76,7 @@ public class AstPrinter<T extends AstNode<T>>
 		if (!hasVisibleProperties(n))
 		{
 			p.indent('"');
-			p.print(StringUtils.escJava(n.getContent()));
+			p.print(StringTools.escJava(n.getContent()));
 			p.println('"');
 		}
 		else
@@ -91,7 +91,7 @@ public class AstPrinter<T extends AstNode<T>>
 		{
 			p.indent(n.getNodeName());
 			p.print("(\"");
-			p.print(StringUtils.escJava(n.getContent()));
+			p.print(StringTools.escJava(n.getContent()));
 			p.println("\")");
 		}
 		else
@@ -242,7 +242,7 @@ public class AstPrinter<T extends AstNode<T>>
 		else if (value instanceof String)
 		{
 			p.indent('"');
-			p.print(StringUtils.escJava((String) value));
+			p.print(StringTools.escJava((String) value));
 			p.println('"');
 		}
 		else if (value instanceof AstNode)

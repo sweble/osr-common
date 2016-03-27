@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils;
+package de.fau.cs.osr.ptk.common.serialization;
 
-import org.apache.commons.collections.bidimap.DualHashBidiMap;
-import org.apache.commons.lang3.StringUtils;
-
+import de.fau.cs.osr.utils.DualHashBidiMap;
+import de.fau.cs.osr.utils.ReflectionUtils;
 import de.fau.cs.osr.utils.ReflectionUtils.ArrayInfo;
+import de.fau.cs.osr.utils.StringTools;
 
 public class SimpleTypeNameMapper
 		implements
@@ -60,7 +60,7 @@ public class SimpleTypeNameMapper
 		{
 			ArrayInfo dim = ReflectionUtils.arrayDimension(n);
 			String elementTypeName = nameForType(dim.elementClass);
-			return elementTypeName + StringUtils.repeat("[]", dim.dim);
+			return elementTypeName + StringTools.strrep("[]", dim.dim);
 		}
 
 		if (ReflectionUtils.isBasicDataType(n))

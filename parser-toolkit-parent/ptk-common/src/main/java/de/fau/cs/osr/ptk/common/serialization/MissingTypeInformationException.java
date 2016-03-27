@@ -15,29 +15,29 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils;
+package de.fau.cs.osr.ptk.common.serialization;
 
-public class UnknownTypeException
+public class MissingTypeInformationException
 		extends
 			RuntimeException
 {
 	private static final long serialVersionUID = 1L;
 
-	public UnknownTypeException()
+	public MissingTypeInformationException()
 	{
 	}
 
-	public UnknownTypeException(String message, Throwable cause)
+	public MissingTypeInformationException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 
-	public UnknownTypeException(String message)
+	public MissingTypeInformationException(String message)
 	{
 		super(message);
 	}
 
-	public UnknownTypeException(Throwable cause)
+	public MissingTypeInformationException(Throwable cause)
 	{
 		super(cause);
 	}

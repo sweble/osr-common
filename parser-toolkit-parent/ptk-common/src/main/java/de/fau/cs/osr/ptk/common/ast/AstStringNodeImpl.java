@@ -19,7 +19,7 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.IOException;
 
-import de.fau.cs.osr.utils.StringUtils;
+import de.fau.cs.osr.utils.StringTools;
 
 public abstract class AstStringNodeImpl<T extends AstNode<T>>
 		extends
@@ -129,7 +129,7 @@ public abstract class AstStringNodeImpl<T extends AstNode<T>>
 	{
 		out.append(getClass().getSimpleName());
 		out.append("(\"");
-		out.append(StringUtils.escJava(getContent()));
+		out.append(StringTools.escJava(getContent()));
 		out.append("\")");
 	}
 }

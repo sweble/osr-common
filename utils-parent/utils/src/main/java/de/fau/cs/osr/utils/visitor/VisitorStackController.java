@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.StringUtils;
+import de.fau.cs.osr.utils.StringTools;
 
 public abstract class VisitorStackController<T>
 {
@@ -423,7 +423,7 @@ public abstract class VisitorStackController<T>
 				if (visitor != null)
 				{
 					if (DEBUG)
-						System.err.println(chain[i].method + ": " + StringUtils.abbreviate(visitNext.toString(), 32));
+						System.err.println(chain[i].method + ": " + StringTools.crop(visitNext.toString(), 32));
 					result = chain[i].method.invoke(visitor, baton, visitNext);
 
 					// We must always query the code to reset it, even if result == null
@@ -541,7 +541,7 @@ public abstract class VisitorStackController<T>
 				Object visitNext)
 		{
 			if (DEBUG)
-				System.err.println(StringUtils.abbreviate(visitNext.toString(), 32));
+				System.err.println(StringTools.crop(visitNext.toString(), 32));
 			return controller.resolveAndVisit(visitNext);
 		}
 

@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import joptsimple.OptionParser;
 import de.fau.cs.osr.utils.FmtIllegalArgumentException;
+import joptsimple.OptionParser;
 
 public final class Options
 {

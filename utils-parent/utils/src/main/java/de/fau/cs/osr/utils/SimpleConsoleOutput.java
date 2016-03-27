@@ -80,9 +80,9 @@ public class SimpleConsoleOutput
 	public static void printBigSep(String title)
 	{
 		System.out.println();
-		String eq80 = StringUtils.strrep("=", 80);
-		String sp76 = StringUtils.strrep(" ", 76);
-		String spX = StringUtils.strrep(" ", Math.max(75 - title.length(), 1));
+		String eq80 = StringTools.strrep("=", 80);
+		String sp76 = StringTools.strrep(" ", 76);
+		String spX = StringTools.strrep(" ", Math.max(75 - title.length(), 1));
 		System.out.println(eq80);
 		System.out.println("==" + sp76 + "==");
 		System.out.println("== " + title + spX + "==");
@@ -93,8 +93,8 @@ public class SimpleConsoleOutput
 
 	public static String formatSepLine(int indent, String title)
 	{
-		String sep = StringUtils.strrep(' ', indent) + "--[ " + title + " ]";
-		String line = sep + StringUtils.strrep("-", Math.max(80 - sep.length(), 2));
+		String sep = StringTools.strrep(' ', indent) + "--[ " + title + " ]";
+		String line = sep + StringTools.strrep("-", Math.max(80 - sep.length(), 2));
 		return line;
 	}
 }

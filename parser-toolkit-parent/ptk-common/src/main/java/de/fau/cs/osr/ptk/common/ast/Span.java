@@ -19,7 +19,7 @@ package de.fau.cs.osr.ptk.common.ast;
 
 import java.io.Serializable;
 
-import de.fau.cs.osr.utils.StringUtils;
+import de.fau.cs.osr.utils.StringTools;
 import xtc.tree.Location;
 
 public final class Span
@@ -168,7 +168,7 @@ public final class Span
 		if (content != null)
 		{
 			buf.append(": \"");
-			buf.append(StringUtils.escJava(StringUtils.crop(content, 32)));
+			buf.append(StringTools.escJava(StringTools.crop(content, 32)));
 			buf.append('"');
 		}
 		else

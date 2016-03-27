@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import de.fau.cs.osr.ptk.common.ast.AstNode;
-import de.fau.cs.osr.utils.StringUtils;
+import de.fau.cs.osr.utils.StringTools;
 
 public class DeepComparisonException
 		extends
@@ -82,7 +82,7 @@ public class DeepComparisonException
 		else
 		{
 			w.append("\"\"\"");
-			w.append(StringUtils.escJava(value.toString()));
+			w.append(StringTools.escJava(value.toString()));
 			w.append("\"\"\"\n");
 		}
 	}

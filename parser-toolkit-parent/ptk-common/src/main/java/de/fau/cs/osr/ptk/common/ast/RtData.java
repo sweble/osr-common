@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import de.fau.cs.osr.utils.StringUtils;
+import de.fau.cs.osr.utils.StringTools;
 import de.fau.cs.osr.utils.WrappedException;
 
 public class RtData
@@ -428,7 +428,7 @@ public class RtData
 	protected void stringRep(StringBuilder sb, String str)
 	{
 		sb.append('"');
-		sb.append(StringUtils.escJava(str));
+		sb.append(StringTools.escJava(str));
 		sb.append('"');
 	}
 

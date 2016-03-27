@@ -22,9 +22,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.google.common.base.Preconditions;
-
-public final class FileUtils
+/**
+ * We call the class *Tools to avoid conflicts with Apache Commons.
+ */
+public final class FileTools
 {
 	public static File fillTempFile(String result, String filePrefix) throws IOException
 	{
@@ -55,9 +56,8 @@ public final class FileUtils
 	{
 		if (File.separatorChar != '/')
 		{
-			Preconditions.checkArgument(
-					path.indexOf('/') == -1,
-					"Test code doesn't work properly if path conatins a '/'.");
+			if (path.indexOf('/') != -1)
+				throw new IllegalArgumentException("Test code doesn't work properly if path conatins a '/'.");
 
 			path = path.replace(File.separatorChar, '/');
 		}

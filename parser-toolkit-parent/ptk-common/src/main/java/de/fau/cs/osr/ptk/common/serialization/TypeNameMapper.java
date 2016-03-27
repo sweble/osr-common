@@ -15,30 +15,15 @@
  * limitations under the License.
  */
 
-package de.fau.cs.osr.utils;
+package de.fau.cs.osr.ptk.common.serialization;
 
-public class MissingTypeInformationException
-		extends
-			RuntimeException
+/**
+ * Interface for a service that bijectively maps types to names and those names
+ * back to types.
+ */
+public interface TypeNameMapper
 {
-	private static final long serialVersionUID = 1L;
+	String nameForType(Class<?> n);
 
-	public MissingTypeInformationException()
-	{
-	}
-
-	public MissingTypeInformationException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
-	public MissingTypeInformationException(String message)
-	{
-		super(message);
-	}
-
-	public MissingTypeInformationException(Throwable cause)
-	{
-		super(cause);
-	}
+	Class<?> typeForName(String name);
 }

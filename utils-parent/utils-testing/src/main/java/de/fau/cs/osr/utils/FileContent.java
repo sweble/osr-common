@@ -58,7 +58,7 @@ public class FileContent
 		this.file = file;
 		String fileContent = org.apache.commons.io.FileUtils.readFileToString(file, encoding);
 
-		this.content = de.fau.cs.osr.utils.FileUtils.lineEndToUnix(fileContent);
+		this.content = de.fau.cs.osr.utils.FileTools.lineEndToUnix(fileContent);
 	}
 
 	// =========================================================================

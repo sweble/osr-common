@@ -14,27 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.fau.cs.osr.utils;
 
-import java.io.IOException;
+package de.fau.cs.osr.ptk.common.serialization;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-public class TestBuildInfo
+public class UnknownTypeException
+		extends
+			RuntimeException
 {
-	// FIXME: This test is useless in this form!
-	@Test
-	@Ignore
-	public void test() throws IOException
+	private static final long serialVersionUID = 1L;
+
+	public UnknownTypeException()
 	{
-		ClassLoader cl;
+	}
 
-		cl = getClass().getClassLoader();
+	public UnknownTypeException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
-		System.out.println(BuildInfo.build(
-				"de.fau.cs.osr.utils",
-				"utils",
-				cl));
+	public UnknownTypeException(String message)
+	{
+		super(message);
+	}
+
+	public UnknownTypeException(Throwable cause)
+	{
+		super(cause);
 	}
 }

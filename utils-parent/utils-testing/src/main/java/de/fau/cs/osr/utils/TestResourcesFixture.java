@@ -90,7 +90,7 @@ public class TestResourcesFixture
 					"Cannot find index file in resource path: `%s'",
 					pathToIndex));
 
-		String path = StringUtils.decodeUsingDefaultCharset(url.getFile());
+		String path = StringTools.decodeUsingDefaultCharset(url.getFile());
 		return new File(path).getParentFile();
 	}
 
@@ -269,7 +269,7 @@ public class TestResourcesFixture
 	 */
 	public static File rebase(File file, String base, String rebase)
 	{
-		String unixPath = FileUtils.fileSeparatorToUnix(file.getAbsolutePath());
+		String unixPath = FileTools.fileSeparatorToUnix(file.getAbsolutePath());
 		File rebasedFile = new File(unixPath.replace(base, rebase));
 
 		if (!rebasedFile.exists())
@@ -334,7 +334,7 @@ public class TestResourcesFixture
 			String ext,
 			boolean noThrow)
 	{
-		String unixPath = FileUtils.fileSeparatorToUnix(file.getAbsolutePath());
+		String unixPath = FileTools.fileSeparatorToUnix(file.getAbsolutePath());
 		String rebased = unixPath.replace(base, rebase);
 
 		int i = rebased.lastIndexOf('.');
@@ -382,7 +382,7 @@ public class TestResourcesFixture
 	{
 		URL wmUrl = clazz.getResource(testFile);
 		if (wmUrl != null)
-			return new File(StringUtils.decodeUsingDefaultCharset(wmUrl.getFile()));
+			return new File(StringTools.decodeUsingDefaultCharset(wmUrl.getFile()));
 		return null;
 	}
 
