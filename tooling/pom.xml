@@ -186,6 +186,10 @@
 				<version>${commons-compress.version}</version>
 			</dependency>
 			<dependency>
+				<!--
+					Also add signature "commons-io-unsafe-<ver>" to 
+					forbiddenapis plugin when using this dependency
+				-->
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
