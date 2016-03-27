@@ -1,0 +1,258 @@
+#!/bin/bash
+#
+# Copyright 2011 The Open Source Research Group,
+#                University of Erlangen-Nürnberg
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+set -ue
+
+# ------------------------------------------------------------------------------
+# Parse command line arguments
+
+while getopts "h?s:d:r:t:g:" opt; do
+  case "$opt" in
+  h|\?)
+    echo "Usage: $( basename $0 ) [-h|-?] [-s <stage>] [-r <release-version>] [-d <development-version>] [-t <tag>] [-g <gpg-key-name>]"
+    echo
+    echo "Stages are:"
+    echo "  clean"
+    echo "  deploy-final-snapshot"
+    echo "  switch-to-release-branch"
+    echo "  prepare-release"
+    echo "  perform-release"
+    echo "  merge-release-tag-into-master"
+    echo "  merge-master-into-develop"
+    echo "  deploy-initial-snapshot"
+    echo "  deploy-signed-release-locally"
+    echo "  deploy-signed-release"
+    echo "  push-to-vcs"
+    exit 0
+    ;;
+  s)
+    stage=$OPTARG
+    ;;
+  r)
+    releaseVersion=$OPTARG
+    ;;
+  d)
+    developmentVersion=$OPTARG
+    ;;
+  t)
+    tag=$OPTARG
+    ;;
+  g)
+    gpgKeyName=$OPTARG
+    ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+[ "${1:-}" = "--" ] && shift
+
+logFile=release.log
+
+# ------------------------------------------------------------------------------
+# Helper functions
+
+readonly sep=$( printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' = )
+
+function getPomField {
+  q="from lxml.etree import parse; from sys import stdin;"
+  q="${q}print ''.join(parse(stdin).xpath("
+  q="${q}  '$1',"
+  q="${q}  namespaces={'x':'http://maven.apache.org/POM/4.0.0'}));"
+  python -c "$q" < pom.xml
+}
+
+function assureGpgAgent {
+  if [[ -z ${GPG_AGENT_INFO:-} ]]; then
+    if [[ -z ${GNUPGHOME:-} ]]; then
+      export GNUPGHOME=${HOME}/.gnupg
+    fi
+    export GPG_AGENT_INFO=${GNUPGHOME}/S.gpg-agent:0:1
+  fi
+}
+
+function logEcho {
+  echo "$@" | tee -a $logFile
+}
+
+function logHeading {
+  echo $sep >> $logFile
+  echo "== $@" >> $logFile
+  echo $sep >> $logFile
+}
+
+function logEchoHeading {
+  logHeading "$@"
+  echo "$@"
+}
+
+function logExec {
+  echo >> $logFile
+  echo ">> $@" >> $logFile
+  "$@" >> $logFile 2> >(tee -a $logFile >&2)
+}
+
+# ------------------------------------------------------------------------------
+# Actual release process
+
+groupId=$( getPomField "/x:project/x:groupId/text()" )
+artifactId=$( getPomField "/x:project/x:artifactId/text()" )
+version=$( getPomField "/x:project/x:version/text()" )
+
+logEcho
+logEcho "Current coordinates are: $groupId:$artifactId:$version"
+
+if [[ -z ${releaseVersion:-} ]] || [[ -z ${developmentVersion:-} ]]; then logEcho; fi
+if [[ -z ${releaseVersion:-} ]]; then
+  read -p "Type the release version, followed by [ENTER]: " releaseVersion
+fi
+if [[ -z ${developmentVersion:-} ]]; then
+  read -p "Type the new development version, followed by [ENTER]: " developmentVersion
+fi
+
+if [[ -z ${tag:-} ]]; then
+  tag="$artifactId-$releaseVersion"
+fi
+
+stage=${stage:-clean}
+localRepoId="temp-release-repo"
+localRepoPath="$HOME/$localRepoId"
+
+logEcho
+logEcho "      release version  :  $releaseVersion"
+logEcho "  development version  :  $developmentVersion"
+logEcho "      release VCS tag  :  $tag"
+logEcho "                stage  :  $stage"
+logEcho "      local repo path  :  $localRepoPath"
+logEcho
+read -p "Is this correct? [y|n]: " -n 1 -r
+logEcho
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  logEcho
+  logEcho "Aborted"
+  exit 1
+fi
+
+case $stage in
+  clean)
+    logEcho
+    logEchoHeading "Cleaning (maven)"
+    logExec mvn clean
+    ;&
+
+  deploy-final-snapshot)
+    logEcho
+    read -p "Do you want to deploy a last snapshot? [y|n]: " -n 1 -r
+    logHeading "Do you want to deploy a last snapshot? [y|n]: " $REPLY
+    logEcho
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      logExec mvn deploy
+    fi
+    ;&
+
+  switch-to-release-branch)
+    logEcho
+    logEchoHeading "Switching to release branch"
+    logExec git checkout -b release
+    ;&
+
+  prepare-release)
+    logEcho
+    logEchoHeading "Preparing release"
+    # We cannot log this since the release plugin often asks questions
+    mvn -q release:prepare -DpushChanges=false \
+      -DreleaseVersion=${releaseVersion} \
+      -DdevelopmentVersion=${developmentVersion} \
+      -Dtag=${tag}
+    ;&
+
+  perform-release)
+    logEcho
+    logEchoHeading "Performing release to local repository: $localRepoPath"
+    logExec mkdir -p $localRepoPath
+    logExec mvn release:perform \
+      -DlocalCheckout=true \
+      -DpushChanges=false \
+      -Darguments=-DaltDeploymentRepository=${localRepoId}::default::file://${localRepoPath}
+    ;&
+
+  merge-release-tag-into-master)
+    logEcho
+    logEchoHeading "Merging release tag into master branch"
+    logExec git checkout master
+    logExec git merge --no-ff ${tag}
+    logExec git tag -f ${tag} master
+    ;&
+
+  merge-master-into-develop)
+    logEcho
+    logEchoHeading "Mergin master branch into develop branch"
+    logExec git checkout develop
+    logExec git merge --no-ff release
+    logExec git branch -d release
+    ;&
+
+  deploy-initial-snapshot)
+    logEcho
+    read -p "Do you want to deploy a first SNAPSHOT version? [y|n]: " -n 1 -r
+    logHeading "Do you want to deploy a first SNAPSHOT version? [y|n]: " $REPLY
+    logEcho
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      logExec mvn deploy
+    fi
+    ;&
+
+  deploy-signed-release-locally)
+    assureGpgAgent
+    logEcho
+    logEchoHeading "Deploying signed artifacts locally"
+    logExec git checkout -q ${tag}
+    logExec mvn install deploy -Psign -Prelease \
+      -Dgpg.keyname=D17B20AF \
+      -DaltDeploymentRepository=${localRepoId}::default::file://${localRepoPath}
+    ;&
+
+  deploy-signed-release)
+    assureGpgAgent
+    logEcho
+    read -p "Do you want to stage the release in the configured remote repository? [y|n]: " -n 1 -r
+    logHeading "Do you want to stage the release in the configured remote repository? [y|n]: " $REPLY
+    logEcho
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      logExec mvn install deploy -Psign -Prelease \
+        -Dgpg.keyname=$gpgKeyName
+    fi
+    ;&
+
+  push-to-vcs)
+    logEcho
+    read -p "Do you want to push the new commits and the release tag to the repository? [y|n]: " -n 1 -r
+    logHeading "Do you want to push the new commits and the release tag to the repository? [y|n]: " $REPLY
+    logEcho
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      logExec git checkout master
+      logExec git push origin master
+      logExec git checkout develop
+      logExec git push origin develop
+      logExec git push origin ${tag}
+    fi
+    ;&
+
+esac
+
+logEcho
+logHeading "Done."

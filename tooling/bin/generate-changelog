@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Copyright 2011 The Open Source Research Group,
+#                University of Erlangen-Nürnberg
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+set -ue
+
+msgFile="commit-msg.txt"
+
+subject="$@"
+if [[ -n "$subject" ]]; then
+	echo "$subject" > "$msgFile"
+	echo >> "$msgFile"
+	echo >> "$msgFile"
+else
+	rm -f "$msgFile"
+fi
+
+git submodule summary | grep -e '^\*' | while read subModule; do
+	project=$(echo "$subModule" | sed -e 's/^\*\s\+\(\S\+\).*/\1/')
+	commitRange=$(echo "$subModule" | sed -e 's/^\*\s\+\S\+\s\+\(\S\+\).*/\1/' | sed -e 's/^0\+\.\.\.//')
+	echo "$subModule"
+	pushd "$project" &>/dev/null
+	echo "$subModule" >> ../"$msgFile"
+	echo >> ../"$msgFile"
+	git log --first-parent "$commitRange" | grep -ve '^Author:\|Date:\|Merge:' | sed -e 's/\(.*\)/    \1/' >> ../"$msgFile"
+	echo >> ../"$msgFile"
+	echo >> ../"$msgFile"
+	popd &>/dev/null
+done

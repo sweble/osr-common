@@ -1,0 +1,9 @@
+http://eclipse-n-mati.blogspot.ch/2015/06/eclipse-mars-how-to-switch-back-to.html
+
+Java code formatter in Eclipse 4.5 has been completely rewritten. There's a lot less of bugs, the behavior is more consistent, and line wrapping is a bit smarter. It also opens way to easier implementation of new improvements in the future.
+
+While most users will probably be happy with the new formatter, for some the changes may be unwelcome. Probably the most controversial change is a more restrictive approach to the "Never join already wrapped lines" option - a lot of line breaks that used to be tolerated by the old formatter, will be now removed if they don't fit the line wrapping settings. Also, some teams just don't want to force everyone to immediately switch to the newest Eclipse, so during the transition it would be problematic if part of the team used different formatter.
+
+If you also find that problems related to changed formatter behavior outweigh the benefits of bug fixes and improvements, you'll be glad to hear that Eclipse Mars has a new extension point for Java formatter. So it's easy to take the code of the old formatter and wrap it in a plugin. I did just that for your convenience, the plugin can be downloaded here. Although I tested it a bit, the plugin is provided "as is" and I take no responsibility for anything that happens because of it. Just unzip the provided jar into the "plugins" directory of your Eclipse installation, restart, and in the Preferences -> Code Style -> Formatter page select Formatter implementation: Old formatter. Happy formatting! 
+
+Posted by Mateusz Matela at 1:26 AM

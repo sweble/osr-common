@@ -48,7 +48,7 @@
 		<tooling.etc-path>${tooling.path}/etc</tooling.etc-path>
 
 		<forbiddenapis-plugin.signatures>${tooling.etc-path}/forbiddenapis.txt</forbiddenapis-plugin.signatures>
-		<license-maven-plugin.header>${tooling.etc-path}/license-header.txt</license-maven-plugin.header>
+		<license-maven-plugin.header>${tooling.etc-path}/apache-license-v2-header.txt</license-maven-plugin.header>
 		<maven-checkstyle-plugin.config>${tooling.etc-path}/checkstyle.xml</maven-checkstyle-plugin.config>
 
 		<!-- Enable/Disable plugins (override in child poms as needed) -->
@@ -809,9 +809,11 @@
 						<failIfMissing>true</failIfMissing>
 						<excludes>
 							<!-- A sensible default set of excludes -->
+							<exclude>bin/*</exclude>
 							<exclude>tooling</exclude>
 							<exclude>etc/checkstyle.xml</exclude>
 							<exclude>etc/forbiddenapis.txt</exclude>
+							<exclude>etc/eclipse-formatter/**</exclude>
 							<exclude>**/LICENSE</exclude>
 							<exclude>**/NOTICE</exclude>
 							<exclude>**/README</exclude>
