@@ -821,6 +821,7 @@
 							<exclude>**/LICENSE</exclude>
 							<exclude>**/NOTICE</exclude>
 							<exclude>**/README</exclude>
+							<exclude>**/README.md</exclude>
 							<exclude>**/*.log</exclude>
 							<exclude>**/.gitignore</exclude>
 						</excludes>
