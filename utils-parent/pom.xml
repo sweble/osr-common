@@ -51,7 +51,8 @@
 		<!-- Utils currently does not conform :( -->
 		<maven-checkstyle-plugin.skip>true</maven-checkstyle-plugin.skip>
 
-		<utils.version>${project.version}</utils.version>
+		<!-- Dependencies -->
+		<osr-common.version>${project.version}</osr-common.version>
 	</properties>
 
 	<!-- =================================================================== -->
@@ -64,7 +65,7 @@
 			<dependency>
 				<groupId>de.fau.cs.osr.utils</groupId>
 				<artifactId>utils</artifactId>
-				<version>${utils.version}</version>
+				<version>${osr-common.version}</version>
 			</dependency>
 
 		</dependencies>

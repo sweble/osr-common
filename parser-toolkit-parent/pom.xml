@@ -60,6 +60,9 @@
 		<xstream.version>1.4.8</xstream.version>
 
 		<maven-rats-plugin.version>1.3.0.1</maven-rats-plugin.version>
+
+		<!-- Dependencies -->
+		<osr-common.version>${project.version}</osr-common.version>
 	</properties>
 
 	<!-- =================================================================== -->
@@ -87,14 +90,14 @@
 			<dependency>
 				<groupId>de.fau.cs.osr.utils</groupId>
 				<artifactId>utils</artifactId>
-				<version>${project.version}</version>
+				<version>${osr-common.version}</version>
 			</dependency>
 
 			<!-- Parser Toolkit - Common -->
 			<dependency>
 				<groupId>de.fau.cs.osr.ptk</groupId>
 				<artifactId>ptk-common</artifactId>
-				<version>${project.version}</version>
+				<version>${osr-common.version}</version>
 			</dependency>
 
 		</dependencies>

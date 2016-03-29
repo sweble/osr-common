@@ -95,6 +95,7 @@
 		<maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
 		<maven-gpg-plugin.version>1.4</maven-gpg-plugin.version>
 		<maven-release-plugin.version>2.4.1</maven-release-plugin.version>
+		<maven-shade-plugin.version>1.6</maven-shade-plugin.version>
 		<maven-source-plugin.version>2.2.1</maven-source-plugin.version>
 
 		<!-- IDEs -->
@@ -228,7 +229,7 @@
 			<!-- Logging - Logging - Logging - Logging - Logging - Logging - -->
 			<!-- =========================================================== -->
 
-			<!-- SLF4J Logging over Log4j -->
+			<!-- SLF4J Logging -->
 			<dependency>
 				<!-- The SLF4J API used in our code -->
 				<groupId>org.slf4j</groupId>
@@ -343,15 +344,12 @@
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 			</plugin>
 		</plugins>
@@ -518,7 +516,6 @@
 
 				<!-- Maven Checkstyle Plugin -->
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>${maven-checkstyle-plugin.version}</version>
 					<configuration>
@@ -542,7 +539,6 @@
 
 				<!-- Maven Dependency Plugin -->
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
 					<version>${maven-dependency-plugin.version}</version>
 					<executions>
@@ -562,7 +558,6 @@
 
 				<!-- Maven Enforcer Plugin -->
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
 					<version>${maven-enforcer-plugin.version}</version>
 					<configuration>
@@ -646,6 +641,12 @@
 							<version>${maven-scm-provider-gitexe.version}</version>
 						</dependency>
 					</dependencies>
+				</plugin>
+
+				<!-- Maven Shade Plugin -->
+				<plugin>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
 				</plugin>
 
 				<!-- Maven Source Plugin -->
