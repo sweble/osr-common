@@ -119,7 +119,7 @@
 		<!-- Dependencies: Toolkits -->
 		<commons-codec.version>1.6</commons-codec.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
-		<commons-compress.version>1.7</commons-compress.version>
+		<commons-compress.version>1.8.1</commons-compress.version>
 		<commons-io.version>1.4</commons-io.version>
 		<commons-jxpath.version>1.3</commons-jxpath.version>
 		<commons-lang3.version>3.4</commons-lang3.version>
@@ -128,7 +128,7 @@
 		<joda-time.version>2.3</joda-time.version>
 
 		<!-- Dependencies: Logging -->
-		<log4j.version>1.2.14</log4j.version>
+		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.12</slf4j.version>
 
 		<!-- Dependencies: XML/JSON -->
