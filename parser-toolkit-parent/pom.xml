@@ -62,7 +62,8 @@
 		<maven-rats-plugin.version>1.3.0.1</maven-rats-plugin.version>
 
 		<!-- Dependencies -->
-		<osr-common.version>${project.version}</osr-common.version>
+		<!-- Should be ${project.version} but that causes trouble with the release plugin -->
+		<osr-common.version>3.0.0-SNAPSHOT</osr-common.version>
 	</properties>
 
 	<!-- =================================================================== -->
