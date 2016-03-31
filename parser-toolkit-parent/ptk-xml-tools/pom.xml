@@ -34,7 +34,7 @@
 	<name>PTK - XML Tools</name>
 	<inceptionYear>2012</inceptionYear>
 	<description>
-		This module provides facilities for reading and writing ASTs in the XML
+		This module provides facilities for reading and writing ASTs in XML
 		format.
 	</description>
 

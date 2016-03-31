@@ -33,7 +33,7 @@
 	<name>PTK - JSON Tools</name>
 	<inceptionYear>2012</inceptionYear>
 	<description>
-		This module provides facilities for reading and writing ASTs in the JSON
+		This module provides facilities for reading and writing ASTs in JSON
 		format.
 	</description>
 

@@ -34,7 +34,7 @@
 	<inceptionYear>2009</inceptionYear>
 	<description>
 		The parser toolkit common module provides the basic facilities for AST
-		building, traversal, persistence and much more.
+		building, traversal, persistence and more.
 	</description>
 
 	<!-- =================================================================== -->

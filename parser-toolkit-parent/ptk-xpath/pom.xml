@@ -32,6 +32,7 @@
 	<packaging>jar</packaging>
 	<name>PTK - XPath</name>
 	<inceptionYear>2016</inceptionYear>
+	<description>Query ASTs using XPath expressions</description>
 
 	<!-- =================================================================== -->
 	<!-- Properties - Properties - Properties - Properties - Properties - Pr -->
