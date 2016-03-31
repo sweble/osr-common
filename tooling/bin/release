@@ -32,6 +32,7 @@ while getopts "h?s:d:r:t:g:" opt; do
     echo "  prepare-release"
     echo "  perform-release"
     echo "  merge-release-tag-into-master"
+    echo "  tag-release"
     echo "  merge-master-into-develop"
     echo "  deploy-initial-snapshot"
     echo "  deploy-signed-release-locally"
@@ -201,7 +202,11 @@ case $stage in
     logEchoHeading "Merging release tag into master branch"
     logExec git checkout master
     logExec git merge --no-ff ${tag}
-    logExec git tag -f ${tag} master
+    ;&
+
+  tag-release)
+    logExec git tag -d ${tag}
+    logCommandOnExec git tag -u "$gpgKeyName" -m "Release $tag" ${tag} master
     ;&
 
   merge-master-into-develop)
@@ -228,7 +233,7 @@ case $stage in
     logEchoHeading "Deploying signed artifacts locally"
     logExec git checkout -q ${tag}
     logExec mvn install deploy -Psign -Prelease \
-      -Dgpg.keyname=D17B20AF \
+      -Dgpg.keyname=$gpgKeyName \
       -DaltDeploymentRepository=${localRepoId}::default::file://${localRepoPath}
     ;&
 

@@ -22,7 +22,7 @@
 
 	<groupId>de.fau.cs.osr</groupId>
 	<artifactId>tooling</artifactId>
-	<version>3.0.0</version>
+	<version>3.0.1</version>
 	<packaging>pom</packaging>
 	<name>Tooling</name>
 	<url>${site-url}</url>
@@ -52,6 +52,9 @@
 		<!-- Configure site staging and deployment -->
 		<maven-site-plugin.topSiteURL>http://sweble.org</maven-site-plugin.topSiteURL>
 		<site-url>${maven-site-plugin.topSiteURL}/sites/${project.groupId}/${project.artifactId}/${project.version}</site-url>
+
+		<!-- Where to put the git.properties file -->
+		<git-commit-id-plugin.properties-filename>${project.build.outputDirectory}/${project.groupId}/${project.artifactId}/git.properties</git-commit-id-plugin.properties-filename>
 
 		<!-- Enable/Disable plugins (override in child poms as needed) -->
 		<forbiddenapis-plugin.skip>false</forbiddenapis-plugin.skip>
@@ -353,6 +356,20 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-site-descriptor</id>
+						<goals>
+							<goal>attach-descriptor</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 
@@ -789,6 +806,7 @@
 					<configuration>
 						<skip>${git-commit-id-plugin.skip}</skip>
 						<generateGitPropertiesFile>true</generateGitPropertiesFile>
+						<generateGitPropertiesFilename>${git-commit-id-plugin.properties-filename}</generateGitPropertiesFilename>
 						<gitDescribe>
 							<!-- Print commit ID if no tag was found "near" this commit -->
 							<always>true</always>
@@ -957,7 +975,7 @@
 		<connection>scm:git://git@github.com/sweble/osr-common.git</connection>
 		<developerConnection>scm:git://git@mojo-forge.cs.fau.de/sweble-public/osr-common.git</developerConnection>
 		<url>https://github.com/sweble/osr-common</url>
-		<tag>osr-common-3.0.0</tag>
+		<tag>osr-common-3.0.1</tag>
 	</scm>
 
 	<repositories>
@@ -1027,37 +1045,13 @@
 			-->
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
+				<forbiddenapis-plugin.skip>true</forbiddenapis-plugin.skip>
+				<git-commit-id-plugin.skip>true</git-commit-id-plugin.skip>
+				<license-maven-plugin.skip>true</license-maven-plugin.skip>
+				<maven-checkstyle-plugin.skip>true</maven-checkstyle-plugin.skip>
+				<maven-dependency-plugin.skip>true</maven-dependency-plugin.skip>
+				<maven-enforcer-plugin.skip>true</maven-enforcer-plugin.skip>
 			</properties>
-
-			<build>
-				<plugins>
-
-					<!-- Don't check and format license headers -->
-					<plugin>
-						<groupId>com.mycila</groupId>
-						<artifactId>license-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>check-licenses</id>
-								<phase>none</phase>
-							</execution>
-						</executions>
-					</plugin>
-
-					<!-- Don't gather git commit information -->
-					<plugin>
-						<groupId>pl.project13.maven</groupId>
-						<artifactId>git-commit-id-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>gather-git-information</id>
-								<phase>none</phase>
-							</execution>
-						</executions>
-					</plugin>
-
-				</plugins>
-			</build>
 
 			<!--
 				Only generate minimal site.
