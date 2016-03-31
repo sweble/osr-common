@@ -1041,37 +1041,13 @@
 			-->
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
+				<forbiddenapis-plugin.skip>true</forbiddenapis-plugin.skip>
+				<git-commit-id-plugin.skip>true</git-commit-id-plugin.skip>
+				<license-maven-plugin.skip>true</license-maven-plugin.skip>
+				<maven-checkstyle-plugin.skip>true</maven-checkstyle-plugin.skip>
+				<maven-dependency-plugin.skip>true</maven-dependency-plugin.skip>
+				<maven-enforcer-plugin.skip>true</maven-enforcer-plugin.skip>
 			</properties>
-
-			<build>
-				<plugins>
-
-					<!-- Don't check and format license headers -->
-					<plugin>
-						<groupId>com.mycila</groupId>
-						<artifactId>license-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>check-licenses</id>
-								<phase>none</phase>
-							</execution>
-						</executions>
-					</plugin>
-
-					<!-- Don't gather git commit information -->
-					<plugin>
-						<groupId>pl.project13.maven</groupId>
-						<artifactId>git-commit-id-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>gather-git-information</id>
-								<phase>none</phase>
-							</execution>
-						</executions>
-					</plugin>
-
-				</plugins>
-			</build>
 
 			<!--
 				Only generate minimal site.
