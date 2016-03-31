@@ -53,6 +53,9 @@
 		<maven-site-plugin.topSiteURL>http://sweble.org</maven-site-plugin.topSiteURL>
 		<site-url>${maven-site-plugin.topSiteURL}/sites/${project.groupId}/${project.artifactId}/${project.version}</site-url>
 
+		<!-- Where to put the git.properties file -->
+		<git-commit-id-plugin.properties-filename>${project.build.outputDirectory}/${project.groupId}/${project.artifactId}/git.properties</git-commit-id-plugin.properties-filename>
+
 		<!-- Enable/Disable plugins (override in child poms as needed) -->
 		<forbiddenapis-plugin.skip>false</forbiddenapis-plugin.skip>
 		<git-commit-id-plugin.skip>false</git-commit-id-plugin.skip>
@@ -803,6 +806,7 @@
 					<configuration>
 						<skip>${git-commit-id-plugin.skip}</skip>
 						<generateGitPropertiesFile>true</generateGitPropertiesFile>
+						<generateGitPropertiesFilename>${git-commit-id-plugin.properties-filename}</generateGitPropertiesFilename>
 						<gitDescribe>
 							<!-- Print commit ID if no tag was found "near" this commit -->
 							<always>true</always>
