@@ -18,26 +18,34 @@
 set -ue
 
 # ------------------------------------------------------------------------------
+# Defaults
+
+stage=${stage:-clean}
+localRepoId="temp-release-repo"
+localRepoPath="$HOME/$localRepoId"
+
+# ------------------------------------------------------------------------------
 # Parse command line arguments
 
-while getopts "h?s:d:r:t:g:" opt; do
+while getopts "h?s:d:r:t:c:g:" opt; do
   case "$opt" in
   h|\?)
-    echo "Usage: $( basename $0 ) [-h|-?] [-s <stage>] [-r <release-version>] [-d <development-version>] [-t <tag>] [-g <gpg-key-name>]"
+    echo "Usage: $( basename $0 ) [-h|-?] [-s <stage>] [-r <release-version>] [-d <development-version>] [-t <tag>] [-c <continued-development-tag>] [-g <gpg-key-name>]"
     echo
     echo "Stages are:"
-    echo "  clean"
-    echo "  deploy-final-snapshot"
-    echo "  switch-to-release-branch"
-    echo "  prepare-release"
-    echo "  perform-release"
-    echo "  merge-release-tag-into-master"
-    echo "  tag-release"
-    echo "  merge-master-into-develop"
-    echo "  deploy-initial-snapshot"
-    echo "  deploy-signed-release-locally"
-    echo "  deploy-signed-release"
-    echo "  push-to-vcs"
+    echo "  clean                            - Execute 'mvn clean'"
+    echo "  deploy-final-snapshot            - Execute 'mvn deploy' on current branch"
+    echo "  switch-to-release-branch         - Switch to release branch"
+    echo "  prepare-release                  - Have maven prepare the release"
+    echo "  perform-release                  - Have maven perform the release"
+    echo "  merge-release-tag-into-master    - Merge release into master branch"
+    echo "  tag-release                      - Tag the release on the master branch (requires GPG)"
+    echo "  merge-release-into-develop       - Merge release branch back into develop branch"
+    echo "  tag-develop                      - Tag the commit that continues the development branch (useful for 'git describe')"
+    echo "  deploy-initial-snapshot          - Execute 'mvn deploy' on develop branch"
+    echo "  deploy-signed-release-locally    - Test deploy artifacts locally (to $localRepoPath)"
+    echo "  deploy-signed-release            - Execute 'mvn deploy' on release tag"
+    echo "  push-to-vcs                      - Push to remote (master, develop, tag, and development tag)"
     exit 0
     ;;
   s)
@@ -51,6 +59,9 @@ while getopts "h?s:d:r:t:g:" opt; do
     ;;
   t)
     tag=$OPTARG
+    ;;
+  t)
+    developTag=$OPTARG
     ;;
   g)
     gpgKeyName=$OPTARG
@@ -135,14 +146,15 @@ if [[ -z ${tag:-} ]]; then
   tag="$artifactId-$releaseVersion"
 fi
 
-stage=${stage:-clean}
-localRepoId="temp-release-repo"
-localRepoPath="$HOME/$localRepoId"
+if [[ -z ${developTag:-} ]]; then
+  developTag="develop-$developmentVersion"
+fi
 
 logEcho
 logEcho "      release version  :  $releaseVersion"
 logEcho "  development version  :  $developmentVersion"
 logEcho "      release VCS tag  :  $tag"
+logEcho "  development VCS tag  :  $developTag"
 logEcho "                stage  :  $stage"
 logEcho "      local repo path  :  $localRepoPath"
 logEcho
@@ -166,6 +178,7 @@ case $stage in
     read -p "Do you want to deploy a last snapshot? [y|n]: " -n 1 -r
     logHeading "Do you want to deploy a last snapshot? [y|n]: " $REPLY
     logEcho
+    logExec git checkout develop
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       logExec mvn deploy
     fi
@@ -174,6 +187,7 @@ case $stage in
   switch-to-release-branch)
     logEcho
     logEchoHeading "Switching to release branch"
+    logExec git checkout develop
     logExec git checkout -b release
     ;&
 
@@ -181,6 +195,7 @@ case $stage in
     logEcho
     logEchoHeading "Preparing release"
     # We cannot log this since the release plugin often asks questions
+    logExec git checkout release
     logCommandOnExec mvn -q release:prepare -DpushChanges=false \
       -DreleaseVersion=${releaseVersion} \
       -DdevelopmentVersion=${developmentVersion} \
@@ -205,16 +220,23 @@ case $stage in
     ;&
 
   tag-release)
+    assureGpgAgent
+    logExec git checkout master
     logExec git tag -d ${tag}
     logCommandOnExec git tag -u "$gpgKeyName" -m "Release $tag" ${tag} master
     ;&
 
-  merge-master-into-develop)
+  merge-release-into-develop)
     logEcho
-    logEchoHeading "Mergin master branch into develop branch"
+    logEchoHeading "Merging master branch into develop branch"
     logExec git checkout develop
     logExec git merge --no-ff release
     logExec git branch -d release
+    ;&
+
+  tag-develop)
+    logExec git checkout develop
+    logCommandOnExec git tag -a -m "Starting development on $developmentVersion" ${developTag} develop
     ;&
 
   deploy-initial-snapshot)
@@ -222,6 +244,7 @@ case $stage in
     read -p "Do you want to deploy a first SNAPSHOT version? [y|n]: " -n 1 -r
     logHeading "Do you want to deploy a first SNAPSHOT version? [y|n]: " $REPLY
     logEcho
+    logExec git checkout develop
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       logExec mvn deploy
     fi
@@ -243,6 +266,7 @@ case $stage in
     read -p "Do you want to stage the release in the configured remote repository? [y|n]: " -n 1 -r
     logHeading "Do you want to stage the release in the configured remote repository? [y|n]: " $REPLY
     logEcho
+    logExec git checkout -q ${tag}
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       logExec mvn install deploy -Psign -Prelease \
         -Dgpg.keyname=$gpgKeyName
@@ -260,6 +284,7 @@ case $stage in
       logExec git checkout develop
       logExec git push origin develop
       logExec git push origin ${tag}
+      logExec git push origin ${developTag}
     fi
     ;&
 
