@@ -16,6 +16,10 @@
  */
 package de.fau.cs.osr.utils;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -51,6 +55,7 @@ public class NodeDeepComparer
 		}
 		catch (ComparisonException e)
 		{
+			System.err.println(e);
 			return false;
 		}
 	}
@@ -76,43 +81,43 @@ public class NodeDeepComparer
 		if (!(a instanceof Node && b instanceof Node))
 			return false;
 
-		Node wa = (Node) a;
-		Node wb = (Node) b;
+		Node na = (Node) a;
+		Node nb = (Node) b;
 
 		// Type
-		if (wa.getNodeType() != wb.getNodeType())
-			throw new ComparisonException(a, b);
+		if (na.getNodeType() != nb.getNodeType())
+			throw new NodeComparisonException(na, nb, NodeDifference.NODE_TYPES_DIFFER);
 
 		// Namespace and name
-		if (!strEquals(wa.getNodeName(), wb.getNodeName()))
-			throw new ComparisonException(a, b);
-		if (!strEquals(wa.getNamespaceURI(), wb.getNamespaceURI()))
-			throw new ComparisonException(a, b);
-		if (!strEquals(wa.getLocalName(), wb.getLocalName()))
-			throw new ComparisonException(a, b);
+		if (!strEquals(na.getNodeName(), nb.getNodeName()))
+			throw new NodeComparisonException(na, nb, NodeDifference.NODE_NAMES_DIFFER);
+		if (!strEquals(na.getNamespaceURI(), nb.getNamespaceURI()))
+			throw new NodeComparisonException(na, nb, NodeDifference.NODE_NAMESPACE_URIS_DIFFER);
+		if (!strEquals(na.getLocalName(), nb.getLocalName()))
+			throw new NodeComparisonException(na, nb, NodeDifference.NODE_LOCAL_NAMES_DIFFER);
 
 		// Value
-		if (!strEquals(wa.getNodeValue(), wb.getNodeValue()))
-			throw new ComparisonException(a, b);
+		if (!strEquals(na.getNodeValue(), nb.getNodeValue()))
+			throw new NodeComparisonException(na, nb, NodeDifference.NODE_VALUES_DIFFER);
 
 		// Other
-		if (!strEquals(wa.getBaseURI(), wb.getBaseURI()))
-			throw new ComparisonException(a, b);
+		if (!strEquals(na.getBaseURI(), nb.getBaseURI()))
+			throw new NodeComparisonException(na, nb, NodeDifference.NODE_BASE_URIS_DIFFER);
 
 		// Ignored:
 		//wa.getPrefix()
 
 		// Attributes
-		if (wa.hasAttributes() ^ wb.hasAttributes())
-			throw new ComparisonException(a, b);
-		if (wa.hasAttributes())
-			compareAttributes(wa, wb, comparer);
+		if (na.hasAttributes() ^ nb.hasAttributes())
+			throw new NodeComparisonException(na, nb, NodeDifference.NUMBER_OF_ATTRIBUTES_DIFFERS);
+		if (na.hasAttributes())
+			compareAttributes(na, nb, comparer);
 
 		// Children
-		if (wa.hasChildNodes() ^ wb.hasChildNodes())
-			throw new ComparisonException(a, b);
-		if (wa.hasChildNodes())
-			compareChildNodes(wa, wb, comparer);
+		if (na.hasChildNodes() ^ nb.hasChildNodes())
+			throw new NodeComparisonException(na, nb, NodeDifference.NUMBER_OF_CHILDREN_DIFFERS);
+		if (na.hasChildNodes())
+			compareChildNodes(na, nb, comparer);
 
 		return true;
 	}
@@ -138,9 +143,9 @@ public class NodeDeepComparer
 				bas.getNamedItemNS(aa.getNamespaceURI(), aa.getLocalName()) :
 				bas.getNamedItem(aa.getNodeName());
 		if (ba == null)
-			throw new ComparisonException();
+			throw new NodeComparisonException(aa, null, NodeDifference.NUMBER_OF_ATTRIBUTES_DIFFERS);
 		if (!aa.getNodeValue().equals(ba.getNodeValue()))
-			throw new ComparisonException();
+			throw new NodeComparisonException(aa, ba, NodeDifference.ATTRIBUTE_VALUE_DIFFERS);
 	}
 
 	private void compareChildNodes(Node a, Node b, DeepComparer comparer) throws ComparisonException
@@ -155,11 +160,226 @@ public class NodeDeepComparer
 		}
 		if (ac != bc)
 			// Both must be null at this point
-			throw new ComparisonException();
+			throw new NodeComparisonException(ac, bc, NodeDifference.NUMBER_OF_CHILDREN_DIFFERS);
 	}
 
 	private boolean strEquals(String a, String b)
 	{
 		return (a == null) ? (b == null) : a.equals(b);
+	}
+
+	// =========================================================================
+
+	public static final class NodeComparisonException
+			extends
+				ComparisonException
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final NodeDifference reason;
+
+		public NodeComparisonException()
+		{
+			this(null, null, NodeDifference.DEEP_COMPARISON_FAILED);
+		}
+
+		public NodeComparisonException(NodeComparisonException e)
+		{
+			this(e, null, null, NodeDifference.DEEP_COMPARISON_FAILED);
+		}
+
+		public NodeComparisonException(Node a, Node b, NodeDifference reason)
+		{
+			super(a, b);
+			this.reason = reason;
+		}
+
+		protected NodeComparisonException(
+				NodeComparisonException e,
+				Node a,
+				Node b)
+		{
+			this(e, a, b, NodeDifference.CHILDREN_DIFFER);
+		}
+
+		protected NodeComparisonException(
+				NodeComparisonException e,
+				Node a,
+				Node b,
+				NodeDifference reason)
+		{
+			super(e, a, b);
+			this.reason = reason;
+		}
+
+		public Node getA()
+		{
+			return (Node) super.getA();
+		}
+
+		public Node getB()
+		{
+			return (Node) super.getB();
+		}
+
+		protected Writer toString(Writer w) throws IOException
+		{
+			w.append("Two nodes differ: ");
+			w.append(reason.getReason());
+			w.append("\n");
+			writeNode(w, getA());
+			w.append("\n");
+			writeNode(w, getB());
+			return w;
+		}
+
+		private void writeNode(Writer w, Node n) throws IOException
+		{
+			if (n == null)
+			{
+				w.append("null");
+			}
+			else
+			{
+				w.append(n.getNodeName());
+				w.append("[");
+				w.append(String.valueOf(n.getNodeType()));
+				w.append("]");
+				if ((n.getLocalName() != null) || (n.getNamespaceURI() != null))
+				{
+					w.append(" (");
+					if (n.getNamespaceURI() != null)
+					{
+						w.append("{");
+						w.append(n.getNamespaceURI());
+						w.append("}");
+					}
+					if (n.getLocalName() != null)
+						w.append(n.getLocalName());
+					w.append(")");
+				}
+				if (n.getNodeValue() != null)
+				{
+					w.append(" = ");
+					w.append(n.getNodeValue());
+				}
+			}
+		}
+
+		@Override
+		public String toString()
+		{
+			try
+			{
+				return toString(new StringWriter()).toString();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+
+	public static enum NodeDifference
+	{
+		NULL_VS_NON_NULL
+		{
+			@Override
+			public String getReason()
+			{
+				return "One node is null the other is non-null";
+			}
+		},
+		NODE_TYPES_DIFFER
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes have different type";
+			}
+		},
+		NODE_NAMES_DIFFER
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes have different node names";
+			}
+		},
+		NODE_NAMESPACE_URIS_DIFFER
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes have different namespace URIs";
+			}
+		},
+		NODE_LOCAL_NAMES_DIFFER
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes have different local names";
+			}
+		},
+		NODE_VALUES_DIFFER
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes have different values";
+			}
+		},
+		NODE_BASE_URIS_DIFFER
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes have different base URIs";
+			}
+		},
+		NUMBER_OF_CHILDREN_DIFFERS
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes' number of children differs";
+			}
+		},
+		CHILDREN_DIFFER
+		{
+			@Override
+			public String getReason()
+			{
+				return "One of the child nodes differs between the two nodes";
+			}
+		},
+		NUMBER_OF_ATTRIBUTES_DIFFERS
+		{
+			@Override
+			public String getReason()
+			{
+				return "The two nodes' number of attributes differs";
+			}
+		},
+		ATTRIBUTE_VALUE_DIFFERS
+		{
+			@Override
+			public String getReason()
+			{
+				return "The value of an attribute differs between the two nodes";
+			}
+		},
+		DEEP_COMPARISON_FAILED
+		{
+			@Override
+			public String getReason()
+			{
+				return "Deep comparison of two values failed";
+			}
+		};
+
+		public abstract String getReason();
 	}
 }
