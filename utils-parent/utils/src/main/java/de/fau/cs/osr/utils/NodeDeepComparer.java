@@ -108,8 +108,10 @@ public class NodeDeepComparer
 		//wa.getPrefix()
 
 		// Attributes
+		/* We cannot make such a simple comparison if we exclude xmlns attributes from the comparison.
 		if (na.hasAttributes() ^ nb.hasAttributes())
 			throw new NodeComparisonException(na, nb, NodeDifference.NUMBER_OF_ATTRIBUTES_DIFFERS);
+		*/
 		if (na.hasAttributes())
 			compareAttributes(na, nb, comparer);
 

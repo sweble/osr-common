@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+### Fixed
+- NodeDeepComparer reported differences when ignored (xmlns) attributes were present
 
 ## 3.0.2 - 2016-05-03
 ### Added
