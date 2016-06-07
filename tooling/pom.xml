@@ -22,7 +22,7 @@
 
 	<groupId>de.fau.cs.osr</groupId>
 	<artifactId>tooling</artifactId>
-	<version>3.0.2</version>
+	<version>3.0.3</version>
 	<packaging>pom</packaging>
 	<name>Tooling</name>
 	<url>${site-url}</url>
@@ -975,7 +975,7 @@
 		<connection>scm:git://git@github.com/sweble/osr-common.git</connection>
 		<developerConnection>scm:git://git@mojo-forge.cs.fau.de/sweble-public/osr-common.git</developerConnection>
 		<url>https://github.com/sweble/osr-common</url>
-		<tag>osr-common-3.0.2</tag>
+		<tag>osr-common-3.0.3</tag>
 	</scm>
 
 	<repositories>
