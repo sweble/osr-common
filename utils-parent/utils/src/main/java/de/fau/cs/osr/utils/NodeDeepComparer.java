@@ -89,8 +89,11 @@ public class NodeDeepComparer
 			throw new NodeComparisonException(na, nb, NodeDifference.NODE_TYPES_DIFFER);
 
 		// Namespace and name
-		if (!strEquals(na.getNodeName(), nb.getNodeName()))
-			throw new NodeComparisonException(na, nb, NodeDifference.NODE_NAMES_DIFFER);
+		if ((na.getLocalName() == null) && (nb.getLocalName() == null))
+		{
+			if (!strEquals(na.getNodeName(), nb.getNodeName()))
+				throw new NodeComparisonException(na, nb, NodeDifference.NODE_NAMES_DIFFER);
+		}
 		if (!strEquals(na.getNamespaceURI(), nb.getNamespaceURI()))
 			throw new NodeComparisonException(na, nb, NodeDifference.NODE_NAMESPACE_URIS_DIFFER);
 		if (!strEquals(na.getLocalName(), nb.getLocalName()))
@@ -112,13 +115,15 @@ public class NodeDeepComparer
 		if (na.hasAttributes() ^ nb.hasAttributes())
 			throw new NodeComparisonException(na, nb, NodeDifference.NUMBER_OF_ATTRIBUTES_DIFFERS);
 		*/
-		if (na.hasAttributes())
+		if (na.hasAttributes() || nb.hasAttributes())
 			compareAttributes(na, nb, comparer);
 
 		// Children
+		/* Same as above
 		if (na.hasChildNodes() ^ nb.hasChildNodes())
 			throw new NodeComparisonException(na, nb, NodeDifference.NUMBER_OF_CHILDREN_DIFFERS);
-		if (na.hasChildNodes())
+		*/
+		if (na.hasChildNodes() || nb.hasChildNodes())
 			compareChildNodes(na, nb, comparer);
 
 		return true;
