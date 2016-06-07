@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+
+## 3.0.3 - 2016-06-07
 ### Added
 - BinaryPrefix can return value as double (getDoubleValue())
 
