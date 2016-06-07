@@ -21,6 +21,8 @@ public class BinaryPrefix
 {
 	private final long normValue;
 
+	private final double doubleValue;
+
 	private final String prefix;
 
 	private final long factor;
@@ -42,6 +44,7 @@ public class BinaryPrefix
 		this.factor = factor;
 
 		this.normValue = value / factor;
+		this.doubleValue = value / (double) factor;
 
 		this.prefix = prefixes[i];
 	}
@@ -49,6 +52,11 @@ public class BinaryPrefix
 	public long getValue()
 	{
 		return normValue;
+	}
+
+	public double getDoubleValue()
+	{
+		return doubleValue;
 	}
 
 	public String getPrefix()
