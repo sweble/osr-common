@@ -1,6 +1,9 @@
 # Change Log
 
 ## Unreleased
+### Changed
+- bin/release script accepts -a option to specify alternative deployment repository
+- bin/release script "deploy-signed-release-locally" is now optional
 
 ## 3.0.3 - 2016-06-07
 ### Added
