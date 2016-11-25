@@ -1193,6 +1193,8 @@
 			</build>
 		</profile>
 
+		<!-- ==[ disable checkstyle ]======================================= -->
+
 		<profile>
 			<id>disable-checkstyle-plugin-for-tooling-module</id>
 			<activation>
