@@ -292,8 +292,11 @@ case $stage in
     logEcho
     logExec git checkout -q ${tag}
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-      logExec mvn install deploy -Psign -Prelease \
-        -Dgpg.keyname=$gpgKeyName "$altDeploymentRepository"
+      if [[ ! -z "$altDeploymentRepository" ]]; then
+        logExec mvn install deploy -Psign -Prelease -Dgpg.keyname=$gpgKeyName "$altDeploymentRepository"
+      else
+        logExec mvn install deploy -Psign -Prelease -Dgpg.keyname=$gpgKeyName
+      fi
     fi
     ;&
 
