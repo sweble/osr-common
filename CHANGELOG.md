@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Changed
+- Disabled Java 8 doclint by default in tooling pom
 - bin/release script accepts -a option to specify alternative deployment repository
 - bin/release script "deploy-signed-release-locally" is now optional
 

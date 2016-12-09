@@ -193,7 +193,7 @@
 			</dependency>
 			<dependency>
 				<!--
-					Also add signature "commons-io-unsafe-<ver>" to 
+					Also add signature "commons-io-unsafe-<ver>" to
 					forbiddenapis plugin when using this dependency
 				-->
 				<groupId>commons-io</groupId>
@@ -499,6 +499,7 @@
 					<configuration>
 						<!-- Be less verbose by default -->
 						<quiet>true</quiet>
+						<additionalparam>${javadoc.opts}</additionalparam>
 					</configuration>
 				</plugin>
 
@@ -594,7 +595,7 @@
 								<rules>
 									<dependencyConvergence />
 									<!--
-										<reactorModuleConvergence /> complains 
+										<reactorModuleConvergence /> complains
 										that tooling is missing a parent. Cannot
 										be enabled in submodules either because
 										it will fail with the same complaint.
@@ -684,8 +685,8 @@
 				</plugin>
 
 				<!--
-					This plugin's configuration is used to store Eclipse m2e 
-					settings only. It has no influence on the Maven build 
+					This plugin's configuration is used to store Eclipse m2e
+					settings only. It has no influence on the Maven build
 					itself.
 				-->
 				<plugin>
@@ -896,6 +897,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<quiet>true</quiet>
+					<additionalparam>${javadoc.opts}</additionalparam>
 				</configuration>
 				<reportSets>
 					<reportSet>
@@ -1040,7 +1042,7 @@
 			<id>quick</id>
 
 			<!--
-				Disables compiling and executing tests 
+				Disables compiling and executing tests
 				(-DskipTests only skips test execution)
 			-->
 			<properties>
@@ -1070,6 +1072,7 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
 							<skip>true</skip>
+							<additionalparam>${javadoc.opts}</additionalparam>
 						</configuration>
 					</plugin>
 
@@ -1106,9 +1109,9 @@
 		<!-- ==[ release ]================================================== -->
 
 		<!--
-			This profile is used to release artifacts to Maven Central. 
+			This profile is used to release artifacts to Maven Central.
 			Each module has to build its main artifacts including javadoc and
-			source. Signing of the artifacts is also required 
+			source. Signing of the artifacts is also required
 			(see "sign" profile).
 		-->
 		<profile>
@@ -1130,6 +1133,7 @@
 						</executions>
 						<configuration>
 							<quiet>true</quiet>
+							<additionalparam>${javadoc.opts}</additionalparam>
 						</configuration>
 					</plugin>
 
@@ -1169,8 +1173,8 @@
 
 		<!--
 			Sign the generated artifacts. Usually used in conjunction with the
-			"release" profile to deploy artifacts to Maven Central. The key name 
-			has to be given as option on the command line (-Dgpg.keyname=...) 
+			"release" profile to deploy artifacts to Maven Central. The key name
+			has to be given as option on the command line (-Dgpg.keyname=...)
 			and the key should be unlocked and held by the gpg agent.
 		-->
 		<profile>
@@ -1206,6 +1210,18 @@
 				<maven-checkstyle-plugin.skip>true</maven-checkstyle-plugin.skip>
 			</properties>
 		</profile>
+
+		<!-- ==[ disable java8 doclint ]==================================== -->
+
+		<profile>
+	    <id>java8-doclint-disabled</id>
+	    <activation>
+	      <jdk>[1.8,)</jdk>
+	    </activation>
+	    <properties>
+	      <javadoc.opts>-Xdoclint:none</javadoc.opts>
+	    </properties>
+	  </profile>
 
 	</profiles>
 </project>
