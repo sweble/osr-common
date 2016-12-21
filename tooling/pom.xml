@@ -345,6 +345,7 @@
           <version>${version.plugin.javadoc}</version>
           <configuration>
             <quiet>true</quiet>
+            <additionalparam>${javadoc.opts}</additionalparam>
           </configuration>
         </plugin>
 
@@ -570,6 +571,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <quiet>true</quiet>
+          <additionalparam>${javadoc.opts}</additionalparam>
         </configuration>
         <reportSets>
           <reportSet>
@@ -802,6 +804,7 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
               <skip>true</skip>
+              <additionalparam>${javadoc.opts}</additionalparam>
             </configuration>
           </plugin>
 
@@ -862,6 +865,7 @@
             </executions>
             <configuration>
               <quiet>true</quiet>
+              <additionalparam>${javadoc.opts}</additionalparam>
             </configuration>
           </plugin>
 
@@ -954,6 +958,16 @@
 
         </plugins>
       </build>
+    </profile>
+
+    <profile>
+      <id>java8-doclint-disabled</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <javadoc.opts>-Xdoclint:none</javadoc.opts>
+      </properties>
     </profile>
 
   </profiles>
