@@ -27,10 +27,10 @@ localRepoPath="$HOME/$localRepoId"
 # ------------------------------------------------------------------------------
 # Parse command line arguments
 
-while getopts "h?s:d:r:t:c:g:" opt; do
+while getopts "h?s:d:r:t:c:g:a:b:m:" opt; do
   case "$opt" in
   h|\?)
-    echo "Usage: $( basename $0 ) [-h|-?] [-s <stage>] [-r <release-version>] [-d <development-version>] [-t <tag>] [-c <continued-development-tag>] [-g <gpg-key-name>]"
+    echo "Usage: $( basename $0 ) [-h|-?] [-s <stage>] [-r <release-version>] [-d <development-version>] [-t <tag>] [-c <continued-development-tag>] [-g <gpg-key-name>] [-a <altDeploymentRepository>] [-b <develop branch>] [-m <master branch>]"
     echo
     echo "Stages are:"
     echo "  clean                            - Execute 'mvn clean'"
@@ -60,11 +60,20 @@ while getopts "h?s:d:r:t:c:g:" opt; do
   t)
     tag=$OPTARG
     ;;
-  t)
+  c)
     developTag=$OPTARG
     ;;
   g)
     gpgKeyName=$OPTARG
+    ;;
+  a)
+    altDeploymentRepository=$OPTARG
+    ;;
+  b)
+    developBranch=$OPTARG
+    ;;
+  m)
+    masterBranch=$OPTARG
     ;;
   esac
 done
@@ -124,6 +133,16 @@ function logCommandOnExec {
   "$@"
 }
 
+function askYesNo {
+  while true; do
+    read -p "$1 [y|n]: " -n 1 -r
+    if [[ $REPLY =~ ^[YyNn]$ ]]; then
+      break
+    fi
+    echo
+  done
+}
+
 # ------------------------------------------------------------------------------
 # Actual release process
 
@@ -150,15 +169,31 @@ if [[ -z ${developTag:-} ]]; then
   developTag="develop-$developmentVersion"
 fi
 
+if [[ -z ${developBranch:-} ]]; then
+  developBranch="develop"
+fi
+
+if [[ -z ${masterBranch:-} ]]; then
+  masterBranch="master"
+fi
+
 logEcho
 logEcho "      release version  :  $releaseVersion"
 logEcho "  development version  :  $developmentVersion"
 logEcho "      release VCS tag  :  $tag"
 logEcho "  development VCS tag  :  $developTag"
+logEcho "        master branch  :  $masterBranch"
+logEcho "       develop branch  :  $developBranch"
 logEcho "                stage  :  $stage"
 logEcho "      local repo path  :  $localRepoPath"
+if [[ -z ${altDeploymentRepository:-} ]]; then
+  altDeploymentRepository=""
+else
+  logEcho " alt. deployment repo. :  $altDeploymentRepository"
+  altDeploymentRepository="-DaltDeploymentRepository=${altDeploymentRepository}"
+fi
 logEcho
-read -p "Is this correct? [y|n]: " -n 1 -r
+askYesNo "Is this correct?"
 logEcho
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   logEcho
@@ -175,10 +210,10 @@ case $stage in
 
   deploy-final-snapshot)
     logEcho
-    read -p "Do you want to deploy a last snapshot? [y|n]: " -n 1 -r
+    askYesNo "Do you want to deploy a last snapshot?"
     logHeading "Do you want to deploy a last snapshot? [y|n]: " $REPLY
     logEcho
-    logExec git checkout develop
+    logExec git checkout $developBranch
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       logExec mvn deploy
     fi
@@ -187,7 +222,7 @@ case $stage in
   switch-to-release-branch)
     logEcho
     logEchoHeading "Switching to release branch"
-    logExec git checkout develop
+    logExec git checkout $developBranch
     logExec git checkout -b release
     ;&
 
@@ -214,75 +249,83 @@ case $stage in
 
   merge-release-tag-into-master)
     logEcho
-    logEchoHeading "Merging release tag into master branch"
-    logExec git checkout master
+    logEchoHeading "Merging release tag into $masterBranch branch"
+    logExec git checkout $masterBranch
     logExec git merge --no-ff ${tag}
     ;&
 
   tag-release)
     assureGpgAgent
-    logExec git checkout master
+    logExec git checkout $masterBranch
     logExec git tag -d ${tag}
-    logCommandOnExec git tag -u "$gpgKeyName" -m "Release $tag" ${tag} master
+    logCommandOnExec git tag -u "$gpgKeyName" -m "Release $tag" ${tag} $masterBranch
     ;&
 
   merge-release-into-develop)
     logEcho
-    logEchoHeading "Merging master branch into develop branch"
-    logExec git checkout develop
+    logEchoHeading "Merging $masterBranch branch into $developBranch branch"
+    logExec git checkout $developBranch
     logExec git merge --no-ff release
     logExec git branch -d release
     ;&
 
   tag-develop)
-    logExec git checkout develop
-    logCommandOnExec git tag -a -m "Starting development on $developmentVersion" ${developTag} develop
+    logExec git checkout $developBranch
+    logCommandOnExec git tag -a -m "Starting development on $developmentVersion" ${developTag} $developBranch
     ;&
 
   deploy-initial-snapshot)
     logEcho
-    read -p "Do you want to deploy a first SNAPSHOT version? [y|n]: " -n 1 -r
+    askYesNo "Do you want to deploy a first SNAPSHOT version?"
     logHeading "Do you want to deploy a first SNAPSHOT version? [y|n]: " $REPLY
     logEcho
-    logExec git checkout develop
+    logExec git checkout $developBranch
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       logExec mvn deploy
     fi
     ;&
 
   deploy-signed-release-locally)
-    assureGpgAgent
     logEcho
-    logEchoHeading "Deploying signed artifacts locally"
-    logExec git checkout -q ${tag}
-    logExec mvn install deploy -Psign -Prelease \
-      -Dgpg.keyname=$gpgKeyName \
-      -DaltDeploymentRepository=${localRepoId}::default::file://${localRepoPath}
+    askYesNo "Do you want to deploy signed artifacts locally?"
+    logHeading "Do you want to deploy signed artifacts locally? [y|n]: " $REPLY
+    logEcho
+    logExec git checkout $developBranch
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      assureGpgAgent
+      logExec git checkout -q ${tag}
+      logExec mvn install deploy -Psign -Prelease \
+        -Dgpg.keyname=$gpgKeyName \
+        -DaltDeploymentRepository=${localRepoId}::default::file://${localRepoPath}
+    fi
     ;&
 
   deploy-signed-release)
     assureGpgAgent
     logEcho
-    read -p "Do you want to stage the release in the configured remote repository? [y|n]: " -n 1 -r
+    askYesNo "Do you want to stage the release in the configured remote repository?"
     logHeading "Do you want to stage the release in the configured remote repository? [y|n]: " $REPLY
     logEcho
     logExec git checkout -q ${tag}
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-      logExec mvn install deploy -Psign -Prelease \
-        -Dgpg.keyname=$gpgKeyName
+      if [[ ! -z "$altDeploymentRepository" ]]; then
+        logExec mvn install deploy -Psign -Prelease -Dgpg.keyname=$gpgKeyName "$altDeploymentRepository"
+      else
+        logExec mvn install deploy -Psign -Prelease -Dgpg.keyname=$gpgKeyName
+      fi
     fi
     ;&
 
   push-to-vcs)
     logEcho
-    read -p "Do you want to push the new commits and the release tag to the repository? [y|n]: " -n 1 -r
+    askYesNo "Do you want to push the new commits and the release tag to the repository?"
     logHeading "Do you want to push the new commits and the release tag to the repository? [y|n]: " $REPLY
     logEcho
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-      logExec git checkout master
-      logExec git push origin master
-      logExec git checkout develop
-      logExec git push origin develop
+      logExec git checkout $masterBranch
+      logExec git push origin $masterBranch
+      logExec git checkout $developBranch
+      logExec git push origin $developBranch
       logExec git push origin ${tag}
       logExec git push origin ${developTag}
     fi
