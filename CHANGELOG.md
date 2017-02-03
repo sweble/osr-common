@@ -1,7 +1,9 @@
 # Change Log
 
 ## Unreleased
-### Changed
+### Fixed
+- Fixed issue #1: "Comparison method violates its general contract" in 
+  VisitorLogic.sweepCache by replacing Java sort with quick select.
 
 ## 3.0.4 - 2017-01-16
 ### Changed
