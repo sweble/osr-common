@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -36,8 +35,9 @@ public class VisitorLogic<T>
 
 	private static final float LOAD_FACTOR = .6f;
 
-	private static final ConcurrentHashMap<Target, Target> CACHE =
-			new ConcurrentHashMap<Target, Target>(LOWER_CAPACITY, LOAD_FACTOR);
+	private static final ConcurrentHashMap<Target, Target> CACHE = new ConcurrentHashMap<Target, Target>(
+			LOWER_CAPACITY,
+			LOAD_FACTOR);
 
 	private VisitorInterface<T> visitorImpl;
 
@@ -52,7 +52,7 @@ public class VisitorLogic<T>
 
 	/**
 	 * Start visitation at the given node.
-	 * 
+	 *
 	 * @param node
 	 *            The node at which the visitation will start.
 	 * @return The result of the visitation. If the visit() method for the given
@@ -222,11 +222,63 @@ public class VisitorLogic<T>
 			keys[i++] = keysEnum.nextElement();
 
 		int length = i;
-		Arrays.sort(keys, 0, length);
-
 		int to = length - LOWER_CAPACITY;
+		quickSelect(keys, length, to);
+		// All elements left of "to" are smaller than all the elements right of
+		// "to".
+
 		for (int j = 0; j < to; ++j)
 			CACHE.remove(keys[j]);
+	}
+
+	private static void quickSelect(Target[] keys, int length, int to)
+	{
+		int left = 0;
+		int right = length - 1;
+		while (right >= left)
+		{
+			int pivot = left + (right - left) / 2;
+			pivot = partition(keys, left, right, pivot);
+			if (pivot == to)
+			{
+				break;
+			}
+			else if (pivot < to)
+			{
+				left = pivot + 1;
+			}
+			else
+			{
+				right = pivot - 1;
+			}
+		}
+	}
+
+	private static int partition(Target[] keys, int left, int right, int pivot)
+	{
+		long pivotValue = keys[pivot].lastUse;
+		swap(keys, pivot, right);
+		int storeIndex = left;
+		for (int i = left; i < right; ++i)
+		{
+			if (keys[i].lastUse < pivotValue)
+			{
+				swap(keys, storeIndex, i);
+				++storeIndex;
+			}
+		}
+		swap(keys, right, storeIndex);
+		return storeIndex;
+	}
+
+	private static void swap(Target[] keys, int a, int b)
+	{
+		if (a != b)
+		{
+			Target tmp = keys[a];
+			keys[a] = keys[b];
+			keys[b] = tmp;
+		}
 	}
 
 	// =========================================================================
@@ -300,7 +352,10 @@ public class VisitorLogic<T>
 			lastUse = ++useCounter;
 		}
 
-		public Object invoke(VisitorInterface<?> visitor, Object node) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException
+		public Object invoke(VisitorInterface<?> visitor, Object node)
+			throws IllegalArgumentException,
+				IllegalAccessException,
+				InvocationTargetException
 		{
 			touch();
 			return method.invoke(visitor, node);
