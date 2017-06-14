@@ -23,13 +23,17 @@
 	<parent>
 		<groupId>de.fau.cs.osr</groupId>
 		<artifactId>tooling</artifactId>
-		<version>3.0.5</version>
+		<version>3.0.6</version>
 		<relativePath>./tooling/</relativePath>
 	</parent>
 
 	<artifactId>osr-common-aggregator</artifactId>
 	<packaging>pom</packaging>
 	<name>Open Source Research Common Aggergator Project</name>
+	<description>
+		An aggregator project for the projects in the de.fau.cs.osr group of the Open Source Research
+		Group.
+	</description>
 
 	<modules>
 		<module>parser-toolkit-parent</module>

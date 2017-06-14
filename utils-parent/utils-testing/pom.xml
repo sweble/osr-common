@@ -23,13 +23,16 @@
 	<parent>
 		<groupId>de.fau.cs.osr.utils</groupId>
 		<artifactId>utils-parent</artifactId>
-		<version>3.0.5</version>
+		<version>3.0.6</version>
 	</parent>
 
 	<artifactId>utils-testing</artifactId>
 	<packaging>jar</packaging>
 	<name>Utils Testing</name>
 	<inceptionYear>2016</inceptionYear>
+	<description>
+		Utility classes for writing unit tests.
+	</description>
 
 	<!-- =================================================================== -->
 	<!-- Properties - Properties - Properties - Properties - Properties - Pr -->

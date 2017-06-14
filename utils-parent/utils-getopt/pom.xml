@@ -23,13 +23,16 @@
 	<parent>
 		<groupId>de.fau.cs.osr.utils</groupId>
 		<artifactId>utils-parent</artifactId>
-		<version>3.0.5</version>
+		<version>3.0.6</version>
 	</parent>
 
 	<artifactId>utils-getopt</artifactId>
 	<packaging>jar</packaging>
 	<name>Utils GetOpt</name>
 	<inceptionYear>2016</inceptionYear>
+	<description>
+		Utility classes for parsing command line options.
+	</description>
 
 	<!-- =================================================================== -->
 	<!-- Properties - Properties - Properties - Properties - Properties - Pr -->
