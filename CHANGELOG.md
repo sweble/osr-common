@@ -2,12 +2,16 @@
 
 ## Unreleased
 
+## 3.0.6 - 2017-06-14
+### Fixed
+- Added missing descriptions to pom.xml files. The release to oss.sonatype.org 
+  was failing with a validation error that complained about the missing 
+  descriptions.
+
 ## 3.0.5 - 2017-02-06
 ### Fixed
 - Fixed issue #1: "Comparison method violates its general contract" in
   VisitorLogic.sweepCache by replacing Java sort with quick select.
-- Added missing descriptions to pom.xml files. The release to oss.sonatype.org was failing with a
-  validation error that complained about the missing descriptions.
 
 ## 3.0.4 - 2017-01-16
 ### Changed
