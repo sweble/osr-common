@@ -32,6 +32,10 @@
 	<packaging>pom</packaging>
 	<name>Utils Parent POM</name>
 	<inceptionYear>2016</inceptionYear>
+	<description>
+		An aggregator project for the projects in the de.fau.cs.osr.utils group of the Open Source
+		Research Group.
+	</description>
 
 	<modules>
 		<module>utils</module>

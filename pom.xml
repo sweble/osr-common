@@ -30,6 +30,10 @@
 	<artifactId>osr-common-aggregator</artifactId>
 	<packaging>pom</packaging>
 	<name>Open Source Research Common Aggergator Project</name>
+	<description>
+		An aggregator project for the projects in the de.fau.cs.osr group of the Open Source Research
+		Group.
+	</description>
 
 	<modules>
 		<module>parser-toolkit-parent</module>

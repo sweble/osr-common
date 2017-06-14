@@ -30,6 +30,9 @@
 	<packaging>jar</packaging>
 	<name>Utils GetOpt</name>
 	<inceptionYear>2016</inceptionYear>
+	<description>
+		Utility classes for parsing command line options.
+	</description>
 
 	<!-- =================================================================== -->
 	<!-- Properties - Properties - Properties - Properties - Properties - Pr -->

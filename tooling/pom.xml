@@ -27,6 +27,10 @@
 	<name>Tooling</name>
 	<url>${site-url}</url>
 	<inceptionYear>2011</inceptionYear>
+	<description>
+		The parent project for all projects in the de.fau.cs.osr group of the Open Source Research
+		Group.
+	</description>
 
 	<!-- =================================================================== -->
 	<!-- Properties - Properties - Properties - Properties - Properties - Pr -->
