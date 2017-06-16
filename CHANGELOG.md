@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+### Changed
+- Added jenkins profile which generates coverage reports when build in Jenkins.
 
 ## 3.0.6 - 2017-06-14
 ### Fixed
