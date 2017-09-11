@@ -22,7 +22,7 @@
 
 	<groupId>de.fau.cs.osr</groupId>
 	<artifactId>tooling</artifactId>
-	<version>3.0.6</version>
+	<version>3.0.7</version>
 	<packaging>pom</packaging>
 	<name>Tooling</name>
 	<url>${site-url}</url>
@@ -114,6 +114,7 @@
 		<aspectj-maven-plugin.version>1.7</aspectj-maven-plugin.version>
 		<build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
 		<exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
+		<cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
 
 		<!-- Other -->
 		<forbiddenapis-plugin.version>2.0</forbiddenapis-plugin.version>
@@ -981,7 +982,7 @@
 		<connection>scm:git://git@github.com/sweble/osr-common.git</connection>
 		<developerConnection>scm:git://git@mojo-forge.cs.fau.de/sweble-public/osr-common.git</developerConnection>
 		<url>https://github.com/sweble/osr-common</url>
-		<tag>osr-common-3.0.6</tag>
+		<tag>osr-common-3.0.7</tag>
 	</scm>
 
 	<repositories>
