@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>de.fau.cs.osr.ptk</groupId>
 		<artifactId>parser-toolkit-parent</artifactId>
-		<version>3.0.7</version>
+		<version>3.0.8-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>ptk-common</artifactId>
