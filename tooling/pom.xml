@@ -22,7 +22,7 @@
 
 	<groupId>de.fau.cs.osr</groupId>
 	<artifactId>tooling</artifactId>
-	<version>3.0.7-SNAPSHOT</version>
+	<version>3.0.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Tooling</name>
 	<url>${site-url}</url>
