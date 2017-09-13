@@ -1,6 +1,10 @@
 # Change Log
 
-## Unreleased
+## 3.0.7 - 2017-09-13
+### Changed
+- Running maven gpg plugin verify phase, not in package phase
+
+## 3.0.7 - 2017-09-13
 ### Changed
 - Added jenkins profile which generates coverage reports when build in Jenkins.
 
