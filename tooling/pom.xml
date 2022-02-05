@@ -63,7 +63,7 @@
 		<!-- Enable/Disable plugins (override in child poms as needed) -->
 		<forbiddenapis-plugin.skip>false</forbiddenapis-plugin.skip>
 		<git-commit-id-plugin.skip>false</git-commit-id-plugin.skip>
-		<license-maven-plugin.skip>false</license-maven-plugin.skip>
+		<license-maven-plugin.skip>true</license-maven-plugin.skip>
 		<maven-checkstyle-plugin.skip>false</maven-checkstyle-plugin.skip>
 		<maven-dependency-plugin.skip>false</maven-dependency-plugin.skip>
 		<maven-deploy-plugin.skip>false</maven-deploy-plugin.skip>
