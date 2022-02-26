@@ -110,8 +110,10 @@
 		<!-- IDEs -->
 		<maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
 
+                <!-- New AspectJ plugin -->
+		<aspectj-maven-plugin.version>1.13.1</aspectj-maven-plugin.version>
+
 		<!-- MojoHaus plugins (http://www.mojohaus.org/plugins.html) -->
-		<aspectj-maven-plugin.version>1.7</aspectj-maven-plugin.version>
 		<build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
 		<exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
 		<cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
@@ -150,7 +152,7 @@
 		<xml-apis.version>1.4.01</xml-apis.version>
 
 		<!-- Dependencies: AspectJ -->
-		<aspectj.version>1.8.5</aspectj.version>
+		<aspectj.version>1.9.8</aspectj.version>
 
 		<!-- Dependencies: Testing -->
 		<junit.version>4.12</junit.version>
@@ -731,7 +733,7 @@
 				<!-- Maven AspectJ Plugin -->
 				<!--
 					When using the AspectJ plugin one must disable the Maven
-					Compilier Plugin in favor of the AspectJ plugin:
+					Compiler Plugin in favor of the AspectJ plugin:
 						<plugin>
 							<artifactId>maven-compiler-plugin</artifactId>
 							<configuration>
@@ -742,7 +744,7 @@
 						</plugin>
 				 -->
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
+					<groupId>dev.aspectj</groupId>
 					<artifactId>aspectj-maven-plugin</artifactId>
 					<version>${aspectj-maven-plugin.version}</version>
 					<dependencies>
