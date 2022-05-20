@@ -55,7 +55,7 @@
 		<maven-checkstyle-plugin.skip>true</maven-checkstyle-plugin.skip>
 
 		<rats-runtime.version>1.15.0</rats-runtime.version>
-		<xstream.version>1.4.8</xstream.version>
+		<xstream.version>1.4.19</xstream.version>
 
 		<maven-rats-plugin.version>1.3.0.1</maven-rats-plugin.version>
 
