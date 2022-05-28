@@ -38,7 +38,7 @@ public class XmlGrammar
 					"|[\\u3001-\\uD7FF]" +
 					"|[\\uF900-\\uFDCF]" +
 					"|[\\uFDF0-\\uFFFD]" +
-					"|[\uD800\\uDC00-\uDB7F\uDFFF]" + // #x10000-#xEFFFF
+					"|[\\uD800\\uDC00-\\uDB7F\\uDFFF]" + // #x10000-#xEFFFF
 					")";
 
 	public final static String RE_XML_NAME_CHAR =

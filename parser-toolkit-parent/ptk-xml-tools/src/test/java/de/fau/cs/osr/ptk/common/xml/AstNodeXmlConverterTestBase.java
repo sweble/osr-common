@@ -26,6 +26,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import com.thoughtworks.xstream.security.AnyTypePermission;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.w3c.dom.Document;
@@ -68,6 +69,7 @@ public class AstNodeXmlConverterTestBase
 		xstream = new XStream(new DomDriver());
 		xstream.registerConverter(converter);
 		xstream.setMode(XStream.NO_REFERENCES);
+		xstream.addPermission(AnyTypePermission.ANY);
 		xstream.processAnnotations(ArticleContainer.class);
 	}
 
